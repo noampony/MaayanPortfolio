@@ -8,7 +8,6 @@
 import { profile } from "./data/profile";
 import { about } from "./data/about";
 import { businessCard } from "./data/businessCard";
-import { courses } from "./data/courses";
 import { experiences } from "./data/experience";
 import { impacts } from "./data/impact";
 import { projects } from "./data/projects";
@@ -74,7 +73,7 @@ function assertExperienceConfidentialityGate(): void {
   }
 }
 
-/** Verify the real Project data is gated correctly (Task 7.1, spec §8.4, §15.4). */
+/** Verify the real Project data is gated correctly (spec §8.4, §15.4). */
 function assertProjectConfidentialityGate(): void {
   const published = filterConfidentialityReviewed(projects);
   if (published.some((entry) => entry.confidentialityReviewed !== true)) {
@@ -82,8 +81,8 @@ function assertProjectConfidentialityGate(): void {
       "Content validator self-check failed: published project output contains an unreviewed entry.",
     );
   }
-  // All four projects are owner-approved for publication (the Check Point three in
-  // generalized, public-safe form); none should remain gated.
+  // Every project is academic work the owner approved for publication; none should
+  // remain gated.
   if (getUnreviewedWorkItems(projects).length !== 0) {
     throw new Error(
       "Content validator self-check failed: a project is unexpectedly still gated (confidentialityReviewed !== true).",
@@ -97,41 +96,30 @@ function assertProjectConfidentialityGate(): void {
 }
 
 /**
- * Verify the real Courses data validates and stays in the homepage preview range
- * (Task 8.1, §8.5).
+ * Verify the Volunteering & Community data validates and is correctly ordered.
  *
- * Upper bound raised 5 → 6 when the CV-sourced web development bootcamp was added.
- * The homepage renders `learning-paths.ts`, not this module, so the bound only guards
- * the Course model data itself.
+ * The carousel arc is built for a handful of cards, not an open-ended list, so the count is
+ * bounded rather than pinned to one number - adding or removing a volunteering entry should
+ * not require touching this file.
  */
-function assertCoursesData(): void {
-  if (courses.length < 3 || courses.length > 6) {
-    throw new Error(
-      "Content validator self-check failed: courses must be 3-6 for the preview (spec §8.5).",
-    );
-  }
-}
-
-/** Verify the real My Impact data validates and is complete + correctly ordered (Task 5.1, §8.2). */
 function assertImpactData(): void {
-  // All nine specification cards (§8.2.1-§8.2.9) must be present.
-  if (impacts.length !== 9) {
+  if (impacts.length < 3 || impacts.length > 9) {
     throw new Error(
-      "Content validator self-check failed: expected 9 My Impact cards (spec §8.2).",
+      "Content validator self-check failed: expected 3-9 Volunteering & Community cards.",
     );
   }
   // No card may ship without a description or at least one impact bullet.
   if (impacts.some((card) => card.impactBullets.length === 0)) {
     throw new Error(
-      "Content validator self-check failed: every My Impact card must have at least one impact bullet.",
+      "Content validator self-check failed: every Volunteering card must have at least one impact bullet.",
     );
   }
-  // displayOrder must be the unique sequence 1..9 (specification order preserved).
+  // displayOrder must be the unique sequence 1..n, so the carousel order is unambiguous.
   const orders = impacts.map((card) => card.displayOrder).sort((a, b) => a - b);
-  const expected = orders.every((order, index) => order === index + 1);
-  if (new Set(orders).size !== orders.length || !expected) {
+  const isSequential = orders.every((order, index) => order === index + 1);
+  if (new Set(orders).size !== orders.length || !isSequential) {
     throw new Error(
-      "Content validator self-check failed: My Impact displayOrder must be the unique sequence 1..9.",
+      `Content validator self-check failed: Volunteering displayOrder must be the unique sequence 1..${impacts.length}.`,
     );
   }
 }
@@ -148,5 +136,4 @@ if (!businessCard.isPromoted) {
 assertConfidentialityFilter();
 assertExperienceConfidentialityGate();
 assertProjectConfidentialityGate();
-assertCoursesData();
 assertImpactData();

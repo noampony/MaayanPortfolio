@@ -8,10 +8,9 @@ import { filterConfidentialityReviewed } from "@/lib/content/loaders";
 import type { Experience as ExperienceModel } from "@/lib/content/types";
 
 /**
- * Experience section - an editorial ledger of professional roles down a single rail:
- * newest role at the top, one hairline-separated record per role, then the education
- * entries (the degree and the bootcamp alongside it) closing it out at the bottom. Entry
- * order and flattening live in `buildExperienceLedger`; the rail, markers and reveals
+ * Experience section - an editorial ledger down a single rail: roles and education in one
+ * reverse-chronological stream, newest at the top, one hairline-separated record each.
+ * Entry order and flattening live in `buildExperienceLedger`; the rail, markers and reveals
  * live in `ExperienceLedger`.
  *
  * Confidentiality gating (§15.4, tasks/README Rule 9): only entries with

@@ -1,9 +1,9 @@
 /**
  * Floating Business Card content (spec §8.9, Task 14.1).
  *
- * Promotion and card-specific TBD inputs were confirmed by the owner:
+ * Promotion and card-specific inputs:
  * - promoted: yes
- * - tagline: Lead Full Stack Web Developer (CV About Me + current role)
+ * - tagline: from the CV's About Me + current lab role
  * - resume: the existing `/resume.pdf`
  * - profile picture: the Contact section avatar, `/contact-avatar.png`
  *
@@ -22,7 +22,7 @@ const businessCardData = {
   isPromoted: true,
   name: profile.name,
   title: profile.title,
-  shortTagline: "Lead Full Stack Web Developer",
+  shortTagline: "Electro-Optics & Microelectronics",
   email: contact.email,
   linkedIn: contact.linkedIn,
   resumeLink: resume.publicUrl,

@@ -1,18 +1,16 @@
 /**
- * My Impact content (spec §8.2, §11.1A) - the cards shown in the My Impact carousel.
+ * Volunteering & Community content - the cards shown in the homepage carousel.
  *
- * Each entry is an outcome-focused, public-safe summary of a career impact. Order
- * follows the specification (§8.2.1 → §8.2.9) via `displayOrder`; the carousel (Task
- * 5.2) is free to consume the array directly. The data is intentionally
- * presentation-agnostic - no UI logic, styling, or icons are embedded here.
+ * Sourced from the owner's CV ("Maayan Pony - CV" → Volunteering). One card per entry,
+ * ordered newest-first via `displayOrder`; the carousel consumes the array directly. The
+ * data is intentionally presentation-agnostic - no UI logic, styling, or icons here.
  *
- * Confidentiality gating (spec §15.4, Dependency Rule 9): every card is
- * owner-confirmed public-safe (`confidentialityReviewed: true`). Wording is
- * deliberately outcome-focused and contains no internal project names, customer
- * data, architecture details, or proprietary implementation specifics (§8.2 rules).
+ * Every card restates what the CV already says publicly. No participant names, no
+ * institution addresses, no numbers the CV does not state - these programmes involve
+ * minors and vulnerable people, so nothing identifying is added and no impact figure is
+ * invented. `confidentialityReviewed: true` records that check.
  *
- * `icon` is omitted for every card - it is optional and TBD (§11.1A); no placeholder
- * asset is invented here.
+ * `icon` is omitted for every card - it is optional and no icon assets exist.
  */
 
 import type { Impact } from "../types";
@@ -20,126 +18,66 @@ import { validateImpactList } from "../validate";
 
 const impactData = [
   {
-    // §8.2.1
-    title: "Catching Production Failures",
+    title: "Perach Mentorship Program",
     description:
-      "Built the \"last line of defense\" that catches and reports critical failures in production while significantly improving visibility during crisis scenarios.",
+      "Mentoring and academic support for youth in underserved communities, from 2025 to today.",
     impactBullets: [
-      "More reliable product",
-      "Clearer picture during incidents",
-      "Safer, more confident deployments",
+      "One-to-one mentoring alongside my own degree",
+      "Academic support where it is hardest to come by",
+      "An ongoing commitment, not a one-off",
     ],
     displayOrder: 1,
     confidentialityReviewed: true,
   },
   {
-    // §8.2.2
-    title: "System Architecture",
+    title: "“Babushka” Initiative",
     description:
-      "Designed 10+ backend systems from the ground up - architecture, documentation, planning, testing, and rollout.",
+      "Taking part in an educational-technological empowerment project for girls from minority communities, run with Elbit and the “Shavot” NGO. Ongoing since 2025.",
     impactBullets: [
-      "Less rework and fewer late design changes",
-      "Potential bugs found during planning, not in production",
-      "Smoother path from design to delivery",
-      "Higher-quality, more reliable systems",
+      "Opening engineering and technology up to girls who rarely see it",
+      "Built around education, not one-off exposure",
+      "Run together with an industry partner and an NGO",
     ],
     displayOrder: 2,
     confidentialityReviewed: true,
   },
   {
-    // §8.2.3
-    title: "Legacy System Modernization",
+    title: "I-School Program",
     description:
-      "Refactored three legacy systems to improve code quality, reliability, and maintainability.",
+      "Mentored and tutored an elementary school student in a socio-economically peripheral community over the 2024-2025 school year.",
     impactBullets: [
-      "Cleaner, easier-to-maintain code",
-      "Better monitoring and debugging",
-      "More stable and scalable in production",
-      "Up to date frameworks, methodologies, and architecture",
+      "Weekly one-to-one tutoring across a full school year",
+      "Support for a student in a peripheral community",
+      "A mentoring relationship, not just homework help",
     ],
     displayOrder: 3,
     confidentialityReviewed: true,
   },
   {
-    // §8.2.4
-    title: "Supporting At-Risk Teenagers",
+    title: "National Agricultural Harvest Scholarship",
     description:
-      "Enhanced the monitoring platform used by a non-profit organization supporting at-risk teenage girls.",
+      "Volunteered in the 2024 national agricultural harvest effort, serving as a team leader.",
     impactBullets: [
-      "3× faster monitoring and case management",
-      "More reliable, easier-to-access data",
-      "Helped staff reach the girls most at risk sooner",
+      "Led a volunteer team in the field",
+      "Answered a national call for agricultural help",
+      "Coordination and responsibility under real deadlines",
     ],
     displayOrder: 4,
     confidentialityReviewed: true,
   },
   {
-    // §8.2.5
-    title: "AI Tooling for the Team",
+    title: "Holon Elderly Club",
     description:
-      "Built plugins for AI coding agents that automate everyday engineering tasks - opening PRs, reviewing code, and resolving tickets.",
+      "Provided assistance and companionship to elderly members of the Holon community during 2023.",
     impactBullets: [
-      "Made AI tools easier for the whole team to use",
-      "More of the team using AI in daily work",
-      "Less time spent on repetitive development tasks",
+      "Regular companionship for people at risk of isolation",
+      "Practical day-to-day assistance",
+      "Time given consistently, week after week",
     ],
     displayOrder: 5,
     confidentialityReviewed: true,
   },
-  {
-    // §8.2.6
-    title: "Grafana Dashboards",
-    description:
-      "Created dozens of Grafana dashboards to monitor services, performance, and production health in real time.",
-    impactBullets: [
-      "Faster investigation when something breaks",
-      "Clear view of production health at all times",
-      "Became the team's go-to for Grafana",
-    ],
-    displayOrder: 6,
-    confidentialityReviewed: true,
-  },
-  {
-    // §8.2.7
-    title: "Team Knowledge Base",
-    description:
-      "Built a central hub for services, guides, templates, incident resolution playbooks, and engineering knowledge.",
-    impactBullets: [
-      "Faster knowledge sharing across the team",
-      "Easier onboarding and daily development",
-      "Less time hunting for information",
-      "Faster production incident resolution using playbooks",
-    ],
-    displayOrder: 7,
-    confidentialityReviewed: true,
-  },
-  {
-    // §8.2.8
-    title: "Weekly Security Reports",
-    description:
-      "Redesigned the weekly report customers receive, making their security incidents and activity easy to understand.",
-    impactBullets: [
-      "Customers see clearly what the product does for them",
-      "Read by technical leaders and senior managers alike",
-      "Helped sales teams demonstrate product value",
-    ],
-    displayOrder: 8,
-    confidentialityReviewed: true,
-  },
-  {
-    // §8.2.9
-    title: "Unlocking Google & Microsoft Data",
-    description:
-      "Made hundreds of Microsoft 365 and Google Workspace event types available through a single service, turning raw data into security insight.",
-    impactBullets: [
-      "Powers multiple customer-facing features",
-      "Enables detection of malicious activity",
-      "Opened the door to future product capabilities",
-    ],
-    displayOrder: 9,
-    confidentialityReviewed: true,
-  },
 ] as const;
 
-/** Validated My Impact cards, in specification order (spec §8.2). */
+/** Validated Volunteering & Community cards, newest first. */
 export const impacts: Impact[] = validateImpactList(impactData);

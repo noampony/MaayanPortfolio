@@ -29,17 +29,17 @@ export type Profile = {
   logo?: AssetReference;
   yearsExperienceStartDate: YearMonthDate;
   projectsCountLabel?: string;
-  technologiesCountLabel: string;
-  coursesCountLabel: string;
+  technologiesCountLabel?: string;
+  coursesCountLabel?: string;
   certificatesCountLabel?: string;
   mainFields: string[];
 };
 
-/** Known About stats only; TBD stats stay absent until owner-confirmed. */
+/** Known About stats only; stats that do not apply to the owner stay absent. */
 export type AboutStats = {
   yearsExperienceCountLabel: string;
-  coursesCountLabel: string;
-  technologiesCountLabel: string;
+  coursesCountLabel?: string;
+  technologiesCountLabel?: string;
   projectsCountLabel?: string;
   certificatesCountLabel?: string;
 };
@@ -65,8 +65,12 @@ export type AboutEducation = {
   institutionLogo?: AssetReference;
   summary: string;
   honor?: string;
-  /** The entry's primary certificate (a degree diploma, a bootcamp certificate, …). */
-  degreeCertificate: EducationCertificateRef;
+  /**
+   * The entry's primary certificate (a degree diploma, a bootcamp certificate, …).
+   * Optional: an entry with no certificate file simply renders without a preview
+   * trigger rather than opening an empty viewer.
+   */
+  degreeCertificate?: EducationCertificateRef;
   honorCertificate?: EducationCertificateRef;
 };
 

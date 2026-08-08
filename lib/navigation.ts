@@ -29,7 +29,7 @@ export type SectionNavItem = {
 
 export const SECTION_NAV_ITEMS: SectionNavItem[] = [
   { id: "experience", label: "Experience", href: "#experience" },
-  { id: "impact", label: "Impact", href: "#impact" },
+  { id: "volunteering", label: "Volunteering", href: "#volunteering" },
   { id: "projects", label: "Projects", href: "#projects" },
   { id: "skills", label: "Skills", href: "#skills" },
   { id: "contact", label: "Contact", href: "#contact" },

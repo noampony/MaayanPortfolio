@@ -1,26 +1,23 @@
 /**
- * About section content (spec §8.2).
+ * About content - the professional summary plus the education entries that close the
+ * Experience ledger.
  *
- * `professionalSummary`, `education` and `furtherEducation` are sourced from the
- * owner's CV ("Shani Penkar - CV"): the About-Me paragraph, the current role at
- * Kiloma Advanced Solutions, the B.Sc. entry (institution, 2019-2023, Dean's List,
- * GPA 85) and the Udemy web-development bootcamp (2023). The CV gives years only -
- * no months - so `dateRange` stays at year granularity rather than inventing months.
+ * `professionalSummary`, `education` and `furtherEducation` are sourced from the owner's
+ * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - present,
+ * GPA 95, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
+ * diploma (2015-2018, GPA 103, with honors).
  *
- * The bootcamp also appears in the Courses data (`data/courses.ts`, where it carries
- * the raw certificate link). That is deliberate: the CV lists it under Education, so
- * it earns a card at the foot of the Experience timeline, while the Courses hub keeps
- * it in the full catalogue of completed courses.
+ * ⚠️ No certificate files exist for either entry yet, so `degreeCertificate` is omitted on
+ * both - the ledger then renders the record without a "Preview certificate" trigger rather
+ * than opening an empty viewer. Drop a PDF into `public/certificates/` and add the ref to
+ * wire it up.
  *
- * Certificate files: the Degree Certificate, Dean's List Certificate and Bootcamp
- * Certificate PDFs live in `public/certificates/` and are wired via `file` below.
+ * ⚠️ No institution logo assets exist in `public/logos/`, so both timeline markers fall back
+ * to initials (`HIT`, `EKH`). Drop a licence-cleared logo in and set `institutionLogo` to
+ * switch either over.
  *
- * ⚠️ No Udemy logo asset exists in `public/logos/`, so the bootcamp's timeline marker
- * falls back to its initials. Drop a licence-cleared logo in and set
- * `institutionLogo` to switch it over.
- *
- * Product TBDs are intentionally absent: project count, certificate subset
- * count, and current professional focus.
+ * Count stats (courses, technologies, projects, certificates) are absent: the CV states
+ * none of them, and nothing in the UI renders them today.
  */
 
 import type { AboutSectionData } from "../types";
@@ -48,57 +45,37 @@ const yearsExperienceCountLabel = String(
 
 const aboutData = {
   professionalSummary:
-    "I'm a full stack developer building web applications with Node.js, Next.js, React, " +
-    "TypeScript, and MSSQL.\n\n" +
-    "At Kiloma Advanced Solutions I lead development end to end - translating product " +
-    "requirements into technical specifications, designing the system and its UI/UX, " +
-    "implementing it full stack, and delivering it to production alongside customers and " +
-    "stakeholders.\n\n" +
-    "I'm known for strong attention to detail, problem-solving, and a highly organized " +
-    "approach, and I care about clean, customer-focused solutions.",
+    "I'm a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, " +
+    "specializing in Electro-Optics and Microelectronics.\n\n" +
+    "In the Electro-Optics Laboratory I design and implement optical setups that integrate " +
+    "electronics and photonics, run experiments with lasers, sensors and signal acquisition " +
+    "systems, and process the resulting data in Matlab and Python.\n\n" +
+    "I'm motivated to apply what I've learned in a practical environment, contribute to " +
+    "innovative projects, and gain hands-on experience in the industry.",
   yearsExperienceStartDate: profile.yearsExperienceStartDate,
   stats: {
     yearsExperienceCountLabel,
-    coursesCountLabel: profile.coursesCountLabel,
-    technologiesCountLabel: profile.technologiesCountLabel,
   },
   mainFields: profile.mainFields,
   education: {
-    dateRange: "2019 - 2023",
-    degree: "B.Sc. Computer Science",
-    institution: "The Academic College of Tel Aviv-Yaffo",
-    institutionLogo: "/logos/academic-college-tel-aviv-yaffo-dark-ink.svg",
-    honor: "Included in Dean's List",
+    dateRange: "Oct 2022 - present",
+    degree: "B.Sc. Electrical & Electronics Engineering",
+    institution: "Holon Institute of Technology (HIT)",
+    honor: "GPA 95",
     summary:
-      "Graduated with a GPA of 85 and a place on the Dean's List, and kept building on the " +
-      "degree with a full-stack web development bootcamp outside the academy.",
-    degreeCertificate: {
-      id: "bsc-degree",
-      title: "B.Sc. Computer Science",
-      viewLabel: "View degree certificate",
-      file: "/certificates/shani-penkar-degree-certificate.pdf",
-    },
-    honorCertificate: {
-      id: "deans-list",
-      title: "Dean's List",
-      viewLabel: "View Dean's List certificate",
-      file: "/certificates/shani-penkar-deans-list-certificate.pdf",
-    },
+      "Specializing in Electro-Optics & Microelectronics. Coursework includes Semiconductor " +
+      "Devices (100), Microelectronics Technologies (99), Control Systems (98), " +
+      "Electromagnetic Fields (94), Digital Signal Processing, Linear Circuits, " +
+      "Communication Systems and the Microcontrollers Lab.",
   },
   furtherEducation: [
     {
-      dateRange: "2023",
-      degree: "The Complete Web Development Bootcamp",
-      institution: "Udemy",
+      dateRange: "2015 - 2018",
+      degree: "High School Diploma, with honors",
+      institution: "Ein-Kerem High School",
+      honor: "GPA 103",
       summary:
-        "Focused on Full Stack development of web application using JavaScript, Node.js, " +
-        "Express.js, React.js and more.",
-      degreeCertificate: {
-        id: "web-development-bootcamp",
-        title: "The Complete Web Development Bootcamp",
-        viewLabel: "View bootcamp certificate",
-        file: "/certificates/shani-penkar-web-development-bootcamp-certificate.pdf",
-      },
+        "Extended studies in Mathematics, English, Physics, Biology and Agriculture.",
     },
   ],
 } as const;

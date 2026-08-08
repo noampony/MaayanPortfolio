@@ -25,7 +25,7 @@ export function StructuredData() {
     "@type": "WebSite",
     name: profile.name,
     description:
-      "Shani Penkar is a Lead Full Stack Developer building web applications with Node.js, Next.js, React, TypeScript, and MSSQL, and managing the full development lifecycle.",
+      "Maayan Pony is a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
     inLanguage: "en",
     url: siteUrl,
   };

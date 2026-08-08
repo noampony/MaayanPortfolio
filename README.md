@@ -1,6 +1,6 @@
-# Shani Penkar Portfolio
+# Maayan Pony Portfolio
 
-Personal portfolio website for Shani Penkar, built with Next.js App Router,
+Personal portfolio website for Maayan Pony, built with Next.js App Router,
 TypeScript, Tailwind CSS, ESLint, and pnpm.
 
 ## Requirements

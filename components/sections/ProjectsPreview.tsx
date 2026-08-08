@@ -11,37 +11,27 @@ import { revealItemVariants, staggerContainerVariants } from "@/lib/motion";
 
 /**
  * Decorative background photos behind the cards, shown at low opacity (served from `/public`).
- * `DEFAULT_CARD_BG` is the shared fallback for any project without its own entry in
- * `PROJECT_BACKGROUNDS`. To give a project its own image, drop the file under
- * `public/images/projects/` and add a `"<project name>": "<path>"` entry below.
- * Missing files degrade gracefully - the card just shows the glass (no console error).
+ * To give a project its own image, drop the file under `public/images/projects/` and add a
+ * `"<project name>": "<path>"` entry below. A project with no entry renders on plain glass -
+ * `ProjectCardBackground` returns null rather than showing a broken or borrowed image.
+ *
+ * There is deliberately no shared default: the previous owner's fallback artwork was a
+ * screenshot of one of her own apps, which has no business sitting behind these cards.
  */
-const DEFAULT_CARD_BG = "/images/projects/card-bg.png";
-
 const PROJECT_BACKGROUNDS: Record<string, string> = {
-  "Microsoft & Google Event Streaming": "/images/projects/microsoft-office-events.png",
-  "Email Archiving Service": "/images/projects/email-archiving-service.png",
-  "Delivery Safety Net": "/images/projects/final-failure-watchdog.png",
-  "At-Risk Teenagers Monitoring System": "/images/projects/students-tracking-system.png",
-  "Developer Portfolio Website": "/images/projects/portfolio-website.png",
-  "Securing a Shared Search Platform":
-    "/images/projects/opensearch-fine-grained-access-control.png",
-  "Contract Management System": "/images/projects/contract-management-system.png",
-  "Strategic Meeting Platform": "/images/projects/strategic-meeting-platform.png",
+  // No project artwork supplied yet.
 };
 
 /** Per-project opacity override for `PROJECT_BACKGROUNDS` (front + back), keyed by project name. */
-const PROJECT_BACKGROUND_OPACITY: Record<string, number> = {
-  "At-Risk Teenagers Monitoring System": 0.06,
-};
+const PROJECT_BACKGROUND_OPACITY: Record<string, number> = {};
 
 /**
- * Projects Preview section (spec §8.4) - the homepage's top projects.
+ * Projects & Labs section (spec §8.4) - the homepage's academic and lab work.
  *
  * Confidentiality gating (spec §15.4, tasks/README Rule 9): only projects with
- * `confidentialityReviewed: true` are ever rendered, so an unreviewed Check Point project
- * can never reach the DOM regardless of ordering. The section renders whatever is reviewed -
- * and renders nothing rather than an empty shell when none are.
+ * `confidentialityReviewed: true` are ever rendered, so an unreviewed entry can never reach
+ * the DOM regardless of ordering. The section renders whatever is reviewed - and renders
+ * nothing rather than an empty shell when none are.
  *
  * Layout / interaction (Task 7.3): a compact responsive grid (1 col → 2 → 3) of click/tap-to-
  * flip glass cards (see `ProjectCard`).
@@ -99,15 +89,15 @@ export function ProjectsPreview() {
           headingId="projects-heading"
           title={
             <>
-              Featured{" "}
+              Projects &{" "}
               <span className="bg-gradient-to-r from-gradient-from via-gradient-via to-gradient-to bg-clip-text text-transparent">
-                Projects
+                Labs
               </span>
             </>
           }
           lead={
             <>
-              A few full stack projects I&apos;ve built and led.
+              The engineering work behind the degree - built, measured, and tested.
               <br />
               Tap a card to flip it over.
             </>
@@ -124,7 +114,7 @@ export function ProjectsPreview() {
               <ProjectCard
                 project={project}
                 headingId={`project-${index}-heading`}
-                backgroundImage={PROJECT_BACKGROUNDS[project.name] ?? DEFAULT_CARD_BG}
+                backgroundImage={PROJECT_BACKGROUNDS[project.name]}
                 backgroundOpacity={PROJECT_BACKGROUND_OPACITY[project.name]}
               />
             </motion.li>

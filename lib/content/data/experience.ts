@@ -1,66 +1,56 @@
 /**
- * Experience content (spec §8.3, §11.2) - used by the Experience timeline.
+ * Experience content - used by the Experience ledger.
  *
- * Sourced from the owner's CV ("Shani Penkar - CV" → Professional Experience). Published
+ * Sourced from the owner's CV ("Maayan Pony - CV" → Experience, Army Service). Published
  * because the CV is the owner's own outward-facing document and the owner asked for its
- * content to go on the site, so the §15.4 confidentiality gate is met by the source
- * itself; nothing is added beyond what the CV already states publicly.
+ * content to go on the site; nothing is added beyond what the CV already states.
  *
- * One organization → one card. The promotion is modelled with `previousRoles`, so the
- * Kiloma card renders the Senior role first and the earlier role below a separator
- * instead of splitting Kiloma across two timeline nodes.
+ * ⚠️ Dates. The CV gives years only ("2024 - present", "2019 - 2021") with no months, so
+ * each entry is anchored at year granularity: January for a start, December for an end.
+ * Confirm the exact months before publishing.
  *
- * ⚠️ Dates. The CV lists ONE continuous role ("Full Stack Developer, 2023-Present") with
- * no months and no promotion date. The owner supplied the split - the Senior role starts
- * 2026 - so:
- *   - Lead Full Stack Developer: 2026-01 → Present
- *   - Full Stack Developer:        2023-01 → 2025-12
- * The months (January in both cases) are the owner's "2026-present" / the CV's "2023"
- * read at year granularity. Confirm the exact months before publishing.
- *
- * The CV's five role bullets are divided between the two sections: ownership, technical
- * specification, lifecycle and stakeholder work sit on the Senior section; hands-on build,
- * maintenance, Agile delivery and code-quality work sit on the earlier section.
+ * ⚠️ The army entry reproduces the CV's own wording, including the unit name. It contains
+ * no operational, technical or location detail. Confirm with the owner that the unit name
+ * should be public before this ships.
  */
 
 import type { Experience } from "../types";
 import { validateExperienceList } from "../validate";
 
-const KILOMA_STACK = ["Node.js", "Next.js", "React", "TypeScript", "SQL", "REST APIs", "Web Design"] as const;
-
 /**
  * Experience entries - stored current-role-first (reverse chronological);
- * final ordering is the timeline's concern (Task 6.2).
+ * final ordering is the ledger's concern.
  */
 const experienceData = [
   {
-    organization: "Kiloma Advanced Solutions",
-    organizationLogo: "/logos/kiloma.svg",
-    role: "Lead Full Stack Developer",
-    startDate: "2026-01",
+    organization: "Holon Institute of Technology (HIT)",
+    organizationType: "Electro-Optics Laboratory",
+    role: "Research Assistant",
+    startDate: "2024-01",
     endDate: "Present",
     technologies: [
-      "Node.js",
-      "Next.js",
-      "React",
-      "TypeScript",
-      "SQL",
-      "System Architecture",
-      "Claude Code",
+      "Matlab",
+      "Python",
+      "Optical Setups",
+      "Lasers",
+      "Sensors",
+      "Signal Acquisition",
+      "Data Analysis",
     ],
     description:
-      "I lead end-to-end development of web applications using Node.js, Next.js, React, TypeScript, and more. I translate product requirements into technical specifications and own the full development lifecycle - architecture design, code, testing, infrastructure and deployment - to deliver production-ready solutions. I meet with customers to guide them through the systems I build and gather their feedback, and I lead Claude Code adoption on the team.",
-    previousRoles: [
-      {
-        role: "Full Stack Developer",
-        startDate: "2023-01",
-        endDate: "2025-12",
-        durationLabel: "3 years",
-        technologies: [...KILOMA_STACK, "Agile"],
-        description:
-          "Developed full-stack web applications using Node.js, Next.js, React, TypeScript, and MSSQL. Maintained and improved existing systems, and worked within an Agile methodology. Continuously adopted new technologies and focused on efficient, clean, maintainable code in a fast-paced, dynamic environment.",
-      },
-    ],
+      "I design and implement optical setups that integrate electronics and photonics, run experiments with lasers, sensors and signal acquisition systems, and process and analyze the resulting experimental data using Matlab and Python.",
+    confidentialityReviewed: true,
+  },
+  {
+    organization: "Israeli Air Force",
+    organizationType: "Patriot Unit",
+    role: "Classified Communication Systems Operator",
+    startDate: "2019-01",
+    endDate: "2021-12",
+    durationLabel: "3 yrs",
+    technologies: ["Communication Systems", "Real-Time Systems", "Teamwork"],
+    description:
+      "Responsible for secure real-time communication systems. Awarded an Excellent Soldier Certificate.",
     confidentialityReviewed: true,
   },
 ] as const;

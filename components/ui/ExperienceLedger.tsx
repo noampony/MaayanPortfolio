@@ -385,9 +385,11 @@ function RoleRecord({ entry, index, onOpenCertificate }: RecordProps<LedgerRoleE
 }
 
 /**
- * The degree record that closes the ledger. Keeps the same in-page certificate viewer as
- * before: a "Preview certificate" trigger for the degree, and - when the honour has its own
- * certificate - one pill that is both the Dean's-List badge and its trigger.
+ * An education record closing out the ledger. The in-page certificate viewer is wired to
+ * whichever certificates exist: a "Preview certificate" trigger when the qualification has
+ * one, and - when the honour has its own certificate - one pill that is both the honour
+ * badge and its trigger. An entry with no certificates at all simply renders no action row,
+ * rather than a trigger that opens an empty viewer.
  */
 function EducationRecord({
   entry,
@@ -404,14 +406,14 @@ function EducationRecord({
           certificate={education.honorCertificate}
           onOpen={onOpenCertificate}
           label={education.honor ?? "Preview certificate"}
-          leadingIcon={<DeanListIcon />}
+          leadingIcon={<HonorIcon />}
         />
       </span>
     );
   } else if (education.honor) {
     honorGroup = (
       <span className="about-education-honor-badge">
-        <DeanListIcon />
+        <HonorIcon />
         {education.honor}
       </span>
     );
@@ -433,19 +435,23 @@ function EducationRecord({
 
       <p className="xp-desc">{education.summary}</p>
 
-      <div className="xp-actions">
-        <EducationCertificateTrigger
-          certificate={education.degreeCertificate}
-          onOpen={onOpenCertificate}
-        />
-        {honorGroup}
-      </div>
+      {education.degreeCertificate || honorGroup ? (
+        <div className="xp-actions">
+          {education.degreeCertificate ? (
+            <EducationCertificateTrigger
+              certificate={education.degreeCertificate}
+              onOpen={onOpenCertificate}
+            />
+          ) : null}
+          {honorGroup}
+        </div>
+      ) : null}
     </>
   );
 }
 
-/** Dean's-List star - mirrors the About section's honour badge glyph. */
-function DeanListIcon() {
+/** Honour star - the badge glyph for a distinction on an education entry. */
+function HonorIcon() {
   return (
     <svg
       aria-hidden="true"

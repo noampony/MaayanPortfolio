@@ -1,17 +1,17 @@
 /**
- * Technical Skills content (spec §8.6, §11.5).
+ * Technical Skills content.
  *
- * Sourced from the owner's CV ("Shani Penkar - CV" → Skills → Technical), grouped into
- * categories for the section's category cards. `System Design`, `Agile`, and
- * `Full Development Lifecycle` come from the CV's Experience and Technical Projects
- * sections rather than its Technical skills list.
+ * Sourced from the owner's CV ("Maayan Pony - CV" → Technical Skills), split into the four
+ * groups the CV itself uses, with the lab hardware pulled out of "Programming & Tools" into
+ * its own group so the software and the bench instruments do not sit in one undifferentiated
+ * pile.
  *
- * The CV's "Personal" skills (Teamwork, Self-Learning, Ambitious, Creativity, Problem
- * Solving, Communication, Organization) are deliberately NOT modelled here - this section
- * renders technology tiles; those traits are carried by the About summary instead.
+ * Unlike the previous owner's data, the CV's Soft Skills ARE modelled here: this CV lists
+ * them as a first-class section, and there is no long professional summary elsewhere on the
+ * page carrying them instead.
  *
  * Rules:
- * - No `proficiency` field is set anywhere - proficiency display is TBD (§8.6).
+ * - No `proficiency` field is set anywhere - the CV states none.
  * - Tiles without an entry in `skill-icons.ts` fall back to the skill's initial, so a
  *   missing brand icon degrades gracefully rather than breaking the tile.
  */
@@ -20,50 +20,32 @@ import type { Skill } from "../types";
 import { validateSkillList } from "../validate";
 
 const skillData: unknown[] = [
-  // ── Programming ──────────────────────────────────────────────────────────
-  { name: "JavaScript", category: "Programming", displayOrder: 1 },
-  { name: "TypeScript", category: "Programming", displayOrder: 2 },
-  { name: "Node.js",    category: "Programming", displayOrder: 3 },
-  { name: "Python",     category: "Programming", displayOrder: 4 },
-  { name: "HTML",       category: "Programming", displayOrder: 5 },
-  { name: "CSS",        category: "Programming", displayOrder: 6 },
-  { name: "SQL",        category: "Programming", displayOrder: 7 },
+  // ── Programming & Tools ──────────────────────────────────────────────────
+  { name: "Python",  category: "Programming & Tools", displayOrder: 1 },
+  { name: "C",       category: "Programming & Tools", displayOrder: 2 },
+  { name: "Matlab",  category: "Programming & Tools", displayOrder: 3 },
+  { name: "LabVIEW", category: "Programming & Tools", displayOrder: 4 },
+  { name: "LTspice", category: "Programming & Tools", displayOrder: 5 },
 
-  // ── Frameworks & Libraries ───────────────────────────────────────────────
-  { name: "Next.js",    category: "Frameworks & Libraries", displayOrder: 1 },
-  { name: "React.js",   category: "Frameworks & Libraries", displayOrder: 2 },
-  { name: "Express.js", category: "Frameworks & Libraries", displayOrder: 3 },
-  { name: "Storybook",  category: "Frameworks & Libraries", displayOrder: 4 },
+  // ── Lab & Instrumentation ────────────────────────────────────────────────
+  { name: "Oscilloscope",      category: "Lab & Instrumentation", displayOrder: 1 },
+  { name: "Signal Generators", category: "Lab & Instrumentation", displayOrder: 2 },
 
-  // ── Databases ────────────────────────────────────────────────────────────
-  { name: "MSSQL",      category: "Databases", displayOrder: 1 },
-  { name: "Azure SQL",  category: "Databases", displayOrder: 2 },
-  { name: "PostgreSQL", category: "Databases", displayOrder: 3 },
-  { name: "MongoDB",    category: "Databases", displayOrder: 4 },
+  // ── Engineering Knowledge ────────────────────────────────────────────────
+  { name: "Circuits",              category: "Engineering Knowledge", displayOrder: 1 },
+  { name: "Semiconductors",        category: "Engineering Knowledge", displayOrder: 2 },
+  { name: "Microelectronics",      category: "Engineering Knowledge", displayOrder: 3 },
+  { name: "Electro-Optics",        category: "Engineering Knowledge", displayOrder: 4 },
+  { name: "Signal Processing",     category: "Engineering Knowledge", displayOrder: 5 },
+  { name: "Control",               category: "Engineering Knowledge", displayOrder: 6 },
+  { name: "Communication Systems", category: "Engineering Knowledge", displayOrder: 7 },
 
-  // ── Cloud & Infrastructure ───────────────────────────────────────────────
-  { name: "AWS",     category: "Cloud & Infrastructure", displayOrder: 1 },
-  { name: "Docker",  category: "Cloud & Infrastructure", displayOrder: 2 },
-  { name: "Jenkins", category: "Cloud & Infrastructure", displayOrder: 3 },
-
-  // ── Tools & Design ───────────────────────────────────────────────────────
-  { name: "Git",    category: "Tools & Design", displayOrder: 1 },
-  { name: "GitHub", category: "Tools & Design", displayOrder: 2 },
-  { name: "Figma",  category: "Tools & Design", displayOrder: 3 },
-
-  // ── Concepts & Methodologies ─────────────────────────────────────────────
-  { name: "REST APIs",                   category: "Concepts & Methodologies", displayOrder: 1 },
-  { name: "System Design",               category: "Concepts & Methodologies", displayOrder: 2 },
-  { name: "Agile",                       category: "Concepts & Methodologies", displayOrder: 3 },
-  { name: "Full Development Lifecycle",  category: "Concepts & Methodologies", displayOrder: 4 },
-
-  // ── AI Development ───────────────────────────────────────────────────────
-  { name: "ChatGPT",         category: "AI Development", displayOrder: 1 },
-  { name: "Claude Code",     category: "AI Development", displayOrder: 2 },
-  { name: "GitHub Copilot",  category: "AI Development", displayOrder: 3 },
-  { name: "Cursor",          category: "AI Development", displayOrder: 4 },
-  { name: "AI Agents",       category: "AI Development", displayOrder: 5 },
-  { name: "OpenAI API",      category: "AI Development", displayOrder: 6 },
+  // ── Soft Skills ──────────────────────────────────────────────────────────
+  { name: "Problem-Solving", category: "Soft Skills", displayOrder: 1 },
+  { name: "Teamwork",        category: "Soft Skills", displayOrder: 2 },
+  { name: "Self-Learning",   category: "Soft Skills", displayOrder: 3 },
+  { name: "Responsibility",  category: "Soft Skills", displayOrder: 4 },
+  { name: "Initiative",      category: "Soft Skills", displayOrder: 5 },
 ];
 
 export const skills: Skill[] = validateSkillList(skillData);

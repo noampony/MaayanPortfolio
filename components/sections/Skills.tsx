@@ -28,21 +28,18 @@ const grouped = groupByCategory(skills);
  * Presentation only - the desktop arrangement, as an ordered list of
  * `[category, column span]`. Plates render in this order rather than in
  * `skills.ts` order, and the two double-width entries tile the 3-column grid
- * exactly (7 categories + 2 extra spans = 9 cells), so no plate is left as an
- * orphan third-width tile in the last row.
+ * exactly (4 categories + 2 extra spans = 6 cells, i.e. two full rows), so no
+ * plate is left as an orphan third-width tile in the last row.
  *
  * A category present in the data but missing here still renders - it is
  * appended after these, one column wide - so adding a category to `skills.ts`
  * degrades gracefully instead of dropping it from the page.
  */
 const CATEGORY_LAYOUT: ReadonlyArray<readonly [category: string, span: 1 | 2]> = [
-  ["Programming", 2],
-  ["Frameworks & Libraries", 1],
-  ["Databases", 1],
-  ["Cloud & Infrastructure", 1],
-  ["Tools & Design", 1],
-  ["AI Development", 2],
-  ["Concepts & Methodologies", 1],
+  ["Programming & Tools", 2],
+  ["Lab & Instrumentation", 1],
+  ["Engineering Knowledge", 2],
+  ["Soft Skills", 1],
 ];
 
 const CATEGORY_SPAN = new Map<string, 1 | 2>(CATEGORY_LAYOUT);
@@ -156,7 +153,7 @@ export function Skills() {
               </span>
             </>
           }
-          lead="The tools, languages, and platforms I work with."
+          lead="The languages, instruments, and engineering fields I work with."
         />
 
         {/* Grid items stretch by default, and `.skills-plate` is `height: 100%`,

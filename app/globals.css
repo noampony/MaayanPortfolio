@@ -154,17 +154,17 @@ html {
    inside stays on --accent / --text-* tokens for AA. */
 .hero-profile-tag {
   border: 1px solid var(--glass-edge-strong);
-  /* Far lighter than --glass-wash: the backdrop here (oval frame fill + cream page)
-     is itself near-white, so any fill above ~15% white stacks into a solid plate. */
-  background: rgb(255 255 255 / 0.12);
+  /* These pills overhang the portrait, so their backdrop is not uniform: the outer half
+     sits on near-white cream, the inner half on the portrait itself - which is dark hair
+     and a black blazer. A ~12% white fill was legible over the cream but let the dark
+     half of the portrait bleed through and swallow the label text, so the fill is heavy
+     enough to hold contrast over black while still reading as frosted glass over the
+     cream (the oval's border line and the portrait's edge still show through). */
+  background: rgb(255 255 255 / 0.62);
   box-shadow: 0 0.75rem 1.75rem rgb(var(--shadow-rgb) / 0.16);
   /* Unprefixed only - the build adds the -webkit- alias for targets that need it, and
-     hand-writing both makes it drop the standard property (so the blur never lands).
-     Blur kept very light on purpose: the backdrop is mostly featureless cream, and the
-     few details that prove the pill is see-through (the oval's border line, the
-     portrait's arm) survive only a small radius - anything heavier smears them into a
-     flat wash that reads as an opaque plate. */
-  backdrop-filter: blur(3px) saturate(140%);
+     hand-writing both makes it drop the standard property (so the blur never lands). */
+  backdrop-filter: blur(7px) saturate(140%);
 }
 
 /* Hero name shine - decorative sweep layered over the typed name; runs after typing

@@ -1,57 +1,87 @@
-# Portfolio Rebrand: Task Breakdown
+# Portfolio Rebrand: Shani Penkar → Maayan Pony
 
-## 0. Prerequisites
-- [ ] Get the new person's approval/sign-off to reuse this codebase (per AGENTS.md confidentiality rules, any Check-Point-specific experience entries must NOT carry over unless independently reviewed for the new person).
-- [ ] Collect source materials from the new person: bio, headshot, resume PDF, LinkedIn URL, project list, course/certificate list, employer logos (with usage rights), contact details.
+Status of the rebrand of this codebase from its original owner to **Maayan Pony**
+(Electrical & Electronics Engineering B.Sc. student, HIT). Source of truth for all published
+content is the CV at `public/resume.pdf`.
 
-## 1. Identity & Metadata
-- [ ] `package.json` → rename `"name": "noam-pony-portfolio"` to new slug.
-- [ ] `app/layout.tsx` → update `<title>`, `metadata.title/description`, OpenGraph `title/description`, `metadataBase` URL.
-- [ ] `components/seo/StructuredData.tsx` → update JSON-LD (`Person` name, jobTitle, url, sameAs links).
-- [ ] `app/` favicon/OG image assets → replace with new person's branding (or generic placeholder if none supplied).
-- [ ] `README.md` → update project title/description if it references Noam.
+## 1. Identity & Metadata — done
 
-## 2. Content Data Layer (`lib/content/data/`)
-- [ ] `profile.ts` - name, title/role, location, bio/tagline, social links (LinkedIn - strip tracking params).
-- [ ] `about.ts` - bio copy, highlights/stats.
-- [ ] `experience.ts` - replace each entry; re-apply the `confidentialityReviewed` gate per new employer's rules - do not flip to `true` without explicit sign-off.
-- [ ] `resume.ts` - update any resume-related copy/labels.
-- [ ] `contact.ts` - email, socials, contact message copy (keep or restyle the "Let's Work Together!" line as the new person prefers).
-- [ ] `businessCard.ts` - name, title, contact details for the business-card component (Phase 14, if in use).
-- [ ] Projects data (wherever it's sourced - check `lib/content/loaders.ts`/`types.ts` for a `projects` source) - replace with new person's projects; drop the "10+" placeholder rule and use their real count or omit.
-- [ ] Courses/skills data - replace with new person's actual courses, certs, and tech stack; recompute counts (don't hardcode "35 courses" or "18+ technologies" unless true for the new person).
-- [ ] `lib/content/types.ts` / `validate.ts` - sanity-check schema still fits new data shape (should be unchanged if data conforms).
+- [x] `package.json` name → `maayan-portfolio`
+- [x] `app/layout.tsx` → title, description, OpenGraph, Twitter, `siteName`
+- [x] `components/seo/StructuredData.tsx` → JSON-LD `Person` / `WebSite`
+- [x] `app/icon.svg` favicon + `public/site-logo-mark.svg` → new "MP" monogram
+      (the old `SP` PNGs are deleted; `Logo.tsx` renders the SVG via a plain `<img>`
+      because `next/image` rejects SVG sources by default)
+- [x] `app/opengraph-image.jpg` / `app/twitter-image.jpg` + their `.alt.txt` files regenerated
+- [x] `README.md`, `AGENTS.md`, `CLAUDE.md`
 
-## 3. Static Assets (`public/`)
-- [ ] `profile.png` - new headshot.
-- [ ] `resume.pdf` - new resume (privacy-review before committing, per AGENTS.md).
-- [ ] `contact-avatar.png` - new avatar image.
-- [ ] `logo.png` / `logo-mark.png` - new personal logo/wordmark (or generic monogram).
-- [ ] `certificates/*.pdf` - replace `noam-pony-*` files with new person's certificates (or remove section if none).
-- [ ] `courses/*.png|webp` - replace/prune to match new person's actual courses.
-- [ ] `logos/*` - replace employer/institution logos (`check-point.svg`, `academic-college-tel-aviv-yaffo.svg`, etc.) with the new person's actual employers/schools, respecting logo usage rights.
-- [ ] `images/projects/*` - replace with new project screenshots/covers.
+## 2. Content data layer (`lib/content/data/`) — done
 
-## 4. Component-Level Text Checks
-- [ ] `components/sections/Hero.tsx` / `HeroContent.tsx` - verify no hardcoded name/copy outside the content layer.
-- [ ] `components/sections/Contact.tsx`, `ResumeViewer.tsx`, `FloatingCode.tsx` - check for hardcoded strings (e.g. floating code snippets, easter eggs) referencing Noam/Check Point.
-- [ ] `components/layout/Navbar.tsx`, `MobileNav.tsx`, `Footer.tsx`, `Logo.tsx` - verify site name/initials/footer copyright pull from content layer, not hardcoded.
-- [ ] `components/ui/ExperienceLedger.tsx`, `components/business-card/FloatingCard.tsx` - confirm purely data-driven (no hardcoded name).
-- [ ] Grep for stray literals: `grep -rniE "noam|pony|checkpoint|check point|linkedin.com/in/noam" app components lib --include="*.tsx" --include="*.ts"`.
+- [x] `profile.ts` — name, title, hero copy, location, main fields
+- [x] `about.ts` — professional summary, HIT B.Sc., Ein-Kerem High School
+- [x] `experience.ts` — HIT Electro-Optics Lab research assistantship, IAF service
+- [x] `contact.ts` — email, LinkedIn, phone (owner-confirmed for publication), location
+- [x] `projects.ts` — Capstone, Microcontrollers Lab, Semiconductors Lab
+- [x] `skills.ts` — Programming & Tools / Lab & Instrumentation / Engineering Knowledge / Soft Skills
+- [x] `impact.ts` — repurposed to **Volunteering & Community** (5 CV entries)
+- [x] `businessCard.ts` — tagline
+- [x] `resume.ts` — already pointed at the new CV
+- [x] `courses.ts` + `learning-paths.ts` — **deleted** (previous owner's 35 Udemy courses;
+      the homepage never rendered them)
 
-## 5. Domain / Deploy Config
-- [ ] Update `siteUrl` / canonical domain used in metadata (Vercel project + custom domain, if any).
-- [ ] Update Vercel project name/env vars if this becomes a separate deployment rather than a repo fork.
-- [ ] `.idea` / editor config - no action needed (local only, not shipped).
+## 3. Model / validator changes — done
 
-## 6. Non-Negotiable Rules to Re-Verify for the New Person
-- [ ] Location field, years-of-experience start date, stats counts (courses/certs/projects/technologies) are all real numbers for the new person - no placeholders.
-- [ ] Any work experience entries are confidentiality-reviewed for their actual employer before publishing.
-- [ ] Resume PDF privacy-reviewed.
-- [ ] All external links (`target="_blank"` + `rel="noopener noreferrer"`) still resolve for the new URLs.
+- [x] `technologiesCountLabel` / `coursesCountLabel` made optional, and the hardcoded
+      `"35"` / `"18+"` pins removed from `validateAboutStats`
+- [x] `AboutEducation.degreeCertificate` made optional; the ledger renders no action row when
+      an entry has no certificate, instead of a trigger that opens an empty viewer
+- [x] `build-validation.ts` — course assertion dropped, impact-count assertion relaxed from
+      "exactly 9" to a 3–9 range
+- [x] `buildExperienceLedger` — roles and education now sort into **one** reverse-chronological
+      stream. Previously education was always appended last, which put the ongoing 2022 degree
+      *below* the 2019–2021 army entry while the row numbers claimed oldest-at-bottom.
 
-## 7. Verification (Definition of Done)
-- [ ] `pnpm build`, `pnpm lint`, `pnpm type-check` all pass.
-- [ ] Manual browser check: no leftover "Noam Pony" / Check Point references anywhere (Hero, About, Experience, Contact, footer, page `<title>`, OG preview).
-- [ ] Responsive check at mobile/tablet/desktop.
-- [ ] No broken links, no console errors, a11y baseline intact.
+## 4. Static assets — done
+
+- [x] `profile.png` + `contact-avatar.png` → new headshot (was `Subject.png`, now removed)
+- [x] `public/certificates/` — deleted (previous owner's degree / Dean's List / bootcamp PDFs)
+- [x] `public/courses/` — deleted (29 course cover images)
+- [x] `public/logos/` — deleted (Kiloma + Academic College of Tel Aviv-Yaffo)
+- [x] `public/images/` — deleted, including `card-bg.png`, which was a screenshot of one of
+      the previous owner's apps and was rendering behind every project card
+
+## 5. Component copy — done
+
+- [x] Hero: rotating subtitle + the three profile tags (GPA 95 / Lab Research Assistant /
+      B.Sc), which are now static CV facts rather than a clock-derived "years of experience"
+- [x] Hero tag glass fill raised so the labels stay legible where the pills overhang the
+      (much darker) new portrait
+- [x] Experience intro lead · Projects heading + lead · Skills lead and category layout
+- [x] `Impact` section → `Volunteering & Community`, including the `#impact` → `#volunteering`
+      anchor and the nav label
+
+## 6. Outstanding
+
+- [ ] **Confirm the army entry may name the Patriot unit publicly.** It reproduces the CV's
+      own wording and carries no operational detail, but it is the one entry worth a second
+      look before the site goes live.
+- [ ] **Confirm the capstone partner (Animal Health Technology Labs) may be named**, and
+      decide how much of the project to describe once it is further along.
+- [ ] **Privacy-review `public/resume.pdf`** — it is served publicly and contains the phone
+      number and personal email.
+- [ ] Institution logos: HIT and Ein-Kerem currently fall back to initials markers
+      (`HIT`, `EKH`). Drop licence-cleared SVGs into `public/logos/` and set
+      `institutionLogo` in `about.ts` to use real logos.
+- [ ] Certificates: no PDFs are wired. Add any (degree, Excellent Soldier) to
+      `public/certificates/` and reference them from `about.ts` / `experience.ts`.
+- [ ] Project artwork: cards render on plain glass. Add images under
+      `public/images/projects/` and register them in `PROJECT_BACKGROUNDS`.
+- [ ] Deploy config: set `NEXT_PUBLIC_SITE_URL` (or attach the domain in Vercel) so canonical
+      URLs and OG image URLs resolve to production rather than `localhost`.
+
+## 7. Verification
+
+- [x] `pnpm build`, `pnpm lint`, `pnpm type-check` all pass
+- [x] No browser console errors
+- [x] Rendered content checked against the CV at desktop (1280) and mobile (390)
+- [x] `grep -rniE "shani|penkar|kiloma"` over `app/ components/ lib/ public/` is clean

@@ -211,11 +211,11 @@ export function validateProfile(data: unknown): Profile {
       `${path}.yearsExperienceStartDate`,
     ),
     projectsCountLabel: assertOptionalString(raw.projectsCountLabel, `${path}.projectsCountLabel`),
-    technologiesCountLabel: assertRequiredString(
+    technologiesCountLabel: assertOptionalString(
       raw.technologiesCountLabel,
       `${path}.technologiesCountLabel`,
     ),
-    coursesCountLabel: assertRequiredString(raw.coursesCountLabel, `${path}.coursesCountLabel`),
+    coursesCountLabel: assertOptionalString(raw.coursesCountLabel, `${path}.coursesCountLabel`),
     certificatesCountLabel: assertOptionalString(
       raw.certificatesCountLabel,
       `${path}.certificatesCountLabel`,
@@ -230,8 +230,8 @@ function validateAboutStats(value: unknown, path: string): AboutStats {
     raw.yearsExperienceCountLabel,
     `${path}.yearsExperienceCountLabel`,
   );
-  const coursesCountLabel = assertRequiredString(raw.coursesCountLabel, `${path}.coursesCountLabel`);
-  const technologiesCountLabel = assertRequiredString(
+  const coursesCountLabel = assertOptionalString(raw.coursesCountLabel, `${path}.coursesCountLabel`);
+  const technologiesCountLabel = assertOptionalString(
     raw.technologiesCountLabel,
     `${path}.technologiesCountLabel`,
   );
@@ -241,15 +241,6 @@ function validateAboutStats(value: unknown, path: string): AboutStats {
     `${path}.certificatesCountLabel`,
   );
 
-  if (coursesCountLabel !== "35") {
-    throw new ContentValidationError(`${path}.coursesCountLabel`, "must remain 35 per C3 rules");
-  }
-  if (technologiesCountLabel !== "18+") {
-    throw new ContentValidationError(
-      `${path}.technologiesCountLabel`,
-      "must remain 18+ per spec §8.2",
-    );
-  }
   for (const [key, label] of Object.entries({
     yearsExperienceCountLabel,
     coursesCountLabel,
@@ -297,10 +288,10 @@ function validateAboutEducation(value: unknown, path: string): AboutEducation {
     institutionLogo: assertOptionalString(raw.institutionLogo, `${path}.institutionLogo`),
     summary: assertRequiredString(raw.summary, `${path}.summary`),
     honor,
-    degreeCertificate: validateEducationCertificateRef(
-      raw.degreeCertificate,
-      `${path}.degreeCertificate`,
-    ),
+    degreeCertificate:
+      raw.degreeCertificate === undefined
+        ? undefined
+        : validateEducationCertificateRef(raw.degreeCertificate, `${path}.degreeCertificate`),
     honorCertificate:
       raw.honorCertificate === undefined
         ? undefined

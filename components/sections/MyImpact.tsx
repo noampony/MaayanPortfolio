@@ -10,13 +10,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { easeOut, staggerContainerVariants } from "@/lib/motion";
 
 /**
- * My Impact section (spec §8.2) - replaces the former About section. Every career
- * impact from the validated content model is rendered as a card inside a Circular
+ * Volunteering & Community section - replaces the former About section. Every
+ * volunteering entry from the validated content model is rendered as a card inside a Circular
  * Gallery (React Bits "Circular Gallery" style, implemented locally): cards fan out
  * along a 3D arc, the centre card upright and fully readable, the rest rotated and
  * dimmed but still present.
  *
- * Carousel behaviour (spec §8.2, Task 5.3): the gallery auto-advances every 5s,
+ * Carousel behaviour: the gallery auto-advances every 5s,
  * pausing while the carousel is hovered or has keyboard focus, and only once the
  * gallery has actually scrolled into view (so a slow scroll to the section never
  * "steals" the first card before the visitor has seen it); prev/next buttons,
@@ -28,7 +28,7 @@ import { easeOut, staggerContainerVariants } from "@/lib/motion";
 /** Number of cards shown on each side of the centre before a slide fades out. */
 const VISIBLE_SIDE = 2;
 
-/** Extra side card shown once the viewport is wide enough to fit it (spec §8.2). */
+/** Extra side card shown once the viewport is wide enough to fit it. */
 const VISIBLE_SIDE_WIDE = 3;
 
 /** Minimum viewport width (px) at which the wider, 7-card arc is used. */
@@ -39,7 +39,7 @@ const WIDE_LAYOUT_QUERY = "(min-width: 1440px)";
  *  the scale/rotation shrink applied at each depth (indexed by `abs`). */
 const STEP_MULTIPLIERS = [0, 1, 1.65, 2.15];
 
-/** Autoplay interval, per spec §8.2. */
+/** Autoplay interval. */
 const AUTOPLAY_MS = 5000;
 
 /** Minimum horizontal wheel delta to count as an intentional navigation gesture. */
@@ -183,8 +183,8 @@ export function MyImpact() {
 
   return (
     <section
-      id="impact"
-      aria-labelledby="impact-heading"
+      id="volunteering"
+      aria-labelledby="volunteering-heading"
       className="impact-section relative isolate overflow-hidden bg-bg-base py-16 lg:py-24"
     >
       <SectionBackground />
@@ -198,10 +198,10 @@ export function MyImpact() {
           variants={staggerContainerVariants}
         >
           <SectionHeading
-            headingId="impact-heading"
-            title="My Impact"
+            headingId="volunteering-heading"
+            title="Volunteering & Community"
             lead={
-              <>Work I&apos;m proud of from across my career - and what each piece changed.</>
+              <>Where I give my time outside the lecture hall - and what each one is for.</>
             }
           />
         </motion.div>
@@ -223,7 +223,7 @@ export function MyImpact() {
             type="button"
             className="impact-gallery-arrow impact-gallery-arrow--prev"
             onClick={goPrev}
-            aria-label="Show previous impact card"
+            aria-label="Show previous volunteering card"
           >
             <ArrowGlyph direction="left" />
           </button>
@@ -232,7 +232,7 @@ export function MyImpact() {
             ref={trackRef}
             className="impact-gallery-track"
             role="list"
-            aria-label="Career impact highlights"
+            aria-label="Volunteering and community highlights"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -262,7 +262,7 @@ export function MyImpact() {
                 >
                   <ImpactCard
                     impact={impact}
-                    headingId={`${baseId}-impact-${index}`}
+                    headingId={`${baseId}-volunteering-${index}`}
                     active={isActive}
                     onActivate={() => goTo(index)}
                   />
@@ -275,7 +275,7 @@ export function MyImpact() {
             type="button"
             className="impact-gallery-arrow impact-gallery-arrow--next"
             onClick={goNext}
-            aria-label="Show next impact card"
+            aria-label="Show next volunteering card"
           >
             <ArrowGlyph direction="right" />
           </button>

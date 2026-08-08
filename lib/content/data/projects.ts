@@ -1,20 +1,20 @@
 /**
- * Projects content (spec §8.4, §11.3) - used by the Projects Preview section.
+ * Projects & Labs content - used by the Projects section.
  *
- * Confidentiality (spec §15.4, Dependency Rule 9): all projects are
- * owner-approved for publication (`confidentialityReviewed: true`). The three Check
- * Point projects are published in generalized, public-safe form (owner sign-off):
- * the company is named per §15.3; scale is stated generically ("billions of events
- * weekly", not an exact non-public figure) to match the approved Experience wording;
- * internal processing mechanics are softened. The volunteer Students Tracking System
- * uses generalized language only - no sensitive teenager / health / risk-evaluation
- * detail (§8.4 privacy note). The portfolio website is a personal project with fully
- * public content (no workplace, no confidential material).
+ * Sourced from the owner's CV ("Maayan Pony - CV" → Projects & Labs). All three are
+ * academic work at HIT and carry no confidential material, so each is marked
+ * `confidentialityReviewed: true`.
  *
- * Still TBD (listed, not invented):
- * - Project years (§19.6) - `year` omitted everywhere.
- * - Final project categories (§19.6) - `category` omitted everywhere.
- * - Students Tracking System customer focus (§8.4) - `customerFocus` omitted for it.
+ * The CV gives one line per entry. The copy below expands that line into the fields the
+ * card needs without adding facts the CV does not state - no results, no grades, and no
+ * tooling that is not either named in the CV entry itself or in its Technical Skills list.
+ *
+ * ⚠️ The capstone is explicitly in progress. Its scope, partner deliverables and results
+ * are deliberately not described beyond what the CV states; revisit once the owner confirms
+ * what can be published (the partner, Animal Health Technology Labs, is named on the CV).
+ *
+ * Still absent by design: project years (`year`) and categories (`category`) are omitted
+ * everywhere rather than invented.
  */
 
 import type { Project } from "../types";
@@ -22,83 +22,48 @@ import { validateProjectList } from "../validate";
 
 const projectData = [
   {
-    // Sourced from the owner's CV ("Shani Penkar - CV" → Technical Projects). Published
-    // because the CV is the owner's own outward-facing document; wording stays within what
-    // the CV already states publicly.
-    name: "Strategic Meeting Platform",
-    role: "Key Developer",
-    workplace: { name: "Kiloma LTD", logo: "/logos/kiloma.svg", showName: true },
+    name: "Capstone Engineering Project",
+    role: "Student Engineer",
     shortDescription:
-      "A platform for managing strategic meetings that senior management follows closely - built with Next.js and Azure SQL.",
+      "My final engineering project, carried out in collaboration with Animal Health Technology Labs. In progress.",
     problemSolved:
-      "Customers needed a system for managing and tracking these meetings. I built one platform to handle it all: approvals, agenda planning, task tracking, and meeting summaries.",
-    solution:
-      "Dashboards give an easy overview of meetings and their status, the system reuses data across meetings so people don't re-enter the same information twice, and automatic email notifications remind people about follow-up tasks and actions.",
-    techStack: [
-      "Next.js",
-      "Node.js",
-      "TypeScript",
-      "Azure SQL Database",
-      "REST APIs",
-      "Figma",
-      "System Design",
-      "Storybook",
-    ],
-    customerFocus:
-      "Planned and implemented the platform while communicating with customers, ran demos with them, gathered feedback, and then improved the product based on it.",
+      "The capstone is the degree's end-to-end engineering exercise: an industry-partnered problem taken from definition through to a working result, with a real partner's constraints rather than a textbook's.",
     whyImportant:
-      "I owned the project from start to finish - technical specification, UI/UX design in Figma, system architecture, full-stack implementation, and deployment.",
+      "It is the piece of the degree that most resembles industry work - an external partner, a moving target, and a result that has to hold up outside the lab.",
+    techStack: ["Engineering Design", "Industry Collaboration"],
     confidentialityReviewed: true,
   },
   {
-    // Sourced from the owner's CV ("Shani Penkar - CV" → Technical Projects). See the note
-    // on the project above for the publication rationale.
-    name: "Contract Management System",
-    role: "Key Developer",
-    workplace: { name: "Kiloma LTD", logo: "/logos/kiloma.svg", showName: true },
+    name: "Microcontrollers Lab",
+    role: "Student Engineer",
     shortDescription:
-      "A web app for tracking and managing contracts - built with Next.js, Node.js, React, and TypeScript.",
+      "Embedded systems designed, programmed in C, and tested on real hardware in the HIT Microcontrollers Lab.",
     problemSolved:
-      "Customers needed a system for managing their contracts. I built one platform to handle it all: budget usage tracking, expiration tracking, contract filtering, notifications, and favorites.",
+      "The lab asks for working embedded systems rather than paper designs. Each one had to be programmed in C, brought up on real hardware, and tested until it behaved to spec.",
     solution:
-      "I defined the system architecture and designed the UX/UI in Figma together with the customers, then added custom notifications and automatic background emails - sent over SMTP - so people stay updated on contract changes.",
-    techStack: [
-      "Next.js",
-      "Node.js",
-      "React",
-      "TypeScript",
-      "MSSQL",
-      "SMTP",
-      "Figma",
-      "System Design",
-    ],
-    customerFocus:
-      "Worked directly with managerial-level customers to plan the system and design the UX/UI in Figma, shaping it around how they manage contracts.",
+      "Designed the system, wrote the firmware in C, then debugged it against the hardware itself - where the gap between what the design says and what the board does is the whole exercise.",
+    techStack: ["C", "Microcontrollers", "Embedded Systems", "Hardware Testing"],
     whyImportant:
-      "Built end to end with the customers who use it - from architecture and design through to a system that keeps them automatically updated.",
+      "This is where circuit theory and digital design stop being coursework and start being something that runs.",
     confidentialityReviewed: true,
   },
   {
-    // §8.4 Project 6 - personal; this very website. No workplace, fully public content.
-    name: "Developer Portfolio Website",
-    role: "Solo Developer",
+    name: "Semiconductors Lab",
+    role: "Student Engineer",
     shortDescription:
-      "The site you're reading right now - my portfolio and online CV, with a custom look and subtle animations.",
+      "Characterization of diodes and transistors, with I-V curves extracted from measurement.",
     problemSolved:
-      "I wanted one home for my CV, experience, and projects - built with real engineering care, not a generic template.",
+      "Datasheet values only go so far. The lab required measuring real devices, extracting their I-V characteristics directly, and reconciling the measurements with the device physics behind them.",
     solution:
-      "Built from scratch with Next.js. All content lives in typed, validated data files, the UI is a small reusable design system, and every animation respects reduced-motion preferences.",
+      "Built the measurement setups, swept the devices, extracted the I-V curves, and analyzed the results against the expected semiconductor behaviour.",
     techStack: [
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Framer Motion",
-      "shadcn/ui",
-      "Vercel",
-      "AI Development",
+      "Semiconductor Devices",
+      "I-V Characterization",
+      "Lab Instrumentation",
+      "Data Analysis",
     ],
     whyImportant:
-      "As a backend developer, building the entire frontend myself - design, animations, accessibility, performance - pushed me far outside my comfort zone and shows full-stack range.",
+      "Device characterization is the groundwork for the Microelectronics and Electro-Optics specialization I chose.",
     confidentialityReviewed: true,
   },
 ] as const;

@@ -7,7 +7,6 @@ import { CountUp } from "@/components/ui/CountUp";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { TypewriterRotator } from "@/components/ui/TypewriterRotator";
 import { profile } from "@/lib/content/data/profile";
-import { about } from "@/lib/content/data/about";
 import { cn } from "@/lib/utils";
 import { useResumeViewer } from "@/components/providers/ResumeViewerProvider";
 
@@ -18,61 +17,49 @@ const TYPEWRITER_CHAR_MS = 88;
 const heroTextLines = profile.heroText.split("\n").filter(Boolean);
 
 // Rotating typewriter subtitle rendered under the role title (Hero, §7.3).
-// Derived from the owner's CV (About Me, Experience, Skills) - no invented claims.
+// Derived from the owner's CV (About Me, Experience, Technical Skills) - no invented claims.
 const heroRoles = [
-  "Node.js & Next.js Developer",
-  "React & TypeScript",
-  "Full Development Lifecycle",
-  "System Design & UI/UX",
-  "Customer-Focused Solutions",
-  "Strong Attention to Detail",
+  "Electro-Optics & Microelectronics",
+  "Research Assistant at HIT",
+  "Optical Setups & Photonics",
+  "Semiconductors & Signal Processing",
+  "Matlab, Python & C",
+  "Hands-On Lab Experience",
   "Continuous Self-Learner",
 ] as const;
-
-function yearsExperienceSince(startDate: string): number {
-  const [startYear, startMonth] = startDate.split("-").map(Number);
-  if (!startYear || !startMonth) return 0;
-  const now = new Date();
-  const delta = now.getFullYear() - startYear;
-  return Math.max(0, now.getMonth() + 1 >= startMonth ? delta : delta - 1);
-}
-
-const yearsOfExperience = yearsExperienceSince(profile.yearsExperienceStartDate);
 
 /**
  * Floating tags pinned to the left edge of the profile-frame ellipse. They pop in
  * bottom-to-top, one second apart, each reusing the original experience-tag
  * spring + float treatment.
+ *
+ * All three are CV facts: the degree GPA, the current lab role, and the degree itself.
+ * Nothing here is derived from a clock, so nothing goes stale between builds.
  */
 const profileTags = [
   {
-    key: "experience",
-    ariaLabel: `${yearsOfExperience}+ years of experience`,
-    value: `${yearsOfExperience}+`,
-    numericValue: yearsOfExperience,
-    lines: ["Years of", "Experience"],
+    key: "gpa",
+    ariaLabel: "GPA 95 at HIT",
+    numericValue: 95,
+    lines: ["GPA", "at HIT"],
     positionClasses:
       "-top-1 -left-6 sm:-top-[4.6px] sm:-left-[28px] min-[850px]:-top-3 min-[850px]:-left-10",
     appearDelay: 3.15,
   },
   {
-    key: "deans-list",
-    ariaLabel: about.education.honor,
-    value: "Dean's",
-    // Shorter value word than the other tags' ("3+", "B.Sc"), so it gets its own
-    // smaller font-size scale to keep it from overflowing the pill (see the
-    // valueTextClasses lookup below).
-    compactValue: true,
-    lines: ["List", "Honor"],
+    key: "lab",
+    ariaLabel: "Research Assistant, Electro-Optics Laboratory",
+    value: "Lab",
+    lines: ["Research", "Assistant"],
     positionClasses:
       "top-1/2 -translate-y-1/2 -left-12 sm:-left-[55px] min-[850px]:-left-20",
     appearDelay: 2.15,
   },
   {
     key: "degree",
-    ariaLabel: "B.Sc Computer Science Degree",
+    ariaLabel: "B.Sc Electrical and Electronics Engineering",
     value: "B.Sc",
-    lines: ["Computer", "Science", "Degree"],
+    lines: ["Electrical &", "Electronics", "Eng."],
     // Bottom offset is a touch larger than the top tag's (rather than the same
     // -1/-2/-3 value) because this tag wraps onto 3 lines and is taller, so a
     // matching edge offset would pull its center closer to the middle tag than
@@ -230,8 +217,8 @@ export function HeroContent({ initials }: HeroContentProps) {
     "min-[850px]:mx-0 min-[850px]:h-auto min-[850px]:max-h-[25rem] min-[850px]:w-auto lg:max-h-[27rem]"
   );
 
-  // Framed-portrait sizing. The frame box is a touch wider than the portrait's own
-  // aspect (819×1310 ≈ 5/8) so the body sits inside the oval without being clipped.
+  // Framed-portrait sizing. The frame box matches the portrait's own aspect
+  // (895×1241 ≈ 5/7) so the body sits inside the oval without being clipped.
   // The portrait itself is cropped head-to-hip and horizontally centred on the
   // subject's optical centre (head + torso, not the hair-inclusive bounding box),
   // so the figure reads as centred in the ellipse.
@@ -432,8 +419,8 @@ export function HeroContent({ initials }: HeroContentProps) {
             <Image
               src={profile.profileImage}
               alt={`${profile.name} profile`}
-              width={819}
-              height={1310}
+              width={895}
+              height={1241}
               priority
               sizes="(min-width: 1024px) 20rem, (min-width: 850px) 18.6rem, (min-width: 640px) 11.5rem, 10rem"
               className="absolute inset-0 h-full w-full object-contain"
@@ -480,24 +467,16 @@ export function HeroContent({ initials }: HeroContentProps) {
                       "rounded-full",
                       // Glass material + accent hairline edge (see .hero-profile-tag).
                       "hero-profile-tag",
-                      "compactValue" in tag
-                        ? "gap-0 px-2.5 py-3 sm:px-3 sm:py-3.5 min-[850px]:px-4 min-[850px]:py-6"
-                        : "gap-1 px-2.5 py-3 sm:gap-1 sm:px-3 sm:py-3.5 min-[850px]:gap-1.5 min-[850px]:px-4 min-[850px]:py-6"
+                      "gap-1 px-2.5 py-3 sm:gap-1 sm:px-3 sm:py-3.5 min-[850px]:gap-1.5 min-[850px]:px-4 min-[850px]:py-6"
                     )}
                   >
                     <span
                       aria-hidden="true"
-                      className={cn(
-                        "font-bold leading-none text-accent",
-                        "compactValue" in tag
-                          ? "text-[11px] sm:text-xs min-[850px]:text-lg"
-                          : "text-sm sm:text-base min-[850px]:text-3xl"
-                      )}
+                      className="font-bold leading-none text-accent text-sm sm:text-base min-[850px]:text-3xl"
                     >
                       {"numericValue" in tag ? (
                         <CountUp
                           value={tag.numericValue}
-                          suffix="+"
                           start={contentRevealed}
                           delay={tag.appearDelay + 0.1}
                         />
@@ -507,16 +486,10 @@ export function HeroContent({ initials }: HeroContentProps) {
                     </span>
                     <span
                       className={cn(
-                        "text-center",
-                        "compactValue" in tag
-                          ? "leading-none text-[11px] sm:text-xs min-[850px]:text-lg font-bold text-accent"
-                          : cn(
-                              "leading-tight",
-                              "font-medium text-text-secondary",
-                              tag.lines.length > 2
-                                ? "text-[6px] sm:text-[7px] min-[850px]:text-[10px]"
-                                : "text-[7px] sm:text-[8px] min-[850px]:text-[11px]",
-                            ),
+                        "text-center leading-tight font-medium text-text-secondary",
+                        tag.lines.length > 2
+                          ? "text-[6px] sm:text-[7px] min-[850px]:text-[10px]"
+                          : "text-[7px] sm:text-[8px] min-[850px]:text-[11px]",
                       )}
                     >
                       {tag.lines.map((line, index) => (

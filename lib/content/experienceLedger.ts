@@ -67,12 +67,12 @@ export type LedgerEducationEntry = LedgerEntryBase & {
 
 export type LedgerEntry = LedgerRoleEntry | LedgerEducationEntry;
 
-/** Words that carry no signal in an initials marker ("The Academic College of ..." → "AC"). */
+/** Words that carry no signal in an initials marker ("Holon Institute of Technology" → "HIT"). */
 const MARKER_STOP_WORDS = new Set(["a", "and", "at", "for", "of", "the"]);
 
 /**
  * Ticker-style initials for a rail marker - the first letters of up to three significant
- * words, e.g. `Kiloma Advanced Solutions` → `KAS`. Only used when the entry has no logo.
+ * words, e.g. `Holon Institute of Technology` → `HIT`. Only used when the entry has no logo.
  */
 export function organizationMarker(name: string): string {
   const initials = name
@@ -91,23 +91,32 @@ function isOngoing(endDate?: ExperienceEndDate): boolean {
  * Build the ledger entries from the (already filtered + duration-resolved) experiences
  * and the education entries.
  *
- * Roles come in the order handed in - the server passes most-recent-first - with each
- * experience immediately followed by its earlier roles at the same organisation. The
- * education entries are appended last, sorted newest-first by their own start year, so
- * they read as the foot of the story rather than being interleaved with the roles. Any
- * number of entries renders; there is no required shape.
+ * Everything - roles and education alike - is ordered newest-first by start date, in one
+ * stream. The ledger numbers its rows `01` at the bottom counting up, so that number is a
+ * claim about chronology: parking education at the foot regardless of date would make an
+ * ongoing degree render *below* a role that ended years earlier, numbered as if it were
+ * older. One chronological stream keeps the numbering honest.
+ *
+ * A role's earlier roles at the same organisation (`previousRoles`) stay welded to it: the
+ * whole organisation is sorted as one group, so a promotion always reads as a progression
+ * directly under the role it led to rather than being split apart by an unrelated entry.
+ *
+ * Any number of entries renders; there is no required shape.
  */
 export function buildExperienceLedger(
   resolved: readonly ResolvedExperience[],
   education: readonly AboutEducation[],
 ): LedgerEntry[] {
-  const entries: LedgerEntry[] = [];
+  /** One sortable unit: a role (plus its earlier roles) or a single education entry. */
+  type LedgerGroup = { sortKey: string; entries: LedgerEntry[] };
+  const groups: LedgerGroup[] = [];
 
   for (const { experience, duration } of resolved) {
     const marker = {
       markerLabel: organizationMarker(experience.organization),
       markerLogo: experience.organizationLogo,
     };
+    const entries: LedgerEntry[] = [];
 
     entries.push({
       kind: "role",
@@ -147,22 +156,33 @@ export function buildExperienceLedger(
         isCurrent: isOngoing(previous.endDate),
       });
     }
+
+    groups.push({ sortKey: experience.startDate, entries });
   }
 
-  const educationNewestFirst = [...education].sort(
-    (a, b) => (firstYear(b.dateRange) ?? 0) - (firstYear(a.dateRange) ?? 0),
-  );
-  for (const entry of educationNewestFirst) {
-    entries.push({
-      kind: "education",
-      id: `education-${entry.institution}-${entry.degree}`,
-      markerLabel: organizationMarker(entry.institution),
-      markerLogo: entry.institutionLogo,
-      education: entry,
+  for (const entry of education) {
+    groups.push({
+      // Education `dateRange` is free-form ("Oct 2022 - present", "2015 - 2018"), so only its
+      // first year is reliable. Anchoring at January sorts it against roles at year
+      // granularity, which is as precise as the source allows.
+      sortKey: `${firstYear(entry.dateRange) ?? 0}-01`,
+      entries: [
+        {
+          kind: "education",
+          id: `education-${entry.institution}-${entry.degree}`,
+          markerLabel: organizationMarker(entry.institution),
+          markerLogo: entry.institutionLogo,
+          education: entry,
+        },
+      ],
     });
   }
 
-  return entries;
+  // Newest first. `sort` is stable, so same-start entries keep the order they were handed in
+  // (roles before education), rather than shuffling between builds.
+  groups.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
+
+  return groups.flatMap((group) => group.entries);
 }
 
 /** First 4-digit year in a free-form date string (`2019 - 2023` → 2019). */
