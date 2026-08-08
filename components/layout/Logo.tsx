@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
  * Site logo: the "MP" code-brackets monogram beside the owner's wordmark
  * (`profile.name`, so it can't drift from the content layer).
  *
- * The mark (`/public/site-logo-mark.svg`) carries its own rose/plum/gold gradient, so it is
+ * The mark (`/public/site-logo-mark.svg`) carries its own orange/rust/gold gradient, so it is
  * rendered directly rather than through the CSS-mask technique used for a single-hue glyph.
  * It goes through a plain `<img>` rather than `next/image`: the source is an SVG, and the
  * image optimizer rejects SVG unless `dangerouslyAllowSVG` is enabled - which is not worth

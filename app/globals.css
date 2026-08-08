@@ -10,28 +10,31 @@
 
 :root {
   color-scheme: light;
-  --bg-base: #FAF5EF;
-  --bg-surface: #FFFCF8;
+  --bg-base: #FFF6EC;
+  --bg-surface: #FFFBF6;
   --bg-surface-raised: #FFFFFF;
-  --border: #E3D9CD;
-  --text-primary: #171310;
-  --text-secondary: #574F4A;
-  --text-muted: #75695F;
-  /* Deep enough that accent-coloured text still clears AA when it sits on an
-     accent-tinted fill (the nav Resume CTA, the "current role" pill, the viewer action
-     links), not just on the bare page. `--accent-hover` goes darker, not lighter: on a
-     light surface, deeper reads as "pressed/active". */
-  --accent: #9C4468;
-  --accent-hover: #82334F;
+  --border: #F0DCC6;
+  --text-primary: #1A120B;
+  --text-secondary: #574A3E;
+  --text-muted: #766050;
+  /* Burnt orange, deep enough that accent-coloured text still clears AA when it sits on
+     an accent-tinted fill (the nav Resume CTA, the "current role" pill, the viewer action
+     links), not just on the bare page - a mid/bright orange would not (4.5:1 rules out
+     anything lighter than roughly this). `--accent-hover` goes darker, not lighter: on a
+     light surface, deeper reads as "pressed/active".
+     Contrast on --bg-base: accent 5.34:1, accent-hover 7.53:1; white on accent 5.71:1. */
+  --accent: #B4400A;
+  --accent-hover: #8F3105;
   --accent-contrast: #FFFFFF;
-  /* Display gradient (hero name, highlighted heading words, logo, bars). Runs
-     raspberry → rose → violet: saturated enough to read as colour (not grey-mauve)
-     on the cream page, warm and feminine to match the pastel washes, and every stop
-     clears 3:1 on --bg-base for the large display text it paints. */
-  --gradient-from: #C13A76;
-  --gradient-via: #D65A96;
-  --gradient-to: #8B5CF6;
-  --danger: #C93D3D;
+  /* Display gradient (hero name, highlighted heading words, logo, bars). A single-hue
+     sunset arc, deep orange → vivid orange → gold, mirroring the reference wash: the
+     bright core sits in the middle so the ends stay dark enough to read. Every stop
+     clears 3:1 on --bg-base for the large display text it paints (5.34 / 3.51 / 3.39). */
+  --gradient-from: #B4400A;
+  --gradient-via: #E0590A;
+  --gradient-to: #C97000;
+  /* Kept a true red rather than an orange-red, so error state never reads as accent. */
+  --danger: #B3211B;
 
   /* ---- Light-theme material tokens -------------------------------------------------
      The site's surfaces are "paper on cream": translucent white plates lifted off the
@@ -39,15 +42,18 @@
      tokens carry that language so every card, dialog, chip and seam is retinted from
      one place instead of from per-component literals. */
 
-  /* Soft pastel wash palette - the blurred ambient blobs behind the content. */
-  --pastel-pink: #F1C9D9;
-  --pastel-lavender: #D7C6EC;
-  --pastel-mint: #BCE3D9;
-  --pastel-peach: #F8D5AE;
+  /* Soft wash palette - the blurred ambient blobs behind the content. All one orange
+     family (pale peach → gold), separated by saturation and lightness rather than hue so
+     overlapping blobs still read as distinct shapes instead of one flat stain.
+     Decorative only: never text, never a border, so no contrast floor applies. */
+  --wash-peach: #FCDCC0;
+  --wash-apricot: #FBC79A;
+  --wash-tangerine: #F9AE79;
+  --wash-amber: #FDE2AC;
 
   /* Elevation. Warm ink, so shadows read as paper shade rather than grey haze; on a
      light page they need far lower alpha than a dark one. */
-  --shadow-rgb: 92 66 58;
+  --shadow-rgb: 104 62 34;
   /* Veil drawn over the page behind a modal / expanded card. */
   --scrim: rgb(var(--shadow-rgb) / 0.28);
 
@@ -64,14 +70,14 @@
      darker than the page, not a translucent white one). */
   --glass-edge: color-mix(in srgb, var(--accent) 20%, var(--border));
   --glass-edge-strong: color-mix(in srgb, var(--accent) 45%, var(--border));
-  /* The two hue tints layered into a plate, echoing the ambient pastels. */
+  /* The two tints layered into a plate, echoing the ambient washes. */
   --glass-tint-a: color-mix(in srgb, var(--accent) 7%, transparent);
   --glass-tint-b: color-mix(in srgb, var(--gradient-to) 6%, transparent);
   /* Small pills/chips sitting on a plate. */
   --chip-fill: color-mix(in srgb, var(--accent) 6%, transparent);
   --chip-fill-hover: color-mix(in srgb, var(--accent) 12%, transparent);
   /* Roadmap road surface + lane dashes (§8.6). */
-  --road-surface: #C8BCAE;
+  --road-surface: #D2B79B;
   --road-lane: rgb(255 255 255 / 0.85);
 
   --background: var(--bg-base);
@@ -168,7 +174,7 @@ html {
 }
 
 /* Hero name shine - decorative sweep layered over the typed name; runs after typing
-   completes (gated in JSX) and only when motion is allowed. A bright rose-white glint
+   completes (gated in JSX) and only when motion is allowed. A bright amber-white glint
    (soft tinted shoulders, near-white core) so the pass reads as light catching the
    letters rather than a shadow crossing them. */
 .hero-name-shine {
@@ -176,7 +182,7 @@ html {
     100deg,
     transparent 30%,
     color-mix(in srgb, #ffffff 55%, var(--gradient-from)) 42%,
-    #fff9fc 50%,
+    #fffaf2 50%,
     color-mix(in srgb, #ffffff 55%, var(--gradient-to)) 58%,
     transparent 70%
   );
@@ -2529,25 +2535,25 @@ main:focus-visible {
   inset: 0;
 }
 
-/* The glows paint with the pastel wash palette rather than the accent itself: on a
-   cream page a saturated tint reads as a stain, while the pastels read as the soft
-   blurred blobs the theme is built around. Light pastels need a much higher mix
-   percentage than the old dark-theme tints to be visible at all. */
+/* The glows paint with the soft wash palette rather than the accent itself: on a
+   warm cream page the saturated burnt orange reads as a stain, while the light washes
+   read as the soft blurred blobs the theme is built around. Light washes need a much
+   higher mix percentage than the old dark-theme tints to be visible at all. */
 .section-glow--split {
   background:
     radial-gradient(
       60% 46% at 88% -4%,
-      color-mix(in srgb, var(--pastel-lavender) 62%, transparent),
+      color-mix(in srgb, var(--wash-tangerine) 62%, transparent),
       transparent 34%
     ),
     radial-gradient(
       46% 42% at 6% 6%,
-      color-mix(in srgb, var(--pastel-pink) 58%, transparent),
+      color-mix(in srgb, var(--wash-apricot) 58%, transparent),
       transparent 32%
     ),
     radial-gradient(
       40% 38% at 18% 96%,
-      color-mix(in srgb, var(--pastel-mint) 45%, transparent),
+      color-mix(in srgb, var(--wash-amber) 45%, transparent),
       transparent 34%
     );
 }
@@ -2556,12 +2562,12 @@ main:focus-visible {
   background:
     radial-gradient(
       circle at 12% 18%,
-      color-mix(in srgb, var(--pastel-pink) 58%, transparent),
+      color-mix(in srgb, var(--wash-apricot) 58%, transparent),
       transparent 30%
     ),
     radial-gradient(
       circle at 8% 82%,
-      color-mix(in srgb, var(--pastel-lavender) 58%, transparent),
+      color-mix(in srgb, var(--wash-tangerine) 58%, transparent),
       transparent 32%
     );
 }
@@ -2570,12 +2576,12 @@ main:focus-visible {
   background:
     radial-gradient(
       circle at 88% 16%,
-      color-mix(in srgb, var(--pastel-peach) 55%, transparent),
+      color-mix(in srgb, var(--wash-peach) 55%, transparent),
       transparent 28%
     ),
     radial-gradient(
       circle at 90% 80%,
-      color-mix(in srgb, var(--pastel-lavender) 58%, transparent),
+      color-mix(in srgb, var(--wash-tangerine) 58%, transparent),
       transparent 30%
     );
 }
@@ -2591,12 +2597,12 @@ main:focus-visible {
   background:
     radial-gradient(
       38% 38% at 32% 30%,
-      color-mix(in srgb, var(--pastel-mint) 46%, transparent),
+      color-mix(in srgb, var(--wash-amber) 46%, transparent),
       transparent 70%
     ),
     radial-gradient(
       42% 42% at 70% 66%,
-      color-mix(in srgb, var(--pastel-peach) 46%, transparent),
+      color-mix(in srgb, var(--wash-peach) 46%, transparent),
       transparent 70%
     );
   opacity: 0.6;

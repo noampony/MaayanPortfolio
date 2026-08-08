@@ -354,7 +354,7 @@ export function HeroContent({ initials }: HeroContentProps) {
               aria-expanded={resumeOpen}
               className={cn(
                 ctaBaseClasses,
-                "w-full border border-white/10 bg-accent text-accent-contrast shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_0_0_rgba(45,212,191,0)] backdrop-blur hover:bg-accent-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.24),0_12px_28px_rgba(45,212,191,0.22)]"
+                "w-full border border-white/10 bg-accent text-accent-contrast shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_0_0_transparent] backdrop-blur hover:bg-accent-hover hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.24),0_12px_28px_color-mix(in_srgb,var(--accent)_35%,transparent)]"
               )}
             >
               {PRIMARY_CTA_LABEL}
@@ -372,7 +372,7 @@ export function HeroContent({ initials }: HeroContentProps) {
               href="#contact"
               className={cn(
                 ctaBaseClasses,
-                "w-full border border-border bg-bg-surface-raised/90 text-text-primary shadow-[0_0_0_rgba(45,212,191,0)] backdrop-blur hover:border-accent hover:bg-[color-mix(in_srgb,var(--accent)_10%,color-mix(in_srgb,var(--bg-surface-raised)_90%,transparent))] hover:text-accent hover:shadow-[0_12px_28px_rgba(45,212,191,0.14)] supports-[backdrop-filter]:bg-bg-surface-raised/75 supports-[backdrop-filter]:hover:bg-[color-mix(in_srgb,var(--accent)_10%,color-mix(in_srgb,var(--bg-surface-raised)_75%,transparent))]"
+                "w-full border border-border bg-bg-surface-raised/90 text-text-primary shadow-[0_0_0_transparent] backdrop-blur hover:border-accent hover:bg-[color-mix(in_srgb,var(--accent)_10%,color-mix(in_srgb,var(--bg-surface-raised)_90%,transparent))] hover:text-accent hover:shadow-[0_12px_28px_color-mix(in_srgb,var(--accent)_22%,transparent)] supports-[backdrop-filter]:bg-bg-surface-raised/75 supports-[backdrop-filter]:hover:bg-[color-mix(in_srgb,var(--accent)_10%,color-mix(in_srgb,var(--bg-surface-raised)_75%,transparent))]"
               )}
             >
               {SECONDARY_CTA_LABEL}
@@ -397,20 +397,29 @@ export function HeroContent({ initials }: HeroContentProps) {
              * spills outside. Fill + border fade in over the lower half only, leaving
              * the cropped head "popping out" of an unframed top.
              */}
-            {/* Glass version of the fill - same oval and gradient stop, teal accent colour. */}
+            {/* Glass version of the fill - same oval and gradient stop, accent-tinted.
+                The colours go through `style` rather than arbitrary Tailwind shadow
+                values because `color-mix()`/`rgb(... / a)` contain spaces and commas
+                that an arbitrary class can't carry. */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -z-10 rounded-[50%] border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-28px_76px_rgba(45,212,191,0.14),0_24px_70px_rgba(2,6,23,0.42)] backdrop-blur-2xl"
+              className="pointer-events-none absolute inset-0 -z-10 rounded-[50%] border backdrop-blur-2xl"
               style={{
+                borderColor: "var(--glass-edge)",
+                boxShadow:
+                  "inset 0 1px 0 var(--glass-highlight), inset 0 -28px 76px color-mix(in srgb, var(--accent) 12%, transparent), 0 24px 70px rgb(var(--shadow-rgb) / 0.18)",
                 background:
                   "linear-gradient(to bottom, transparent 30%, color-mix(in srgb, var(--accent) 30%, transparent) 70%)",
               }}
             />
-            {/* Lower-half border treatment, softened into a glass edge - teal accent colour. */}
+            {/* Lower-half border treatment, softened into a glass edge - accent-tinted. */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -z-10 rounded-[50%] border-[3px] border-[rgba(45,212,191,0.62)] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_0_34px_rgba(45,212,191,0.22)]"
+              className="pointer-events-none absolute inset-0 -z-10 rounded-[50%] border-[3px]"
               style={{
+                borderColor: "color-mix(in srgb, var(--accent) 55%, transparent)",
+                boxShadow:
+                  "inset 0 1px 0 var(--glass-highlight), 0 0 34px color-mix(in srgb, var(--accent) 22%, transparent)",
                 WebkitMaskImage:
                   "linear-gradient(to bottom, transparent 40%, #000 62%)",
                 maskImage: "linear-gradient(to bottom, transparent 40%, #000 62%)",

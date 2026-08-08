@@ -514,8 +514,8 @@ export function getSkillIcon(skillName: string): SkillIcon | null {
 /** Warm near-black for brands whose official mark is pure black (Next.js,
  *  GitHub, Express, Cursor, OpenAI) - pure #000 clashes with the cream palette. */
 const WARM_INK = "#2E2A27";
-/** Site accent - also the fallback for skills without a brand color. */
-const ACCENT = "#9C4468";
+/** Site accent (`--accent`) - also the fallback for skills without a brand color. */
+const ACCENT = "#B4400A";
 
 /**
  * Skill name → brand color for the icon fill, keyed exactly like `skills.ts`.
@@ -558,11 +558,13 @@ export const SKILL_COLORS: Record<string, string> = {
   GitHub: WARM_INK,
   Figma: "#F24E1E",
 
-  // Concepts & Methodologies - accent + display gradient stops
+  // Concepts & Methodologies - four distinct steps along the theme's orange ramp
+  // (accent → gradient-via → gradient-to → accent-hover) so the row doesn't render
+  // four identical marks now that every theme stop shares one hue.
   "REST APIs": ACCENT,
-  "System Design": "#8B5CF6",
-  Agile: "#C13A76",
-  "Full Development Lifecycle": "#D65A96",
+  "System Design": "#C97000",
+  Agile: "#E0590A",
+  "Full Development Lifecycle": "#8F3105",
 
   // AI Development
   ChatGPT: "#10A37F",
@@ -571,7 +573,7 @@ export const SKILL_COLORS: Record<string, string> = {
   "OpenAI API": WARM_INK,
   "Claude Code": "#D97757",
   // No brand owns "AI Agents", so it takes the site accent like the other
-  // concept skills - and it keeps this row off a third purple.
+  // concept skills - and it keeps this row off a third purple (Copilot, Cursor).
   "AI Agents": ACCENT,
 };
 

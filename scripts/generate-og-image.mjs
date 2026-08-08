@@ -4,7 +4,7 @@
  * the live Hero section.
  *
  * The preview image is a committed static asset rather than a generated one:
- * `next/og` (satori) does not support the blurred pastel backdrop, the masked
+ * `next/og` (satori) does not support the blurred wash backdrop, the masked
  * portrait ellipse or the glass tags the Hero is built from, so anything drawn
  * at request time would only approximate the section. A screenshot is the real
  * thing - the cost is that this script has to be re-run whenever the Hero
