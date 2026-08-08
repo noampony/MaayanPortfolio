@@ -1,0 +1,2856 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .site-shell {
+    @apply mx-auto w-full max-w-7xl px-6 sm:px-10 md:px-16;
+  }
+}
+
+:root {
+  color-scheme: light;
+  --bg-base: #FAF5EF;
+  --bg-surface: #FFFCF8;
+  --bg-surface-raised: #FFFFFF;
+  --border: #E3D9CD;
+  --text-primary: #171310;
+  --text-secondary: #574F4A;
+  --text-muted: #75695F;
+  /* Deep enough that accent-coloured text still clears AA when it sits on an
+     accent-tinted fill (the nav Resume CTA, the "current role" pill, the viewer action
+     links), not just on the bare page. `--accent-hover` goes darker, not lighter: on a
+     light surface, deeper reads as "pressed/active". */
+  --accent: #9C4468;
+  --accent-hover: #82334F;
+  --accent-contrast: #FFFFFF;
+  /* Display gradient (hero name, highlighted heading words, logo, bars). Runs
+     raspberry → rose → violet: saturated enough to read as colour (not grey-mauve)
+     on the cream page, warm and feminine to match the pastel washes, and every stop
+     clears 3:1 on --bg-base for the large display text it paints. */
+  --gradient-from: #C13A76;
+  --gradient-via: #D65A96;
+  --gradient-to: #8B5CF6;
+  --danger: #C93D3D;
+
+  /* ---- Light-theme material tokens -------------------------------------------------
+     The site's surfaces are "paper on cream": translucent white plates lifted off the
+     warm page with a soft warm shade, edged with an accent-tinted hairline. These
+     tokens carry that language so every card, dialog, chip and seam is retinted from
+     one place instead of from per-component literals. */
+
+  /* Soft pastel wash palette - the blurred ambient blobs behind the content. */
+  --pastel-pink: #F1C9D9;
+  --pastel-lavender: #D7C6EC;
+  --pastel-mint: #BCE3D9;
+  --pastel-peach: #F8D5AE;
+
+  /* Elevation. Warm ink, so shadows read as paper shade rather than grey haze; on a
+     light page they need far lower alpha than a dark one. */
+  --shadow-rgb: 92 66 58;
+  /* Veil drawn over the page behind a modal / expanded card. */
+  --scrim: rgb(var(--shadow-rgb) / 0.28);
+
+  /* Glass plates: a translucent white body (two weights + one near-opaque), a white
+     sheen/wash on top, a bright top edge, and a faint accent underline. */
+  --glass-base: rgb(255 255 255 / 0.66);
+  --glass-base-strong: rgb(255 255 255 / 0.92);
+  --glass-base-solid: rgb(255 255 255 / 0.98);
+  --glass-sheen: rgb(255 255 255 / 0.55);
+  --glass-wash: rgb(255 255 255 / 0.4);
+  --glass-highlight: rgb(255 255 255 / 0.9);
+  --glass-underline: color-mix(in srgb, var(--accent) 14%, transparent);
+  /* Plate edges - resting and hover/active. Opaque (a light theme needs an edge
+     darker than the page, not a translucent white one). */
+  --glass-edge: color-mix(in srgb, var(--accent) 20%, var(--border));
+  --glass-edge-strong: color-mix(in srgb, var(--accent) 45%, var(--border));
+  /* The two hue tints layered into a plate, echoing the ambient pastels. */
+  --glass-tint-a: color-mix(in srgb, var(--accent) 7%, transparent);
+  --glass-tint-b: color-mix(in srgb, var(--gradient-to) 6%, transparent);
+  /* Small pills/chips sitting on a plate. */
+  --chip-fill: color-mix(in srgb, var(--accent) 6%, transparent);
+  --chip-fill-hover: color-mix(in srgb, var(--accent) 12%, transparent);
+  /* Roadmap road surface + lane dashes (§8.6). */
+  --road-surface: #C8BCAE;
+  --road-lane: rgb(255 255 255 / 0.85);
+
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface-raised);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-contrast);
+  --secondary: var(--bg-surface-raised);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-surface);
+  --muted-foreground: var(--text-muted);
+  --accent-foreground: var(--accent-contrast);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--bg-base);
+  --input: var(--border);
+  --ring: var(--accent);
+  --font-sans-fallback: Montserrat, system-ui, -apple-system, sans-serif;
+  --font-mono-fallback: Montserrat, system-ui, -apple-system, sans-serif;
+  --type-display: 2.5rem;
+  --leading-display: 1.1;
+  --type-h1: 2rem;
+  --leading-h1: 1.2;
+  --type-h2: 1.5rem;
+  --leading-h2: 1.25;
+  --type-body: 1rem;
+  --leading-body: 1.6;
+  --type-small: 0.875rem;
+  --leading-small: 1.5;
+  --measure-body: 72ch;
+  --radius: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --type-display: 3.5rem;
+    --type-h1: 2.5rem;
+    --type-h2: 1.75rem;
+    --type-body: 1.0625rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg-base);
+  font-family: var(--font-sans), var(--font-sans-fallback);
+  /* Offset in-page anchor jumps so a scrolled-to section's top lands flush
+     against the sticky navbar's bottom edge (spec §5.2). `--navbar-height` is
+     the header's real measured height (Navbar.tsx); the 4.5rem fallback only
+     applies before that first measurement (or if JS is disabled). */
+  scroll-padding-top: var(--navbar-height, 4.5rem);
+}
+
+/* Smooth in-page anchor scrolling, disabled under reduced-motion (spec §7.3). */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Hero name - crisp gradient edge glow on the typed display name. Kept tight on the
+   light theme: a wide coloured halo behind coloured text on cream reads as haze and
+   costs legibility, so only the edge crispener and a faint bloom remain. */
+.hero-name-glow {
+  filter: drop-shadow(0 0 1px color-mix(in srgb, var(--gradient-from) 50%, transparent))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--gradient-via) 28%, transparent));
+}
+
+/* Hero profile tags - the three stat pills pinned to the portrait's oval frame.
+   Flat glassmorphism (§6.3 material language, owner-requested): one uniform
+   translucent white fill so the blur is visible, a hairline accent-tinted edge and
+   a single soft paper-shade shadow. Deliberately no sheen, tint wash or inset
+   highlights - any layered gradient reads as shading on these small pills. Text
+   inside stays on --accent / --text-* tokens for AA. */
+.hero-profile-tag {
+  border: 1px solid var(--glass-edge-strong);
+  /* Far lighter than --glass-wash: the backdrop here (oval frame fill + cream page)
+     is itself near-white, so any fill above ~15% white stacks into a solid plate. */
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: 0 0.75rem 1.75rem rgb(var(--shadow-rgb) / 0.16);
+  /* Unprefixed only - the build adds the -webkit- alias for targets that need it, and
+     hand-writing both makes it drop the standard property (so the blur never lands).
+     Blur kept very light on purpose: the backdrop is mostly featureless cream, and the
+     few details that prove the pill is see-through (the oval's border line, the
+     portrait's arm) survive only a small radius - anything heavier smears them into a
+     flat wash that reads as an opaque plate. */
+  backdrop-filter: blur(3px) saturate(140%);
+}
+
+/* Hero name shine - decorative sweep layered over the typed name; runs after typing
+   completes (gated in JSX) and only when motion is allowed. A bright rose-white glint
+   (soft tinted shoulders, near-white core) so the pass reads as light catching the
+   letters rather than a shadow crossing them. */
+.hero-name-shine {
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, #ffffff 55%, var(--gradient-from)) 42%,
+    #fff9fc 50%,
+    color-mix(in srgb, #ffffff 55%, var(--gradient-to)) 58%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-position: 120% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+}
+
+/* Linear (constant-speed) sweep so the band never decelerates/lingers at the hand-off.
+   Endpoints 120% → -20% carry the band fully off-screen at both ends. The sweep occupies
+   ~32.26% of the 6.2s cycle (= 2s). The title's delay (1.2s) is tuned so its bright peak
+   enters the title at the exact moment the name's peak exits the name - a zero-gap,
+   continuous flow. Cycle: name sweep (0-2s) → title sweep (1.2-3.2s, peak hand-off at
+   ~1.6s) → ~3s cooldown → repeat. */
+@keyframes hero-name-shine-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  32.26% {
+    background-position: -20% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-name-shine {
+    animation: hero-name-shine-sweep 6.2s linear infinite;
+  }
+
+  /* Title peak enters exactly as the name peak exits - no gap. */
+  .hero-name-shine--delayed {
+    animation-delay: 1.2s;
+  }
+}
+
+/* Hero typewriter cursor - decorative; disabled under reduced motion (§7.3). */
+@keyframes hero-type-cursor-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-type-cursor {
+    animation: hero-type-cursor-blink 1s step-end infinite;
+  }
+}
+
+/* Hero CTA icons - decorative hover bounce, disabled under reduced motion (§7.3). */
+@keyframes hero-cta-icon-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  35% {
+    transform: translateY(-0.16rem);
+  }
+
+  70% {
+    transform: translateY(0.06rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover .hero-cta-icon-bounce {
+    animation: hero-cta-icon-bounce 0.72s ease-in-out infinite;
+  }
+}
+
+/* Navbar entrance - a gentle one-shot slide down from the top of the screen
+   (spec §5). Pure CSS so it always runs to completion; disabled under reduced
+   motion by gating the `animation` on `no-preference` (the header renders in its
+   resting position with no transform when motion is reduced). */
+@keyframes navbar-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .navbar-slide-in {
+    animation: navbar-slide-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+/* Cursor-following spotlight on the navbar: a soft accent glow tracks the pointer
+   (its position fed in via the --cursor-x/--cursor-y custom properties set in
+   Navbar.tsx) and fades in only while the header is hovered. Decorative and
+   pointer-events:none so it never intercepts clicks; the fade is gated behind
+   reduced-motion. Sits above the header background but below the nav content. */
+.navbar-cursor-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    18rem 18rem at var(--cursor-x, 50%) var(--cursor-y, 50%),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 60%
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .navbar-cursor-spotlight {
+    transition: opacity 250ms ease;
+  }
+}
+
+.group:hover .navbar-cursor-spotlight {
+  opacity: 1;
+}
+
+/* Active-section spotlight for the mobile nav dropdown (spec §5.4): a soft
+   accent-tinted pill with an inner hairline and an outer glow, so the current
+   section reads as lit up. Pairs with `text-accent` on the active item. */
+.nav-spotlight {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 0 20px -6px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* Active-section underline for the desktop navbar (spec §5.4): a slim accent bar
+   with a soft glow that slides between items as scroll-spy changes the active
+   section (the slide is a Framer Motion shared-layout animation on the element). */
+.nav-underline {
+  background: var(--accent);
+  box-shadow: 0 0 12px -2px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+/* Navbar "Resume" action - set apart from the plain section links by accent
+   colour: an accent-tinted outline button that fills to solid accent on hover
+   and focus. Explicit color-mix values (not Tailwind `/opacity`) so the alpha
+   actually applies to the CSS-variable accent colour, matching how the rest of
+   the site tints the accent. */
+.nav-resume-cta {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+  box-shadow: 0 0 18px -8px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+.nav-resume-cta:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--accent) 90%, transparent);
+}
+
+/* Mobile nav toggle (hamburger): quiet by default, lights up with an
+   accent-tinted outline and soft glow while hovered or while the menu is open,
+   matching the accent treatment of the other navbar affordances. Explicit
+   color-mix (not Tailwind `/opacity`) for the same reason as `.nav-resume-cta`. */
+.mobile-nav-toggle {
+  border: 1px solid transparent;
+}
+
+.mobile-nav-toggle:hover,
+.mobile-nav-toggle[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  box-shadow: 0 0 16px -6px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* Mobile nav dropdown panel: a glass surface (blur + translucent raised bg) with
+   an accent-tinted hairline border, a faint accent wash bleeding in from the
+   top-right corner (where the panel visually "emerges" from the toggle), and a
+   layered shadow - depth from the dark drop shadow, identity from the accent
+   glow. Matches the scroll-to-top button's glass treatment. */
+.mobile-nav-panel {
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  background:
+    radial-gradient(
+      120% 65% at 100% 0%,
+      color-mix(in srgb, var(--accent) 10%, transparent),
+      transparent 55%
+    ),
+    color-mix(in srgb, var(--bg-surface-raised) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 16px 40px -16px rgb(var(--shadow-rgb) / 0.18),
+    0 0 28px -14px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+/* Hover wash for individual items in the mobile nav panel; the active item keeps
+   the stronger `.nav-spotlight` treatment instead. */
+.mobile-nav-item:hover {
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+
+/* Floating "back to top" button: a glass surface over the page (not the accent
+   fill the Resume CTA uses, so it doesn't visually compete as another primary
+   action) with a soft accent-tinted border and drop shadow to lift it off the
+   content behind it. Explicit color-mix (not Tailwind `/opacity`) for the same
+   reason as `.nav-resume-cta` above. */
+.scroll-to-top-button {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  background: color-mix(in srgb, var(--bg-surface-raised) 88%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 12px 28px -12px rgb(var(--shadow-rgb) / 0.16),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.scroll-to-top-button:hover {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+}
+
+/* Logo emblem: a subtle accent glow that lifts slightly when the brand link is
+   hovered. Gated behind `no-preference` so reduced-motion users get no movement. */
+.site-logo-emblem {
+  display: inline-flex;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 22%, transparent));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-logo-emblem {
+    transition: transform 200ms ease;
+  }
+
+  .group\/logo:hover .site-logo-emblem {
+    transform: translateY(-1px) scale(1.04);
+  }
+}
+
+.about-copy-accent-line {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .about-copy-accent-line {
+    display: block;
+    position: absolute;
+    top: 0.2rem;
+    bottom: 0.15rem;
+    left: -1rem;
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--gradient-to) 70%, var(--accent)));
+    box-shadow: 0 0 1.25rem color-mix(in srgb, var(--accent) 32%, transparent);
+    pointer-events: none;
+  }
+}
+
+/* Matches the subtle "Education" tag (pill, hairline border, faint fill, secondary text),
+   just bolder and with the Dean's-List star - gentle enough to sit with the rest of the card. */
+.about-education-honor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--chip-fill);
+  padding: 0.25rem 0.625rem;
+  color: var(--text-secondary);
+  font-size: var(--type-small);
+  font-weight: 700;
+  line-height: var(--leading-small);
+}
+
+/* Same gentle "Education" tag look as the honour badge, but bold with an "open"
+   glyph so it reads as a clickable control that opens the certificate. */
+.about-cert-trigger {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--chip-fill);
+  color: var(--text-secondary);
+  font-size: var(--type-small);
+  line-height: var(--leading-small);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.about-cert-trigger-label {
+  white-space: nowrap;
+}
+
+.about-cert-trigger-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
+}
+
+.about-cert-trigger-open-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  flex: none;
+  opacity: 0.75;
+}
+
+.about-cert-trigger:hover {
+  border-color: color-mix(in srgb, var(--text-secondary) 40%, var(--border));
+  background: var(--chip-fill-hover);
+  color: var(--text-primary);
+}
+
+.about-cert-trigger:hover .about-cert-trigger-open-icon {
+  opacity: 1;
+}
+
+.about-cert-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cert-viewer-dialog {
+  width: min(94vw, 44rem);
+  max-height: min(92vh, 44rem);
+  margin: auto;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base);
+  color: var(--text-primary);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.15),
+    0 0 2rem color-mix(in srgb, var(--accent) 8%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(28px) saturate(170%);
+}
+
+.cert-viewer-dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+}
+
+/* Pop-in / fade-out for the certificate dialog + its backdrop. Plain CSS transitions on a
+   native <dialog>: `@starting-style` supplies the entry "from" state and `transition-behavior:
+   allow-discrete` (on `display`/`overlay`) keeps the element around long enough to animate the
+   close - so both open and close are smooth with no JS. The from-state styles live only inside
+   this query, so reduced-motion (and browsers without @starting-style) just show it instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  .cert-viewer-dialog {
+    opacity: 0;
+    transform: scale(0.96);
+    transition:
+      opacity 280ms ease,
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .cert-viewer-dialog[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .cert-viewer-dialog[open] {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  .cert-viewer-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 280ms ease,
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .cert-viewer-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .cert-viewer-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+.cert-viewer-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(92vh, 44rem);
+}
+
+.cert-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  padding: 1rem 1rem 0.875rem;
+}
+
+.cert-viewer-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cert-viewer-icon {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+.cert-viewer-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.cert-viewer-title {
+  margin: 0;
+  font-size: var(--type-body);
+  font-weight: 600;
+  line-height: var(--leading-body);
+}
+
+.cert-viewer-close {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--border) 88%, var(--accent));
+  border-radius: 0.375rem;
+  background: var(--bg-surface-raised);
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.cert-viewer-close:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--text-primary);
+}
+
+.cert-viewer-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cert-viewer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.cert-viewer-frame-wrap {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  border-radius: 0.375rem;
+  background: var(--bg-surface-raised);
+}
+
+.cert-viewer-frame {
+  display: block;
+  width: 100%;
+  height: min(62vh, 34rem);
+  border: 0;
+  background: white;
+}
+
+.cert-viewer-open-link {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--glass-edge);
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--accent) 10%, rgb(255 255 255 / 0.7));
+  color: var(--accent);
+  font-size: var(--type-small);
+  font-weight: 500;
+  line-height: var(--leading-small);
+  text-decoration: none;
+  backdrop-filter: blur(8px) saturate(160%);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.cert-viewer-open-link:hover {
+  border-color: color-mix(in srgb, var(--accent-hover) 60%, var(--border));
+  background: color-mix(in srgb, var(--accent) 18%, rgb(255 255 255 / 0.75));
+  color: var(--accent-hover);
+}
+
+.cert-viewer-open-link-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.cert-viewer-open-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cert-viewer-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 7rem;
+  margin-bottom: 0.875rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 88%, var(--accent));
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--bg-surface-raised) 88%, var(--accent));
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-muted));
+}
+
+.cert-viewer-preview svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.cert-viewer-placeholder {
+  margin: 0;
+  font-size: var(--type-small);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Resume preview modal (§8.7) - shares the certificate viewer's glass-dialog
+   language, sized a little larger to fit a full CV page. */
+.resume-viewer-dialog {
+  width: min(94vw, 52rem);
+  max-height: min(94vh, 52rem);
+  margin: auto;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base);
+  color: var(--text-primary);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.15),
+    0 0 2rem color-mix(in srgb, var(--accent) 8%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(28px) saturate(170%);
+}
+
+.resume-viewer-dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+}
+
+/* Pop-in / fade-out, same technique as the certificate dialog: @starting-style
+   supplies the entry state and allow-discrete keeps the element alive to
+   animate the close. Confined to no-preference so reduced-motion shows it
+   instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  .resume-viewer-dialog {
+    opacity: 0;
+    transform: scale(0.96);
+    transition:
+      opacity 280ms ease,
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .resume-viewer-dialog[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .resume-viewer-dialog[open] {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+
+  .resume-viewer-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 280ms ease,
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .resume-viewer-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .resume-viewer-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+.resume-viewer-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(94vh, 52rem);
+}
+
+.resume-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  padding: 1rem 1rem 0.875rem;
+}
+
+.resume-viewer-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resume-viewer-icon {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+.resume-viewer-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.resume-viewer-title {
+  margin: 0;
+  font-size: var(--type-body);
+  font-weight: 600;
+  line-height: var(--leading-body);
+}
+
+.resume-viewer-close {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--border) 88%, var(--accent));
+  border-radius: 0.375rem;
+  background: var(--bg-surface-raised);
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.resume-viewer-close:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--text-primary);
+}
+
+.resume-viewer-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.resume-viewer-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.resume-viewer-frame-wrap {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  border-radius: 0.375rem;
+  background: var(--bg-surface-raised);
+}
+
+.resume-viewer-frame {
+  display: block;
+  width: 100%;
+  height: min(72vh, 42rem);
+  border: 0;
+  background: white;
+}
+
+.resume-viewer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.resume-viewer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--glass-edge);
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--accent) 10%, rgb(255 255 255 / 0.7));
+  color: var(--accent);
+  font-size: var(--type-small);
+  font-weight: 500;
+  line-height: var(--leading-small);
+  text-decoration: none;
+  backdrop-filter: blur(8px) saturate(160%);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.resume-viewer-action:hover {
+  border-color: color-mix(in srgb, var(--accent-hover) 60%, var(--border));
+  background: color-mix(in srgb, var(--accent) 18%, rgb(255 255 255 / 0.75));
+  color: var(--accent-hover);
+}
+
+.resume-viewer-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.resume-viewer-action--primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.resume-viewer-action--primary:hover {
+  border-color: transparent;
+  background: var(--accent-hover);
+  color: var(--accent-contrast);
+}
+
+.resume-viewer-action-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-method-link:hover {
+    transform: translateY(-0.25rem);
+  }
+}
+
+/* ===== Floating business card (spec §7.6, §8.9, §16.5) =============================
+   Always-visible top-left avatar trigger (just below the sticky navbar, clear of the
+   Hero CTAs) + a compact card that expands out of the button: the native <dialog>
+   shares the trigger's anchor point and scales up from a top-left transform origin,
+   so opening reads as the button growing into the card. Shares the glass-dialog
+   language of the resume / certificate viewers; the expand uses the same
+   @starting-style + allow-discrete technique, confined to no-preference so
+   reduced-motion shows it instantly. */
+
+/* Trigger: a horizontal "Reach Out" pill fixed at the bottom center of the
+   viewport - same size and shape at every screen width (owner request). */
+.business-card-trigger {
+  bottom: 0.75rem;
+  left: 50%;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--bg-surface-raised) 88%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 12px 28px -12px rgb(var(--shadow-rgb) / 0.16),
+    0 0 18px -6px color-mix(in srgb, var(--accent) 45%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.business-card-trigger:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow:
+    0 12px 28px -12px rgb(var(--shadow-rgb) / 0.16),
+    0 0 22px -4px color-mix(in srgb, var(--accent) 65%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.business-card-trigger svg {
+  flex: none;
+  color: var(--accent);
+}
+
+.business-card-trigger-label {
+  white-space: nowrap;
+  font-size: var(--type-small);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.business-card-dialog {
+  position: fixed;
+  top: auto;
+  bottom: 0.75rem;
+  left: 50%;
+  translate: -50% 0;
+  transform-origin: bottom center;
+  margin: 0;
+  width: min(88vw, 20rem);
+  max-height: calc(100dvh - 1.5rem);
+  overflow-y: auto;
+  padding: 0;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base-strong);
+  color: var(--text-primary);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.15),
+    0 0 2rem color-mix(in srgb, var(--accent) 8%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(28px) saturate(170%);
+}
+
+.business-card-dialog::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .business-card-dialog {
+    opacity: 0;
+    transform: scale(0.15);
+    transition:
+      opacity 240ms ease,
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .business-card-dialog[open] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .business-card-dialog[open] {
+      opacity: 0;
+      transform: scale(0.15);
+    }
+  }
+
+  .business-card-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 280ms ease,
+      overlay 320ms ease allow-discrete,
+      display 320ms ease allow-discrete;
+  }
+
+  .business-card-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .business-card-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+.business-card-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem 1.25rem;
+}
+
+.business-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  padding-bottom: 0.875rem;
+}
+
+.business-card-header-label {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: var(--type-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.business-card-close {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--border) 88%, var(--accent));
+  border-radius: 0.375rem;
+  background: var(--bg-surface-raised);
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.business-card-close:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--text-primary);
+}
+
+.business-card-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.business-card-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.business-card-avatar {
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: var(--bg-surface-raised);
+  box-shadow: 0 0 20px -6px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.business-card-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.business-card-name {
+  margin: 0;
+  font-size: var(--type-h2);
+  font-weight: 600;
+  line-height: var(--leading-h2);
+}
+
+.business-card-title {
+  margin: 0;
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+  color: var(--accent);
+}
+
+.business-card-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.business-card-contact-link {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--border) 92%, var(--accent));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--bg-surface-raised) 70%, transparent);
+  color: var(--text-secondary);
+  font-size: var(--type-small);
+  line-height: var(--leading-small);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+a.business-card-contact-link:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--text-primary);
+}
+
+a.business-card-contact-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.business-card-contact-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.business-card-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  color: var(--accent);
+}
+
+.business-card-external-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  margin-left: auto;
+  color: currentColor;
+  opacity: 0.7;
+}
+
+.business-card-resume-action {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--type-small);
+  font-weight: 500;
+  line-height: var(--leading-small);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.business-card-resume-action:hover {
+  background: var(--accent-hover);
+}
+
+.business-card-resume-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.business-card-resume-action .business-card-icon {
+  color: currentColor;
+}
+
+/* ===== Experience ledger (spec §8.3) ================================================
+   The Experience timeline reads as an editorial ledger down a single rail: a hairline
+   rule pinned to the left with one small marker pill per entry (the organisation's logo,
+   or its initials as a fallback), and beside it a flat record - index, date range, role,
+   organisation, description, tech chips - separated from the next by a hairline rule.
+   Nothing is behind a disclosure, so the section is fully readable without JS.
+
+   Geometry: `.xp-timeline` reserves `--xp-gutter` on the left and the rail is pulled back
+   into it, so `left: calc(-1 * var(--xp-gutter))` lands on the timeline's left edge for both
+   the rail and each entry's marker - the marker therefore straddles the rail with no JS
+   measurement. Each entry indents its record by the same gutter again, so records, the rail
+   markers and the closing line all stay on one vertical rhythm at any card height.
+
+   The rail's accent fill is scroll-driven (`--rail-fill`, set by ExperienceLedger.tsx). It
+   is a read-position indicator rather than decoration, so - like the navbar progress bar -
+   it stays live under reduced motion; the 100% fallback keeps the rail fully drawn without
+   JS. The hover nudge/tilt and the entry reveal are motion, so those ARE gated behind
+   `prefers-reduced-motion: no-preference` and use only transform/opacity (§7.3/§14.8). */
+
+.xp-timeline {
+  --xp-gutter: 2.125rem;
+  /* Owns the gap under the section heading in CSS (rather than a margin utility) so the rail
+     can start exactly where the heading's accent line ends - the two numbers have to agree. */
+  --xp-head-gap: 2.5rem;
+  --xp-rail-x: calc(-1 * var(--xp-gutter));
+  --xp-rail-top: 0.5rem;
+  max-width: 55rem;
+  margin-top: var(--xp-head-gap);
+  padding-left: var(--xp-gutter);
+}
+
+@media (max-width: 640px) {
+  .xp-timeline {
+    --xp-gutter: 1.625rem;
+  }
+}
+
+/* From `sm` up the heading carries `.about-copy-accent-line` - a 2px accent line 1rem left of
+   the shell's content edge, ending 0.15rem above the heading block. The rail picks that line
+   up: same centre (hence the half-pixel, since the rail is a 1px hairline) and starting at the
+   accent line's own end, so the two read as one continuous line rather than two segments with
+   a gap. Below `sm` there is no accent line, so the rail keeps its own inset start. */
+@media (min-width: 640px) {
+  .xp-timeline {
+    --xp-head-gap: 3rem;
+    --xp-rail-x: calc(-1 * var(--xp-gutter) - 1rem + 0.5px);
+    --xp-rail-top: calc(-1 * (var(--xp-head-gap) + 0.15rem));
+  }
+}
+
+/* Positioning context for the rail, sized to the entry list alone so the rail starts and
+   ends with the records rather than running past them into the closing line. */
+.xp-track {
+  position: relative;
+}
+
+.xp-rail {
+  position: absolute;
+  top: var(--xp-rail-top);
+  bottom: 0.5rem;
+  left: var(--xp-rail-x);
+  width: 1px;
+  background: var(--border);
+}
+
+/* Read-progress fill. Defaults to a fully drawn rail so no-JS never shows a stub. */
+.xp-rail-fill {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 2px;
+  height: var(--rail-fill, 100%);
+  border-radius: 1px;
+  background: linear-gradient(to bottom, var(--gradient-to), var(--accent));
+}
+
+/* Glowing tip riding the bottom of the fill - makes the read position legible at a
+   glance. It moves with the fill height (scroll-driven, like the fill itself), so it
+   stays live under reduced motion; no-JS parks it at the rail's end.
+   `--rail-tip-opacity` (set alongside `--rail-fill` by ExperienceLedger.tsx) keeps it hidden
+   while progress sits at 0% - before the rail is reached, or again after scrolling back past
+   it - so it only exists once the line is actually moving, never parked at a fixed top point.
+   Defaults to visible so no-JS keeps the tip at the rail's fully-drawn end. */
+.xp-rail-fill::after {
+  content: "";
+  position: absolute;
+  bottom: -0.1875rem;
+  left: 50%;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 0 0.625rem 0.125rem color-mix(in srgb, var(--accent) 45%, transparent);
+  opacity: var(--rail-tip-opacity, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .xp-rail-fill::after {
+    transition: opacity 200ms ease;
+  }
+}
+
+.xp-items {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-item {
+  position: relative;
+  padding: 2.75rem 0 2.5rem var(--xp-gutter);
+  border-bottom: 1px solid var(--border);
+}
+
+.xp-item:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 640px) {
+  .xp-item {
+    padding-top: 2rem;
+    padding-bottom: 1.875rem;
+  }
+}
+
+/* ----- Rail marker ---------------------------------------------------------------- */
+/* Pinned to the rail and centred on it; the opaque plate hides the rail behind it, so the
+   marker reads as a station on the line rather than a badge floating beside it. */
+.xp-marker {
+  position: absolute;
+  top: 2.75rem;
+  /* Centred on the rail (the marker is translated -50%), so it straddles the line at whatever
+     x the rail resolves to - half a pixel right of the rail's left edge. */
+  left: calc(var(--xp-rail-x) + 0.5px);
+  z-index: 2;
+  display: inline-flex;
+  min-width: 2rem;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  border: 1px solid var(--glass-edge);
+  border-radius: 9999px;
+  background: var(--bg-surface-raised);
+  padding: 0.3125rem 0.5rem;
+  box-shadow: 0 0.25rem 0.75rem rgb(var(--shadow-rgb) / 0.06);
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 640px) {
+  .xp-marker {
+    top: 2rem;
+    min-width: 1.75rem;
+    padding: 0.25rem 0.4375rem;
+  }
+}
+
+/* The current role's station carries a soft accent halo so the live entry reads first. */
+.xp-marker--current {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow:
+    0 0.25rem 0.75rem rgb(var(--shadow-rgb) / 0.06),
+    0 0 0 0.1875rem color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* A slow accent ring breathes out of the current station - the one "alive" signal on the
+   rail. Transform/opacity only, and animated only under no-preference (the static halo
+   above still marks the current role for everyone else). */
+.xp-marker--current::after {
+  content: "";
+  position: absolute;
+  inset: -0.3125rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes xp-current-ping {
+    0% {
+      opacity: 0.65;
+      transform: scale(0.82);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(1.18);
+    }
+  }
+
+  .xp-marker--current::after {
+    animation: xp-current-ping 3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+}
+
+.xp-marker-logo {
+  height: 0.9375rem;
+  width: auto;
+  max-width: 3.25rem;
+  object-fit: contain;
+}
+
+.xp-marker-text {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ----- Record -------------------------------------------------------------------- */
+.xp-content {
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.xp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.625rem;
+}
+
+/* Editorial entry number - decorative counterpart to the ordered list's own semantics.
+   Accent-tinted mono so the count reads as part of the rail's language, not body copy.
+   A trailing rule keeps it visually separate from the date beside it - without one, the
+   zero-padded "01" reads as if it were the date's leading digits (e.g. "01 Jan 2023"). */
+.xp-index {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-muted));
+  padding-right: 1rem;
+  border-right: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.xp-date {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* Secondary meta beside the dates: duration, employment type, or the "Education" marker. */
+.xp-note {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.xp-role {
+  position: relative;
+  width: fit-content;
+  margin: 0 0 0.375rem;
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  transition: color 300ms ease;
+}
+
+/* Gradient underline drawn out under the role on hover/focus (transform-only; the
+   transition is reduced-motion-gated below, so it appears instantly there). */
+.xp-role::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.25rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--accent), var(--gradient-to));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.xp-org {
+  margin: 0 0 0.875rem;
+  font-size: var(--type-body);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.xp-org-name {
+  font-weight: 600;
+  color: color-mix(in srgb, var(--accent) 40%, var(--text-primary));
+}
+
+.xp-desc {
+  margin: 0;
+  max-width: 42rem;
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.xp-detail {
+  margin: 0.75rem 0 0;
+  font-size: var(--type-small);
+  color: var(--text-secondary);
+}
+
+.xp-detail-label {
+  color: var(--text-muted);
+}
+
+.xp-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* The Dean's-List honour: a single pill that is both the honour badge and its certificate
+   trigger (star + label + "open" glyph), kept distinct from the degree's own trigger. */
+.experience-honor-group {
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.xp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.125rem;
+  font-size: var(--type-small);
+  font-weight: 500;
+  color: var(--accent);
+  transition: color 160ms ease;
+}
+
+.xp-link:hover {
+  color: var(--accent-hover);
+}
+
+/* Closing flourish under the rail - decorative, and every date it alludes to is already
+   in the records above, so it is hidden from assistive tech. */
+.xp-end {
+  margin: 1.75rem 0 0 var(--xp-gutter);
+  font-size: var(--type-body);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.xp-end-year {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ----- Hover / focus ------------------------------------------------------------- */
+/* `:focus-within` mirrors `:hover` so keyboard users tabbing to a record's link or
+   certificate trigger get the same feedback as a pointer. */
+.xp-item:hover .xp-marker,
+.xp-item:focus-within .xp-marker {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+}
+
+.xp-item:hover .xp-role,
+.xp-item:focus-within .xp-role {
+  color: var(--accent);
+}
+
+.xp-item:hover .xp-role::after,
+.xp-item:focus-within .xp-role::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .xp-role::after {
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .xp-item:hover .xp-marker,
+  .xp-item:focus-within .xp-marker {
+    transform: translateX(-50%) rotate(-4deg);
+  }
+
+  .xp-item:hover .xp-content,
+  .xp-item:focus-within .xp-content {
+    transform: translateX(0.375rem);
+  }
+}
+
+/* ----- Entry reveal -------------------------------------------------------------- */
+/* `data-reveal` is set per entry by ExperienceLedger.tsx. It lives on an inner wrapper so it
+   never fights the hover nudge on `.xp-content`, and no-JS / reduced motion never reach the
+   "armed" (hidden) state - they just get the finished records. */
+@media (prefers-reduced-motion: no-preference) {
+  .xp-item[data-reveal="armed"] .xp-reveal {
+    opacity: 0;
+    transform: translateX(-1.75rem) translateY(0.5rem);
+  }
+
+  .xp-item[data-reveal="revealed"] .xp-reveal {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* The station pops onto the rail alongside its record - same trigger, so nothing here
+     fires for no-JS or reduced motion. The revealed state sets no transform/opacity
+     targets of its own (it relies on the base values), so this never fights the hover
+     rotate above; it only swaps in a springier transform curve. */
+  .xp-item[data-reveal="armed"] .xp-marker {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+  }
+
+  .xp-item[data-reveal="revealed"] .xp-marker {
+    transition:
+      opacity 500ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 300ms ease,
+      box-shadow 300ms ease,
+      transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+/* Technology chips - mono, glassy, accent edge on hover. */
+.experience-tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--border) 88%, var(--accent));
+  border-radius: 0.375rem;
+  background: color-mix(in srgb, var(--bg-base) 60%, transparent);
+  padding: 0.1875rem 0.5rem;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: var(--type-small);
+  line-height: var(--leading-small);
+  color: var(--text-secondary);
+  transition:
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.experience-tag:hover {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
+  color: var(--text-primary);
+}
+
+/* "Current" badge - appears on the current-role card front face.
+   A small live-dot (pulsing) prefixes the label to reinforce the active state. */
+/* The gap and left padding are sized so the dot's radiating rings (below) stay clear of the
+   label at their largest - the ring is the reason for the extra room. The rings still extend
+   past the pill's own edges at their peak (that's the original design), so this only protects
+   the label's legibility, not the pill's border. */
+.experience-current-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 0.1875rem 0.9375rem;
+  font-size: var(--type-small);
+  line-height: var(--leading-small);
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.experience-current-tag-dot {
+  position: relative;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 0.15rem color-mix(in srgb, var(--accent) 22%, transparent),
+    0 0 0.5rem color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+/* First radiating ring - fires immediately. */
+.experience-current-tag-dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Second radiating ring - fires at 1.2s offset so one ring is always expanding. */
+.experience-current-tag-dot::before {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .experience-current-tag-dot::after {
+    animation: experience-node-ring 2.4s ease-out infinite;
+  }
+
+  .experience-current-tag-dot::before {
+    animation: experience-node-ring 2.4s ease-out 1.2s infinite;
+  }
+}
+
+@keyframes experience-node-ring {
+  0% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* ===== Projects - flip cards + "view all" CTA (spec §6.7 / §7.4 / §8.4) ==============
+   Each project is a click/tap-to-flip card: the front shows the title + a "click to know
+   more" affordance, the back reveals the details. Both faces stack in one grid cell, so the
+   card auto-sizes to its taller (back) face - no fixed heights, no clipping. Faces carry the
+   same glass treatment as the Experience cards (copied here, self-contained, so the flip
+   mechanics don't entangle the Experience selectors). The 3D flip transition + hover lift +
+   shimmer are gated under `prefers-reduced-motion: no-preference` (reduced motion → instant,
+   transform-free face swap), and a `<noscript>` block in the section reveals the back face so
+   the content stays readable with JS disabled. */
+
+.project-flip {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  perspective: 1400px;
+}
+
+.project-flip-inner {
+  position: relative;
+  display: grid;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.project-flip[data-flipped="true"] .project-flip-inner {
+  transform: rotateY(180deg);
+}
+
+/* Both faces share one grid cell → the card grows to the taller (back) face. */
+.project-flip-face {
+  position: relative;
+  grid-area: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base);
+  box-shadow:
+    0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.07),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(22px) saturate(170%);
+  /* Intentionally compact - these cards are ~30% smaller than the first draft. */
+  padding: 1.05rem 1.1rem;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+@media (min-width: 640px) {
+  .project-flip-face {
+    padding: 1.25rem 1.3rem;
+  }
+}
+
+/* Static inner sheen + (hover-only) shimmer sweep, behind the face content. */
+.project-flip-face::after {
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: calc(var(--radius) - 1px);
+  background:
+    linear-gradient(180deg, var(--glass-wash), transparent 38%),
+    linear-gradient(90deg, var(--glass-tint-a), transparent 34%, var(--glass-tint-b));
+  content: "";
+  pointer-events: none;
+}
+
+/* GlareHover overlay replaces the former ::before shimmer sweep. */
+
+.project-flip-face > :not(.project-card-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Decorative low-opacity photo behind the card content. It uses Next's responsive image
+   pipeline and native lazy loading, while the card's fixed geometry prevents CLS. */
+.project-card-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  opacity: var(--card-bg-opacity, 0.14);
+  pointer-events: none;
+}
+
+/* Front face shows its photo more prominently than the back. `--card-bg-opacity` lets an
+   individual card (via inline style) override both faces' opacity at once. */
+.project-flip-front .project-card-bg {
+  opacity: var(--card-bg-opacity, 0.32);
+}
+
+.project-flip-front {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.project-flip-front-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.project-flip-back {
+  display: flex;
+  flex-direction: column;
+  transform: rotateY(180deg);
+}
+
+.project-flip-title {
+  line-height: var(--leading-h2);
+}
+
+/* Small project title at the top of the back (content) face. Right padding keeps the
+   text clear of the workplace badge pinned to the top-right corner. */
+.project-flip-back-title {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 3.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  font-size: var(--type-small);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+}
+
+.project-role-pill {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--chip-fill);
+  padding: 0.125rem 0.5rem;
+  font-size: var(--type-small);
+  color: var(--text-primary);
+}
+
+/* Front-face column: role pill on top, workplace tag directly below it. */
+.project-flip-front-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+/* Workplace attribution - the exact same pill as `.project-role-pill`, holding the logo +
+   name instead of role text. Background is a touch darker to read as a distinct tag. */
+.project-workplace-tag {
+  background: color-mix(in srgb, var(--text-primary) 8%, var(--chip-fill));
+}
+
+.project-workplace-logo {
+  height: 1.3rem;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: grayscale(0.15);
+}
+
+.project-workplace-name {
+  font-size: var(--type-small);
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+/* Back-face header: just the title - the workplace badge is pinned separately (see below). */
+.project-flip-back-header {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Back-face workplace badge - logo only (no name, no pill background), pinned to the
+   top-right corner regardless of the surrounding content flow or padding. Bigger than the
+   front-face logo since it no longer has to share room with the company name. */
+.project-flip-back .project-workplace-badge {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+}
+
+.project-workplace-badge-logo {
+  height: 2.4rem;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: grayscale(0.15);
+}
+
+/* "Tap to know more" affordance - the visible cue that the card is interactive (§7.4).
+   A circular icon badge + uppercase, letter-spaced label; brightens to accent on card hover. */
+.project-flip-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  align-self: flex-end;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  transition: color 200ms ease;
+}
+
+.project-flip:hover .project-flip-hint {
+  color: var(--accent);
+}
+
+.project-flip-hint--back {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.project-flip-hint-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+  transition:
+    background 200ms ease,
+    box-shadow 200ms ease,
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-flip:hover .project-flip-hint-icon {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: 0 0 0.9rem color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.project-flip-hint svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* Show "Click to know more" on pointer/hover devices, "Tap to know more" on touch. */
+.project-flip-hint-text--pointer {
+  display: none;
+}
+.project-flip-hint-text--touch {
+  display: inline;
+}
+@media (hover: hover) and (pointer: fine) {
+  .project-flip-hint-text--pointer {
+    display: inline;
+  }
+  .project-flip-hint-text--touch {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-flip:hover .project-flip-hint-icon {
+    transform: rotate(180deg);
+  }
+}
+
+/* One full-card transparent toggle flips the card from either face; it stays flat above the
+   rotating faces so the click target never disappears mid-flip. */
+.project-flip-toggle {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+}
+
+.project-flip-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Hover: brighten the visible face + lift the card (mirrors the Experience card hover). */
+.project-flip:hover .project-flip-face {
+  border-color: var(--glass-edge-strong);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.09),
+    0 0 2.25rem color-mix(in srgb, var(--accent) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .project-flip-inner {
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-flip:hover {
+    transform: translateY(-0.25rem);
+    transition: transform 180ms ease;
+  }
+
+}
+
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+  text-rendering: optimizeLegibility;
+}
+
+p {
+  max-width: var(--measure-body);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono), var(--font-mono-fallback);
+}
+
+/* Visible focus indicator on every keyboard-focused element (spec §20.3). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The <main> landmark is focused programmatically by the skip link, but is not
+   an interactive control - suppress its focus ring while keeping it focusable. */
+main:focus,
+main:focus-visible {
+  outline: none;
+}
+
+/* Contact section (spec §8.8, Task 11.2). Direct-link "cards" for each contact
+   method; the glassy surface mirrors the About stat cards for visual continuity. */
+.contact-method-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base);
+  padding: 0.875rem 1rem;
+  box-shadow:
+    0 1rem 3rem rgb(var(--shadow-rgb) / 0.06),
+    inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(20px) saturate(170%);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Only the link variants are interactive; the Location card is static text. */
+.contact-method-link {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.contact-method-link:hover {
+  border-color: var(--glass-edge-strong);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.09),
+    0 0 2.25rem color-mix(in srgb, var(--accent) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+.contact-method-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--bg-surface-raised) 62%, transparent);
+  color: var(--accent);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+}
+
+.contact-method-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Compact variant for the 1/2-width column. */
+.contact-method-card--compact {
+  padding: 0.25rem 1.25rem;
+  gap: 0.5rem;
+}
+.contact-method-card--compact .contact-method-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.contact-method-card--compact .contact-method-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* ── My Impact section (spec §8.2) ─────────────────────────────────────────
+   Circular Gallery of impact cards. The dev-grid wash mirrors the retired About
+   wash; the card glass matches the site card system (§6.7) but sits on a more
+   opaque base so overlapping slides stay readable in the 3D arc. */
+
+.impact-header {
+  position: relative;
+}
+
+.impact-gallery {
+  --impact-card-w: clamp(15.5rem, 80vw, 21rem);
+  --impact-card-h: clamp(23rem, 70vh, 27rem);
+  /* Step tracks the card width so the neighbour overlap stays consistent from
+     mobile to desktop instead of bottoming out at a fixed min. */
+  --impact-step: calc(var(--impact-card-w) * 0.72);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+.impact-gallery-track {
+  position: relative;
+  flex: 1 1 auto;
+  height: calc(var(--impact-card-h) + 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  touch-action: pan-y;
+}
+
+/* Prev/Next controls flank the track on both sides (spec §8.2 side navigation). */
+.impact-gallery-arrow {
+  position: relative;
+  /* Must beat every card's z-index (`total - abs`, currently up to 9) - cards are
+     absolutely positioned and can visually extend under the arrows, so a low z-index
+     here let an overlapping card swallow the arrow's click. */
+  z-index: 20;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.impact-gallery-arrow svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.impact-gallery-arrow:hover {
+  border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg-surface));
+  color: var(--accent);
+}
+
+.impact-gallery-arrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .impact-gallery-arrow {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.impact-slide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--impact-card-w);
+  height: var(--impact-card-h);
+  /* Depth is conveyed with translateX/scale/opacity only - no rotateY or translateZ.
+     Either one turns the card into a projected 3D shape whose real screen quad can
+     drift from its rectangular hit box, so clicks on a visible side card silently
+     miss the card behind them. Pure 2D transforms keep "what's rendered" and "what's
+     clickable" exactly the same rectangle, while still reading as a receding arc. */
+  transform:
+    translate(-50%, -50%)
+    translateX(calc(var(--offset) * var(--impact-step)))
+    scale(calc(1 - var(--abs) * 0.09));
+  opacity: calc(1 - var(--abs) * 0.28);
+  transition:
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+/* Slides outside the visible window are fully hidden and non-interactive
+   (they are also `inert` in the DOM, so they never take keyboard focus). */
+.impact-slide:not([data-visible]) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.impact-card {
+  position: relative;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base-strong);
+  box-shadow:
+    0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.11),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(24px) saturate(175%);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.impact-card[data-active] {
+  border-color: var(--glass-edge-strong);
+  /* Nearly opaque so the two overlapping cards behind it (visible through the
+     backdrop blur otherwise) never bleed into the focused card's own text. */
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base-solid);
+  animation: impact-card-glow 4.5s ease-in-out infinite;
+}
+
+.impact-card:not([data-active]):hover {
+  border-color: var(--glass-edge-strong);
+}
+
+@keyframes impact-card-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
+      0 0 2.5rem color-mix(in srgb, var(--accent) 14%, transparent),
+      inset 0 1px 0 var(--glass-highlight),
+      inset 0 -1px 0 var(--glass-underline);
+  }
+  50% {
+    box-shadow:
+      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
+      0 0 3.25rem color-mix(in srgb, var(--accent) 24%, transparent),
+      inset 0 1px 0 var(--glass-highlight),
+      inset 0 -1px 0 var(--glass-underline);
+  }
+}
+
+.impact-card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  padding: clamp(1.1rem, 2.6vw, 1.5rem);
+}
+
+.impact-card-index {
+  margin: 0;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: var(--type-small);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--accent) 78%, var(--text-muted));
+}
+
+.impact-card-title {
+  margin: 0.1rem 0 0;
+  font-size: var(--type-h2);
+  font-weight: 600;
+  line-height: var(--leading-h2);
+  color: var(--text-primary);
+}
+
+.impact-card-desc {
+  margin: 0.15rem 0 0;
+  font-size: var(--type-small);
+  line-height: var(--leading-body);
+  color: var(--text-secondary);
+}
+
+.impact-card-bullets {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.impact-card-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: var(--type-small);
+  line-height: var(--leading-small);
+  color: var(--text-secondary);
+}
+
+.impact-card-bullet-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--accent);
+}
+
+/* Whole-card activator overlay for non-centre slides. Transparent so the article
+   text underneath stays visible; labelled for AT via its `aria-label`. */
+.impact-card-activate {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  appearance: none;
+}
+
+.impact-card-activate:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .impact-slide {
+    transition: none;
+  }
+
+  .impact-card {
+    transition: none;
+    animation: none;
+  }
+
+  .section-glow,
+  .section-aurora {
+    animation: none;
+  }
+}
+
+/* ===== Shared section background system ============================================
+   One ambient treatment for every non-hero section (see components/layout/
+   SectionBackground.tsx): static corner-glow tints (the compositions the sections
+   always had, now shared), a static film-grain tile, an optional dev-grid wash,
+   and glow seams that blend adjacent sections instead of a flat border. Everything
+   is static and paint-cheap - no blur filters, no animation, tiled backgrounds
+   rasterised once. */
+
+.section-bg {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Static corner-glow tints, per placement variant. */
+.section-glow {
+  position: absolute;
+  inset: 0;
+}
+
+/* The glows paint with the pastel wash palette rather than the accent itself: on a
+   cream page a saturated tint reads as a stain, while the pastels read as the soft
+   blurred blobs the theme is built around. Light pastels need a much higher mix
+   percentage than the old dark-theme tints to be visible at all. */
+.section-glow--split {
+  background:
+    radial-gradient(
+      60% 46% at 88% -4%,
+      color-mix(in srgb, var(--pastel-lavender) 62%, transparent),
+      transparent 34%
+    ),
+    radial-gradient(
+      46% 42% at 6% 6%,
+      color-mix(in srgb, var(--pastel-pink) 58%, transparent),
+      transparent 32%
+    ),
+    radial-gradient(
+      40% 38% at 18% 96%,
+      color-mix(in srgb, var(--pastel-mint) 45%, transparent),
+      transparent 34%
+    );
+}
+
+.section-glow--left {
+  background:
+    radial-gradient(
+      circle at 12% 18%,
+      color-mix(in srgb, var(--pastel-pink) 58%, transparent),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 8% 82%,
+      color-mix(in srgb, var(--pastel-lavender) 58%, transparent),
+      transparent 32%
+    );
+}
+
+.section-glow--right {
+  background:
+    radial-gradient(
+      circle at 88% 16%,
+      color-mix(in srgb, var(--pastel-peach) 55%, transparent),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      color-mix(in srgb, var(--pastel-lavender) 58%, transparent),
+      transparent 30%
+    );
+}
+
+/* Abstract "aurora" sheen - two faint offset tints that slowly orbit the section
+   centre, giving the ambient background a subtle sense of life behind the static
+   corner glows. Sits behind the grid/grain. Inset negative + a covering scale so
+   the rotation never reveals a hard edge inside the clipped section. The motion
+   itself is transform-only and lives in the reduced-motion media query below. */
+.section-aurora {
+  position: absolute;
+  inset: -35%;
+  background:
+    radial-gradient(
+      38% 38% at 32% 30%,
+      color-mix(in srgb, var(--pastel-mint) 46%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      42% 42% at 70% 66%,
+      color-mix(in srgb, var(--pastel-peach) 46%, transparent),
+      transparent 70%
+    );
+  opacity: 0.6;
+}
+
+/* Static film grain - an SVG feTurbulence tile repeated at compositor cost. Never animated.
+   `multiply` (rather than `overlay`) so the mid-grey noise reads as paper tooth on the
+   cream page; `overlay` on a light backdrop mostly screens the noise away. */
+.section-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+}
+
+/* Subtle dev-grid wash (generalises the former .impact-grid-wash / .roadmap-grid-wash). */
+.section-grid-wash {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      color-mix(in srgb, var(--accent) 40%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 40%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 3.75rem 3.75rem;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 72%, transparent 100%);
+  opacity: 0.13;
+}
+
+/* Seams - a soft wash toward --bg-surface where two sections meet, so every
+   hand-off is tint-matched; the "line" variant adds a centred glowing hairline
+   in place of the old flat border-t. */
+.section-seam-top {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 6rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-surface) 55%, transparent),
+    transparent
+  );
+}
+
+.section-seam-top--line::before,
+.seam-hairline::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 26%, var(--border)) 50%,
+    transparent
+  );
+}
+
+/* Standalone glowing hairline for non-section boundaries (e.g. the footer),
+   replacing a flat `border-t border-border`. Host must be `position: relative`. */
+.seam-hairline {
+  position: relative;
+}
+
+.section-seam-bottom {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 8rem;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--bg-surface) 55%, transparent)
+  );
+}
+
+/* Cursor-reactive glow (see components/ui/CursorGlow.tsx) - sits above the
+   ambient .section-bg layers (later in DOM order, same negative z), behind the
+   section content. Position is driven by --spot-x/--spot-y custom props. */
+.section-cursor-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  background: radial-gradient(
+    30rem 30rem at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in srgb, var(--accent) 10%, transparent),
+    transparent 65%
+  );
+}
+
+.section-cursor-glow[data-active="true"] {
+  opacity: 1;
+}
+
+/* Subtle, abstract ambient motion for the unified section background (spec §7.1
+   "animated gradient background", §7.2/§14.8: subtle, transform/opacity only, no
+   layout shift). The corner glows breathe/drift while the aurora slowly orbits;
+   both are GPU-composited transform animations, long and low-amplitude, and only
+   run when the user has not asked for reduced motion. Because every section uses
+   the same `glow="split"` treatment, the motion is identical across the page. */
+@keyframes section-glow-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(2%, 1.5%, 0) scale(1.05);
+  }
+}
+
+@keyframes section-aurora-spin {
+  from {
+    transform: rotate(0deg) scale(1.05);
+  }
+  to {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .section-glow {
+    will-change: transform;
+    animation: section-glow-drift 30s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+  }
+
+  .section-aurora {
+    will-change: transform;
+    animation: section-aurora-spin 80s linear infinite;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Technical Skills - glass category plates + skill pills.
+
+   The plate is the shared glass recipe (same token stack as `.contact-method-card`
+   and `.impact-card`) so Skills reads as the same material as the rest of the page.
+   The pill reuses the `.about-cert-trigger` chip vocabulary - hairline border,
+   `--chip-fill`, pill radius - so a skill looks like every other tag on the site.
+   --------------------------------------------------------------------------- */
+.skills-plate {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  /* The grid item stretches to its row height; the plate fills it so plates
+     sitting side by side share a bottom edge. */
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  border: 1px solid var(--glass-edge);
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
+    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    var(--glass-base);
+  padding: 1.125rem 1.25rem 1.25rem;
+  box-shadow:
+    0 1rem 3rem rgb(var(--shadow-rgb) / 0.06),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
+  backdrop-filter: blur(20px) saturate(170%);
+}
+
+/* Without backdrop-filter the translucent fill has nothing to blur, so the
+   plate would read as a washed-out box. Fall back to a near-opaque surface. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .skills-plate {
+    background: var(--glass-base-strong);
+  }
+}
+
+.skills-plate:hover {
+  border-color: var(--glass-edge-strong);
+  box-shadow:
+    0 1.5rem 4rem rgb(var(--shadow-rgb) / 0.09),
+    0 0 2.25rem color-mix(in srgb, var(--accent) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight);
+}
+
+/* Fading hairline under the category label - same gradient family as the
+   section heading's accent line, so the plates read as part of the system. */
+.skills-plate-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 45%, transparent),
+    color-mix(in srgb, var(--gradient-to) 22%, transparent) 40%,
+    transparent
+  );
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--chip-fill);
+  padding: 0.3125rem 0.6875rem 0.3125rem 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  line-height: 1.25;
+}
+
+.skill-pill:hover {
+  border-color: var(--glass-edge-strong);
+  background: var(--chip-fill-hover);
+  color: var(--text-primary);
+}
+
+.skill-pill-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+/* Colour/border hover applies in both motion modes; only the lift (and the
+   transitions that smooth it) are gated, so reduced motion gets the tint
+   without anything moving. */
+@media (prefers-reduced-motion: no-preference) {
+  .skills-plate,
+  .skill-pill {
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease,
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .skill-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.25rem rgb(var(--shadow-rgb) / 0.1);
+  }
+}
+
+/* Thin gradient scroll-progress bar sitting on the header's bottom border.
+   Absolutely positioned so it never affects the measured --navbar-height. */
+.navbar-scroll-progress {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--gradient-from), var(--gradient-to));
+  box-shadow: 0 0 8px -2px color-mix(in srgb, var(--accent) 70%, transparent);
+}

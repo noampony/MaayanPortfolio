@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+allowed_email="noampong@gmail.com"
+current_email="$(git config user.email || true)"
+
+if [ "$current_email" != "$allowed_email" ]; then
+  echo "pre-commit: blocked — user.email is '$current_email', expected '$allowed_email' for this personal project." >&2
+  echo "Fix with: git config user.email $allowed_email" >&2
+  exit 1
+fi

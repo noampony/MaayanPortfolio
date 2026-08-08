@@ -1,0 +1,152 @@
+/**
+ * Build/dev-time self-check for the content validator (Task 3.2).
+ *
+ * Imported as a side effect from `loaders.ts` so `pnpm build` / `next dev` fail
+ * when sample data is invalid or the confidentiality gate regresses.
+ */
+
+import { profile } from "./data/profile";
+import { about } from "./data/about";
+import { businessCard } from "./data/businessCard";
+import { courses } from "./data/courses";
+import { experiences } from "./data/experience";
+import { impacts } from "./data/impact";
+import { projects } from "./data/projects";
+import {
+  sampleExperienceReviewed,
+  sampleExperienceUnreviewed,
+  sampleProjectReviewed,
+  sampleProjectUnreviewed,
+} from "./fixtures";
+import {
+  filterConfidentialityReviewed,
+  getUnreviewedWorkItems,
+  validateExperience,
+  validateProject,
+} from "./validate";
+
+function assertConfidentialityFilter(): void {
+  const experiences = [
+    validateExperience(sampleExperienceReviewed),
+    validateExperience(sampleExperienceUnreviewed),
+  ];
+  const publishedExperiences = filterConfidentialityReviewed(experiences);
+  if (publishedExperiences.length !== 1) {
+    throw new Error(
+      "Content validator self-check failed: confidentiality filter must exclude unreviewed experience items.",
+    );
+  }
+  if (publishedExperiences[0]?.organization !== sampleExperienceReviewed.organization) {
+    throw new Error(
+      "Content validator self-check failed: confidentiality filter kept the wrong experience item.",
+    );
+  }
+
+  const projects = [
+    validateProject(sampleProjectReviewed),
+    validateProject(sampleProjectUnreviewed),
+  ];
+  const publishedProjects = filterConfidentialityReviewed(projects);
+  if (publishedProjects.length !== 1) {
+    throw new Error(
+      "Content validator self-check failed: confidentiality filter must exclude unreviewed project items.",
+    );
+  }
+  if (publishedProjects[0]?.name !== sampleProjectReviewed.name) {
+    throw new Error(
+      "Content validator self-check failed: confidentiality filter kept the wrong project item.",
+    );
+  }
+}
+
+/** Verify the real Experience data is gated correctly (Task 6.1, spec §15.4). */
+function assertExperienceConfidentialityGate(): void {
+  const published = filterConfidentialityReviewed(experiences);
+  if (published.some((entry) => entry.confidentialityReviewed !== true)) {
+    throw new Error(
+      "Content validator self-check failed: published experience output contains an unreviewed entry.",
+    );
+  }
+  if (published.length < 1) {
+    throw new Error(
+      "Content validator self-check failed: expected at least one published experience entry.",
+    );
+  }
+}
+
+/** Verify the real Project data is gated correctly (Task 7.1, spec §8.4, §15.4). */
+function assertProjectConfidentialityGate(): void {
+  const published = filterConfidentialityReviewed(projects);
+  if (published.some((entry) => entry.confidentialityReviewed !== true)) {
+    throw new Error(
+      "Content validator self-check failed: published project output contains an unreviewed entry.",
+    );
+  }
+  // All four projects are owner-approved for publication (the Check Point three in
+  // generalized, public-safe form); none should remain gated.
+  if (getUnreviewedWorkItems(projects).length !== 0) {
+    throw new Error(
+      "Content validator self-check failed: a project is unexpectedly still gated (confidentialityReviewed !== true).",
+    );
+  }
+  if (published.length < 1) {
+    throw new Error(
+      "Content validator self-check failed: expected at least one published project.",
+    );
+  }
+}
+
+/**
+ * Verify the real Courses data validates and stays in the homepage preview range
+ * (Task 8.1, §8.5).
+ *
+ * Upper bound raised 5 → 6 when the CV-sourced web development bootcamp was added.
+ * The homepage renders `learning-paths.ts`, not this module, so the bound only guards
+ * the Course model data itself.
+ */
+function assertCoursesData(): void {
+  if (courses.length < 3 || courses.length > 6) {
+    throw new Error(
+      "Content validator self-check failed: courses must be 3-6 for the preview (spec §8.5).",
+    );
+  }
+}
+
+/** Verify the real My Impact data validates and is complete + correctly ordered (Task 5.1, §8.2). */
+function assertImpactData(): void {
+  // All nine specification cards (§8.2.1-§8.2.9) must be present.
+  if (impacts.length !== 9) {
+    throw new Error(
+      "Content validator self-check failed: expected 9 My Impact cards (spec §8.2).",
+    );
+  }
+  // No card may ship without a description or at least one impact bullet.
+  if (impacts.some((card) => card.impactBullets.length === 0)) {
+    throw new Error(
+      "Content validator self-check failed: every My Impact card must have at least one impact bullet.",
+    );
+  }
+  // displayOrder must be the unique sequence 1..9 (specification order preserved).
+  const orders = impacts.map((card) => card.displayOrder).sort((a, b) => a - b);
+  const expected = orders.every((order, index) => order === index + 1);
+  if (new Set(orders).size !== orders.length || !expected) {
+    throw new Error(
+      "Content validator self-check failed: My Impact displayOrder must be the unique sequence 1..9.",
+    );
+  }
+}
+
+if (!profile.name) {
+  throw new Error("Content validator self-check failed: profile data failed to load.");
+}
+if (!about.professionalSummary) {
+  throw new Error("Content validator self-check failed: about data failed to load.");
+}
+if (!businessCard.isPromoted) {
+  throw new Error("Content validator self-check failed: business card promotion was not confirmed.");
+}
+assertConfidentialityFilter();
+assertExperienceConfidentialityGate();
+assertProjectConfidentialityGate();
+assertCoursesData();
+assertImpactData();
