@@ -93,6 +93,10 @@ export type ImpactLogo = {
   src: AssetReference;
   /** Organization name, read by assistive tech - not decorative. */
   alt: string;
+  /** Intrinsic pixel width of the asset - lets the lockup reserve its box before decode. */
+  width: number;
+  /** Intrinsic pixel height of the asset. */
+  height: number;
 };
 
 /** §11.1A Impact Model - a single card in the Volunteering & Community grid (§8.2). */
@@ -101,9 +105,11 @@ export type Impact = {
   description: string;
   impactBullets: string[];
   /**
-   * Display-only period label for the card's timeline chip (e.g. `2024 - 2025`). Free
-   * text rather than a date pair: the CV states these as bare years, so nothing here is
-   * a computed or invented month.
+   * Display-only period label for the card's timeline chip. Validated shape: `YYYY`,
+   * `YYYY - YYYY`, or `YYYY - Present`. Free text rather than a date pair because the CV
+   * states these as bare years, so nothing here is a computed or invented month. The
+   * literal `Present` is the sentinel the card's "ongoing" state keys off, matching the
+   * {@link ExperienceEndDate} sentinel.
    */
   period?: string;
   /** Partner/organization logos for this entry; omitted entries fall back to initials. */

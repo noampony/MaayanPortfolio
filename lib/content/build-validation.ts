@@ -122,6 +122,21 @@ function assertImpactData(): void {
       `Content validator self-check failed: Volunteering displayOrder must be the unique sequence 1..${impacts.length}.`,
     );
   }
+  // The sort above only proves displayOrder is a permutation of 1..n. The bento derives
+  // its wide feature tiles from array position, so the array itself has to be authored in
+  // that order - otherwise the wide tiles silently land on the wrong entries.
+  if (impacts.some((card, index) => card.displayOrder !== index + 1)) {
+    throw new Error(
+      "Content validator self-check failed: Volunteering cards must be authored in displayOrder (1..n).",
+    );
+  }
+  // `period` is optional in the model, but the CV gives a year for every volunteering
+  // entry and the card head reserves space for the chip - a missing one is a design bug.
+  if (impacts.some((card) => !card.period)) {
+    throw new Error(
+      "Content validator self-check failed: every Volunteering card must carry a `period` label.",
+    );
+  }
 }
 
 if (!profile.name) {

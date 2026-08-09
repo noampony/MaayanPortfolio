@@ -141,6 +141,8 @@ function validateImpactLogo(value: unknown, path: string): ImpactLogo {
   return {
     src: assertRequiredInternalPath(raw.src, `${path}.src`),
     alt: assertRequiredString(raw.alt, `${path}.alt`),
+    width: assertRequiredNumber(raw.width, `${path}.width`),
+    height: assertRequiredNumber(raw.height, `${path}.height`),
   };
 }
 
@@ -177,6 +179,25 @@ function assertExperienceEndDate(value: unknown, path: string): ExperienceEndDat
     return value;
   }
   return assertYearMonthDate(value, path);
+}
+
+/**
+ * Volunteering period labels: `YYYY`, `YYYY - YYYY`, or `YYYY - Present`. The CV states
+ * these as bare years, so a month here would be an invented fact and the shape refuses
+ * one. `Present` matches the {@link assertExperienceEndDate} sentinel, and the separator
+ * is the ASCII hyphen-with-spaces used by every other date label on the site.
+ */
+const IMPACT_PERIOD_PATTERN = /^\d{4}(?: - (?:\d{4}|Present))?$/;
+
+function assertOptionalImpactPeriod(value: unknown, path: string): string | undefined {
+  const period = assertOptionalString(value, path);
+  if (period !== undefined && !IMPACT_PERIOD_PATTERN.test(period)) {
+    throw new ContentValidationError(
+      path,
+      "expected `YYYY`, `YYYY - YYYY`, or `YYYY - Present`",
+    );
+  }
+  return period;
 }
 
 function assertOptionalYearOrNumber(value: unknown, path: string): string | number | undefined {
@@ -645,7 +666,7 @@ export function validateImpactList(data: unknown): Impact[] {
       title: assertRequiredString(raw.title, `${path}.title`),
       description: assertRequiredString(raw.description, `${path}.description`),
       impactBullets: assertRequiredStringArray(raw.impactBullets, `${path}.impactBullets`),
-      period: assertOptionalString(raw.period, `${path}.period`),
+      period: assertOptionalImpactPeriod(raw.period, `${path}.period`),
       logos: assertOptionalImpactLogos(raw.logos, `${path}.logos`),
       displayOrder: assertRequiredNumber(raw.displayOrder, `${path}.displayOrder`),
       confidentialityReviewed: assertRequiredBoolean(
