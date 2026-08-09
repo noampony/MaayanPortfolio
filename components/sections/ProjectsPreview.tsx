@@ -19,7 +19,9 @@ import { revealItemVariants, staggerContainerVariants } from "@/lib/motion";
  * screenshot of one of her own apps, which has no business sitting behind these cards.
  */
 const PROJECT_BACKGROUNDS: Record<string, string> = {
-  // No project artwork supplied yet.
+  "Capstone Engineering Project": "/images/projects/capstone-engineering-project.jpg",
+  "Microcontrollers Lab": "/images/projects/microcontrollers-lab.jpg",
+  "Semiconductors Lab": "/images/projects/semiconductors-lab.jpg",
 };
 
 /** Per-project opacity override for `PROJECT_BACKGROUNDS` (front + back), keyed by project name. */
