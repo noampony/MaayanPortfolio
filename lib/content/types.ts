@@ -100,6 +100,12 @@ export type Impact = {
   title: string;
   description: string;
   impactBullets: string[];
+  /**
+   * Display-only period label for the card's timeline chip (e.g. `2024 - 2025`). Free
+   * text rather than a date pair: the CV states these as bare years, so nothing here is
+   * a computed or invented month.
+   */
+  period?: string;
   /** Partner/organization logos for this entry; omitted entries fall back to initials. */
   logos?: ImpactLogo[];
   /** 1-based display ordering. */

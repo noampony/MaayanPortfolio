@@ -645,6 +645,7 @@ export function validateImpactList(data: unknown): Impact[] {
       title: assertRequiredString(raw.title, `${path}.title`),
       description: assertRequiredString(raw.description, `${path}.description`),
       impactBullets: assertRequiredStringArray(raw.impactBullets, `${path}.impactBullets`),
+      period: assertOptionalString(raw.period, `${path}.period`),
       logos: assertOptionalImpactLogos(raw.logos, `${path}.logos`),
       displayOrder: assertRequiredNumber(raw.displayOrder, `${path}.displayOrder`),
       confidentialityReviewed: assertRequiredBoolean(

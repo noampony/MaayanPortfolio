@@ -2242,58 +2242,272 @@ main:focus-visible {
 }
 
 /* ── Volunteering & Community section (spec §8.2) ──────────────────────────
-   A logo-led card grid (1 col -> 2 -> 3, mirroring Projects & Labs). The card glass
-   matches the site card system (§6.7: see `.project-flip-face`, `.skills-plate`). */
+   An asymmetric bento grid (1 col -> 2 -> 3) whose first entry leads as a wide
+   two-column tile, so five entries fill every breakpoint without a hole in the last
+   row. The plate is the site card material (§6.7: see `.project-flip-face`,
+   `.skills-plate`) built up in layers instead of left flat: the organization's own
+   mark as a multiply-blended watermark, a pointer-tracking accent bloom, a hairline
+   hatch, a ghost index numeral and a flowing gradient spine down the leading edge.
+   Every layer is decorative, transform/opacity-driven and stilled under
+   `prefers-reduced-motion`. */
 
 .impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   margin-top: clamp(2rem, 5vw, 3.5rem);
 }
 
+@media (min-width: 640px) {
+  .impact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .impact-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.impact-cell {
+  display: flex;
+}
+
+/* The lead entry takes the full width of the first row's remaining span. */
+@media (min-width: 640px) {
+  .impact-cell--featured {
+    grid-column: span 2;
+  }
+}
+
 .impact-card {
+  --lift: 0rem;
+  --spine-width: 3px;
   position: relative;
+  isolation: isolate;
   display: flex;
   width: 100%;
   height: 100%;
   overflow: hidden;
   border: 1px solid var(--glass-edge);
-  border-radius: var(--radius);
+  border-radius: 1.1rem;
   background:
-    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
-    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
+    linear-gradient(150deg, var(--glass-wash), var(--glass-tint-a) 44%, var(--glass-tint-b)),
     var(--glass-base-solid);
   box-shadow:
     0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.11),
     inset 0 1px 0 var(--glass-highlight),
     inset 0 -1px 0 var(--glass-underline);
   backdrop-filter: blur(24px) saturate(175%);
+  /* The tilt vars are written by ImpactCard on pointer move; `--lift` is CSS-only. */
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    translate3d(0, var(--lift), 0);
   transition:
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    transform 200ms ease;
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms ease,
+    box-shadow 260ms ease;
 }
 
 .impact-card:hover,
 .impact-card:focus-within {
+  --lift: -0.4rem;
+  --spine-width: 5px;
   border-color: var(--glass-edge-strong);
-  transform: translateY(-0.25rem);
   box-shadow:
-    0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.14),
+    0 1.9rem 4.75rem rgb(var(--shadow-rgb) / 0.16),
     inset 0 1px 0 var(--glass-highlight),
     inset 0 -1px 0 var(--glass-underline);
 }
 
+/* Layer: the organization mark, blown up behind the copy. `multiply` drops the white
+   field of the JPG logos so they read as ink on the plate rather than a pale box. */
+.impact-card-watermark {
+  position: absolute;
+  right: -6%;
+  bottom: -10%;
+  z-index: 0;
+  display: block;
+  width: 52%;
+  max-width: 13rem;
+  opacity: 0.075;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(75% 75% at 70% 70%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(75% 75% at 70% 70%, #000 25%, transparent 78%);
+  transform: rotate(-4deg);
+  transition:
+    opacity 380ms ease,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The wide tile's row height is set by its taller neighbour, so its mark sits up in the
+   space that opens between the description and the bottom-anchored bullets. */
+.impact-card--featured .impact-card-watermark {
+  width: 26%;
+  max-width: 11rem;
+  right: 5%;
+  bottom: 34%;
+}
+
+.impact-card-watermark-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Initials stand in as the watermark when an entry has no logo. */
+.impact-card-watermark--text {
+  right: 5%;
+  bottom: 0.35rem;
+  width: auto;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 4.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.07;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.impact-card:hover .impact-card-watermark {
+  opacity: 0.13;
+  transform: rotate(-4deg) scale(1.05);
+}
+
+/* Layer: accent bloom. Sits where the pointer is (falling back to the top-left
+   shoulder) and drifts slowly on its own, out of phase per card. */
+.impact-card-bloom {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    42% 46% at var(--pointer-x, 24%) var(--pointer-y, 14%),
+    color-mix(in srgb, var(--accent) 26%, transparent),
+    transparent 68%
+  );
+  opacity: 0.6;
+  transition: opacity 380ms ease;
+  animation: impact-bloom-drift 19s ease-in-out infinite;
+  animation-delay: calc(var(--card-index, 0) * -3.4s);
+}
+
+.impact-card:hover .impact-card-bloom {
+  opacity: 0.85;
+}
+
+@keyframes impact-bloom-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 5%, 0) scale(1.08);
+  }
+}
+
+/* Layer: hairline hatch, dissolved toward the middle of the plate - just enough
+   texture that the surface is not a flat fill. */
+.impact-card-hatch {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--accent) 7%, transparent) 7px 8px
+  );
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(90% 80% at 100% 0%, #000 0%, transparent 62%);
+  mask-image: radial-gradient(90% 80% at 100% 0%, #000 0%, transparent 62%);
+}
+
+/* Layer: gradient spine down the leading edge, with a slow light travelling through it. */
+.impact-card-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 1;
+  width: var(--spine-width);
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--gradient-from),
+    var(--gradient-via) 28%,
+    var(--gradient-to) 55%,
+    var(--gradient-via) 78%,
+    var(--gradient-from)
+  );
+  background-size: 100% 260%;
+  animation: impact-spine-flow 9s linear infinite;
+  animation-delay: calc(var(--card-index, 0) * -1.6s);
+  transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes impact-spine-flow {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -260%;
+  }
+}
+
+/* Ghost index numeral, pinned opposite the logo lockup. */
+.impact-card-index {
+  position: absolute;
+  top: clamp(0.75rem, 1.6vw, 1.1rem);
+  right: clamp(0.9rem, 2vw, 1.4rem);
+  z-index: 1;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: color-mix(in srgb, var(--accent) 14%, transparent);
+  pointer-events: none;
+  user-select: none;
+  transition: color 300ms ease;
+}
+
+.impact-card--featured .impact-card-index {
+  font-size: 2.9rem;
+}
+
+.impact-card:hover .impact-card-index {
+  color: color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
 .impact-card-body {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
   width: 100%;
-  padding: clamp(1.25rem, 2.6vw, 1.75rem);
+  padding: clamp(1.35rem, 2.6vw, 1.85rem);
 }
 
-/* Partner/organization logos lead the card - a row of raised chips so JPG-white,
-   PNG-transparent, and other source backgrounds all read as the same material. */
+.impact-card--featured .impact-card-body {
+  gap: 0.7rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Logo lockup, then the period chip beneath it. Stacked rather than justified across the
+   row so the chip never crowds the index numeral on the narrow tiles. */
+.impact-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding-right: 2.6rem;
+}
+
 .impact-card-logos {
   display: flex;
   align-items: center;
@@ -2305,19 +2519,34 @@ main:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 2.75rem;
-  min-width: 2.75rem;
-  padding: 0.4rem 0.65rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  padding: 0.35rem 0.6rem;
   border-radius: 0.75rem;
   border: 1px solid var(--glass-edge);
   background: var(--bg-surface-raised);
   box-shadow: 0 0.25rem 0.75rem rgb(var(--shadow-rgb) / 0.06);
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.impact-card--featured .impact-card-logo {
+  height: 3.25rem;
+  min-width: 3.25rem;
+}
+
+.impact-card:hover .impact-card-logo {
+  transform: translateY(-2px);
+  border-color: var(--glass-edge-strong);
+  box-shadow: 0 0.5rem 1.15rem rgb(var(--shadow-rgb) / 0.12);
 }
 
 .impact-card-logo-img {
   height: 100%;
   width: auto;
-  max-width: 6rem;
+  max-width: 5rem;
   object-fit: contain;
 }
 
@@ -2331,51 +2560,144 @@ main:focus-visible {
   color: color-mix(in srgb, var(--accent) 78%, var(--text-muted));
 }
 
+/* Period chip - display-only years, restating what the description already says. */
+.impact-card-period {
+  flex: none;
+  align-self: flex-start;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: 9999px;
+  background: var(--chip-fill);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent);
+  transition: background-color 260ms ease;
+}
+
+.impact-card:hover .impact-card-period {
+  background: var(--chip-fill-hover);
+}
+
 .impact-card-title {
-  margin: 0.3rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: var(--type-h2);
   font-weight: 600;
   line-height: var(--leading-h2);
+  letter-spacing: -0.01em;
   color: var(--text-primary);
+}
+
+.impact-card--featured .impact-card-title {
+  font-size: calc(var(--type-h2) * 1.14);
 }
 
 .impact-card-desc {
   margin: 0.15rem 0 0;
+  max-width: 52ch;
   font-size: var(--type-small);
   line-height: var(--leading-body);
   color: var(--text-secondary);
 }
 
+.impact-card--featured .impact-card-desc {
+  font-size: var(--type-body);
+}
+
+/* `margin-top: auto` anchors the bullet block to the bottom of every tile, so the rules
+   above them line up across a row even when the titles and descriptions differ in length. */
 .impact-card-bullets {
-  margin: 0.5rem 0 0;
-  padding: 0;
+  margin: 0.9rem 0 0;
+  margin-top: auto;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 14%, var(--border));
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
+}
+
+/* The wide tile has room to run its bullets in two columns. */
+@media (min-width: 768px) {
+  .impact-card--featured .impact-card-bullets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
 }
 
 .impact-card-bullet {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.55rem;
   margin: 0;
   font-size: var(--type-small);
   line-height: var(--leading-small);
   color: var(--text-secondary);
 }
 
-.impact-card-bullet-icon {
-  width: 1rem;
-  height: 1rem;
+/* Check mark in a tinted disc; the discs lift in sequence as the card is hovered. */
+.impact-card-bullet-disc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
-  margin-top: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  background: var(--chip-fill);
   color: var(--accent);
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 320ms ease,
+    border-color 320ms ease;
+  transition-delay: calc(var(--bullet-index, 0) * 45ms);
+}
+
+.impact-card:hover .impact-card-bullet-disc {
+  transform: scale(1.12);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--chip-fill-hover);
+}
+
+.impact-card-bullet-icon {
+  width: 0.7rem;
+  height: 0.7rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .impact-card {
+  .impact-card,
+  .impact-card-watermark,
+  .impact-card-bloom,
+  .impact-card-spine,
+  .impact-card-index,
+  .impact-card-logo,
+  .impact-card-period,
+  .impact-card-bullet-disc {
     transition: none;
+  }
+
+  .impact-card-bloom,
+  .impact-card-spine {
+    animation: none;
+  }
+
+  /* No lift, no tilt - the plate stays exactly where it is painted. */
+  .impact-card:hover,
+  .impact-card:focus-within {
+    --lift: 0rem;
+    transform: none;
+  }
+
+  .impact-card:hover .impact-card-watermark,
+  .impact-card:hover .impact-card-logo,
+  .impact-card:hover .impact-card-bullet-disc {
+    transform: none;
   }
 
   .section-glow,

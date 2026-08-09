@@ -1,26 +1,48 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 import { impacts } from "@/lib/content/data/impact";
 import { SectionBackground } from "@/components/layout/SectionBackground";
 import { ImpactCard } from "@/components/ui/ImpactCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { revealItemVariants, staggerContainerVariants } from "@/lib/motion";
+import { easeOut, revealItemVariants, staggerContainerVariants } from "@/lib/motion";
 
 /**
  * Volunteering & Community section - replaces the former About section. Every
- * volunteering entry from the validated content model renders as a logo-led card in a
- * responsive grid (1 col -> 2 -> 3), mirroring the Projects & Labs layout: each card leads
- * with the partner/organization logo(s), then title, description, and impact bullets.
+ * volunteering entry from the validated content model renders as a card in an asymmetric
+ * bento grid: the newest entry leads as a wide two-column tile, the rest follow as
+ * standard tiles, so the grid fills cleanly at every breakpoint (1 col -> 2 -> 3) instead
+ * of leaving a hole in the last row.
  *
- * Motion: a stagger fade-up reveal on scroll, gated behind `prefers-reduced-motion` (cards
- * render in place with no transform when reduced motion is requested). The `<noscript>`
- * block restores full opacity so the grid is completely readable with JS disabled.
+ * Motion: a stagger reveal that lifts, scales and un-skews each tile on scroll, on the
+ * house easing curve. Everything is gated behind `prefers-reduced-motion` (tiles then
+ * render in place with no transform), and the `<noscript>` block restores full opacity so
+ * the grid is completely readable with JS disabled.
  */
 
-/** No-JS fallback: keep the grid visible instead of stuck at the reveal's hidden opacity. */
+/** No-JS fallback: keep the grid visible instead of stuck at the reveal's hidden state. */
 const NO_JS_FALLBACK = `.impact-reveal{opacity:1!important;transform:none!important}`;
+
+/**
+ * Tile reveal - the shared fade-up with a slight scale and a longer travel, so the bento
+ * tiles settle into place rather than simply appearing. Transform/opacity only.
+ */
+const tileRevealVariants: Variants = {
+  hidden: { opacity: 0, y: 34, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.75, ease: easeOut },
+  },
+};
+
+/** Slightly tighter stagger than the site default - five tiles, so the wave stays brisk. */
+const gridStaggerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.08 } },
+};
 
 export function MyImpact() {
   const reduceMotion = useReducedMotion();
@@ -54,13 +76,25 @@ export function MyImpact() {
           }
         />
 
-        <ul className="impact-grid mt-10 grid list-none gap-4 p-0 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        <motion.ul
+          className="impact-grid list-none p-0"
+          variants={animate ? gridStaggerVariants : undefined}
+        >
           {impacts.map((impact, index) => (
-            <motion.li key={impact.title} variants={revealItemVariants} className="impact-reveal flex">
-              <ImpactCard impact={impact} headingId={`volunteering-${index}-heading`} />
+            <motion.li
+              key={impact.title}
+              variants={animate ? tileRevealVariants : revealItemVariants}
+              className={`impact-reveal impact-cell${index === 0 ? " impact-cell--featured" : ""}`}
+            >
+              <ImpactCard
+                impact={impact}
+                headingId={`volunteering-${index}-heading`}
+                index={index}
+                featured={index === 0}
+              />
             </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </motion.div>
     </section>
   );

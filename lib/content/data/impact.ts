@@ -12,6 +12,9 @@
  *
  * `logos` is the owner-supplied partner/organization logo(s) for an entry (served from
  * `/public/images/volunteering/`); a card with no logo falls back to initials in the UI.
+ *
+ * `period` is a display-only label restating the years the description already gives -
+ * the CV states bare years, so no month is inferred and nothing new is claimed.
  */
 
 import type { Impact } from "../types";
@@ -27,6 +30,7 @@ const impactData = [
       "Academic support where it is hardest to come by",
       "An ongoing commitment, not a one-off",
     ],
+    period: "2025 - Present",
     logos: [{ src: "/images/volunteering/perach.jpg", alt: "Perach" }],
     displayOrder: 1,
     confidentialityReviewed: true,
@@ -40,6 +44,7 @@ const impactData = [
       "Built around education, not one-off exposure",
       "Run together with an industry partner and an NGO",
     ],
+    period: "2025 - Present",
     logos: [
       { src: "/images/volunteering/elbit.png", alt: "Elbit Systems" },
       { src: "/images/volunteering/shavot.png", alt: "Shavot" },
@@ -56,6 +61,7 @@ const impactData = [
       "Support for a student in a peripheral community",
       "A mentoring relationship, not just homework help",
     ],
+    period: "2024 - 2025",
     logos: [{ src: "/images/volunteering/ischool.jpg", alt: "I-School Program" }],
     displayOrder: 3,
     confidentialityReviewed: true,
@@ -69,6 +75,7 @@ const impactData = [
       "Answered a national call for agricultural help",
       "Coordination and responsibility under real deadlines",
     ],
+    period: "2024",
     displayOrder: 4,
     confidentialityReviewed: true,
   },
@@ -81,6 +88,7 @@ const impactData = [
       "Practical day-to-day assistance",
       "Time given consistently, week after week",
     ],
+    period: "2023",
     displayOrder: 5,
     confidentialityReviewed: true,
   },
