@@ -17,6 +17,7 @@ import type {
   ExperienceEndDate,
   ExperienceRole,
   Impact,
+  ImpactLogo,
   LearningPath,
   Profile,
   Project,
@@ -133,6 +134,24 @@ function assertOptionalStringArray(value: unknown, path: string): string[] | und
     return undefined;
   }
   return assertRequiredStringArray(value, path);
+}
+
+function validateImpactLogo(value: unknown, path: string): ImpactLogo {
+  const raw = assertObject(value, path);
+  return {
+    src: assertRequiredInternalPath(raw.src, `${path}.src`),
+    alt: assertRequiredString(raw.alt, `${path}.alt`),
+  };
+}
+
+function assertOptionalImpactLogos(value: unknown, path: string): ImpactLogo[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!Array.isArray(value)) {
+    throw new ContentValidationError(path, "optional array of logos");
+  }
+  return value.map((item, index) => validateImpactLogo(item, `${path}[${index}]`));
 }
 
 function assertYearMonthDate(value: unknown, path: string): YearMonthDate {
@@ -626,7 +645,7 @@ export function validateImpactList(data: unknown): Impact[] {
       title: assertRequiredString(raw.title, `${path}.title`),
       description: assertRequiredString(raw.description, `${path}.description`),
       impactBullets: assertRequiredStringArray(raw.impactBullets, `${path}.impactBullets`),
-      icon: assertOptionalString(raw.icon, `${path}.icon`),
+      logos: assertOptionalImpactLogos(raw.logos, `${path}.logos`),
       displayOrder: assertRequiredNumber(raw.displayOrder, `${path}.displayOrder`),
       confidentialityReviewed: assertRequiredBoolean(
         raw.confidentialityReviewed,

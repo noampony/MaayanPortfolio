@@ -2241,118 +2241,18 @@ main:focus-visible {
   height: 0.9rem;
 }
 
-/* ── My Impact section (spec §8.2) ─────────────────────────────────────────
-   Circular Gallery of impact cards. The dev-grid wash mirrors the retired About
-   wash; the card glass matches the site card system (§6.7) but sits on a more
-   opaque base so overlapping slides stay readable in the 3D arc. */
+/* ── Volunteering & Community section (spec §8.2) ──────────────────────────
+   A logo-led card grid (1 col -> 2 -> 3, mirroring Projects & Labs). The card glass
+   matches the site card system (§6.7: see `.project-flip-face`, `.skills-plate`). */
 
-.impact-header {
-  position: relative;
-}
-
-.impact-gallery {
-  --impact-card-w: clamp(15.5rem, 80vw, 21rem);
-  --impact-card-h: clamp(23rem, 70vh, 27rem);
-  /* Step tracks the card width so the neighbour overlap stays consistent from
-     mobile to desktop instead of bottoming out at a fixed min. */
-  --impact-step: calc(var(--impact-card-w) * 0.72);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 2vw, 1.5rem);
+.impact-grid {
   margin-top: clamp(2rem, 5vw, 3.5rem);
-}
-
-.impact-gallery-track {
-  position: relative;
-  flex: 1 1 auto;
-  height: calc(var(--impact-card-h) + 3rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  touch-action: pan-y;
-}
-
-/* Prev/Next controls flank the track on both sides (spec §8.2 side navigation). */
-.impact-gallery-arrow {
-  position: relative;
-  /* Must beat every card's z-index (`total - abs`, currently up to 9) - cards are
-     absolutely positioned and can visually extend under the arrows, so a low z-index
-     here let an overlapping card swallow the arrow's click. */
-  z-index: 20;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-  background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
-}
-
-.impact-gallery-arrow svg {
-  width: 1.1rem;
-  height: 1.1rem;
-}
-
-.impact-gallery-arrow:hover {
-  border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-surface));
-  color: var(--accent);
-}
-
-.impact-gallery-arrow:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@media (max-width: 640px) {
-  .impact-gallery-arrow {
-    width: 2rem;
-    height: 2rem;
-  }
-}
-
-.impact-slide {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--impact-card-w);
-  height: var(--impact-card-h);
-  /* Depth is conveyed with translateX/scale/opacity only - no rotateY or translateZ.
-     Either one turns the card into a projected 3D shape whose real screen quad can
-     drift from its rectangular hit box, so clicks on a visible side card silently
-     miss the card behind them. Pure 2D transforms keep "what's rendered" and "what's
-     clickable" exactly the same rectangle, while still reading as a receding arc. */
-  transform:
-    translate(-50%, -50%)
-    translateX(calc(var(--offset) * var(--impact-step)))
-    scale(calc(1 - var(--abs) * 0.09));
-  opacity: calc(1 - var(--abs) * 0.28);
-  transition:
-    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-/* Slides outside the visible window are fully hidden and non-interactive
-   (they are also `inert` in the DOM, so they never take keyboard focus). */
-.impact-slide:not([data-visible]) {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .impact-card {
   position: relative;
   display: flex;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border: 1px solid var(--glass-edge);
@@ -2360,7 +2260,7 @@ main:focus-visible {
   background:
     radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
     linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
-    var(--glass-base-strong);
+    var(--glass-base-solid);
   box-shadow:
     0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.11),
     inset 0 1px 0 var(--glass-highlight),
@@ -2368,40 +2268,18 @@ main:focus-visible {
   backdrop-filter: blur(24px) saturate(175%);
   transition:
     border-color 200ms ease,
-    box-shadow 200ms ease;
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
-.impact-card[data-active] {
+.impact-card:hover,
+.impact-card:focus-within {
   border-color: var(--glass-edge-strong);
-  /* Nearly opaque so the two overlapping cards behind it (visible through the
-     backdrop blur otherwise) never bleed into the focused card's own text. */
-  background:
-    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
-    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
-    var(--glass-base-solid);
-  animation: impact-card-glow 4.5s ease-in-out infinite;
-}
-
-.impact-card:not([data-active]):hover {
-  border-color: var(--glass-edge-strong);
-}
-
-@keyframes impact-card-glow {
-  0%,
-  100% {
-    box-shadow:
-      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
-      0 0 2.5rem color-mix(in srgb, var(--accent) 14%, transparent),
-      inset 0 1px 0 var(--glass-highlight),
-      inset 0 -1px 0 var(--glass-underline);
-  }
-  50% {
-    box-shadow:
-      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
-      0 0 3.25rem color-mix(in srgb, var(--accent) 24%, transparent),
-      inset 0 1px 0 var(--glass-highlight),
-      inset 0 -1px 0 var(--glass-underline);
-  }
+  transform: translateY(-0.25rem);
+  box-shadow:
+    0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.14),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
 }
 
 .impact-card-body {
@@ -2409,22 +2287,52 @@ main:focus-visible {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.6rem;
   width: 100%;
-  padding: clamp(1.1rem, 2.6vw, 1.5rem);
+  padding: clamp(1.25rem, 2.6vw, 1.75rem);
 }
 
-.impact-card-index {
-  margin: 0;
+/* Partner/organization logos lead the card - a row of raised chips so JPG-white,
+   PNG-transparent, and other source backgrounds all read as the same material. */
+.impact-card-logos {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.impact-card-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-edge);
+  background: var(--bg-surface-raised);
+  box-shadow: 0 0.25rem 0.75rem rgb(var(--shadow-rgb) / 0.06);
+}
+
+.impact-card-logo-img {
+  height: 100%;
+  width: auto;
+  max-width: 6rem;
+  object-fit: contain;
+}
+
+/* Initials fallback for entries with no supplied logo - same ticker style as the
+   Experience rail's `.xp-marker-text` (see `organizationMarker`). */
+.impact-card-logo--initials {
   font-family: var(--font-mono), var(--font-mono-fallback);
+  font-weight: 700;
   font-size: var(--type-small);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: color-mix(in srgb, var(--accent) 78%, var(--text-muted));
 }
 
 .impact-card-title {
-  margin: 0.1rem 0 0;
+  margin: 0.3rem 0 0;
   font-size: var(--type-h2);
   font-weight: 600;
   line-height: var(--leading-h2);
@@ -2465,32 +2373,9 @@ main:focus-visible {
   color: var(--accent);
 }
 
-/* Whole-card activator overlay for non-centre slides. Transparent so the article
-   text underneath stays visible; labelled for AT via its `aria-label`. */
-.impact-card-activate {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  cursor: pointer;
-  border: 0;
-  border-radius: var(--radius);
-  background: transparent;
-  appearance: none;
-}
-
-.impact-card-activate:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .impact-slide {
-    transition: none;
-  }
-
   .impact-card {
     transition: none;
-    animation: none;
   }
 
   .section-glow,

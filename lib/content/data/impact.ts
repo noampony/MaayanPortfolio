@@ -1,16 +1,17 @@
 /**
- * Volunteering & Community content - the cards shown in the homepage carousel.
+ * Volunteering & Community content - the cards shown in the homepage grid.
  *
  * Sourced from the owner's CV ("Maayan Pony - CV" → Volunteering). One card per entry,
- * ordered newest-first via `displayOrder`; the carousel consumes the array directly. The
- * data is intentionally presentation-agnostic - no UI logic, styling, or icons here.
+ * ordered newest-first via `displayOrder`; the grid consumes the array directly. The
+ * data is intentionally presentation-agnostic - no layout or styling here.
  *
  * Every card restates what the CV already says publicly. No participant names, no
  * institution addresses, no numbers the CV does not state - these programmes involve
  * minors and vulnerable people, so nothing identifying is added and no impact figure is
  * invented. `confidentialityReviewed: true` records that check.
  *
- * `icon` is omitted for every card - it is optional and no icon assets exist.
+ * `logos` is the owner-supplied partner/organization logo(s) for an entry (served from
+ * `/public/images/volunteering/`); a card with no logo falls back to initials in the UI.
  */
 
 import type { Impact } from "../types";
@@ -26,6 +27,7 @@ const impactData = [
       "Academic support where it is hardest to come by",
       "An ongoing commitment, not a one-off",
     ],
+    logos: [{ src: "/images/volunteering/perach.jpg", alt: "Perach" }],
     displayOrder: 1,
     confidentialityReviewed: true,
   },
@@ -37,6 +39,10 @@ const impactData = [
       "Opening engineering and technology up to girls who rarely see it",
       "Built around education, not one-off exposure",
       "Run together with an industry partner and an NGO",
+    ],
+    logos: [
+      { src: "/images/volunteering/elbit.png", alt: "Elbit Systems" },
+      { src: "/images/volunteering/shavot.png", alt: "Shavot" },
     ],
     displayOrder: 2,
     confidentialityReviewed: true,
@@ -50,6 +56,7 @@ const impactData = [
       "Support for a student in a peripheral community",
       "A mentoring relationship, not just homework help",
     ],
+    logos: [{ src: "/images/volunteering/ischool.jpg", alt: "I-School Program" }],
     displayOrder: 3,
     confidentialityReviewed: true,
   },
