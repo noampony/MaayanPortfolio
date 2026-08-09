@@ -3,7 +3,7 @@ import { SectionBackground } from "@/components/layout/SectionBackground";
 import { ExperienceLedger } from "@/components/ui/ExperienceLedger";
 import { about } from "@/lib/content/data/about";
 import { experiences } from "@/lib/content/data/experience";
-import { buildExperienceLedger, ledgerStartYear } from "@/lib/content/experienceLedger";
+import { buildExperienceLedger } from "@/lib/content/experienceLedger";
 import { filterConfidentialityReviewed } from "@/lib/content/loaders";
 import type { Experience as ExperienceModel } from "@/lib/content/types";
 
@@ -118,7 +118,7 @@ export function Experience() {
       <div className="site-shell relative z-10">
         <ExperienceIntro />
 
-        <ExperienceLedger entries={ledger} startYear={ledgerStartYear(ledger)} />
+        <ExperienceLedger entries={ledger} />
       </div>
     </section>
   );

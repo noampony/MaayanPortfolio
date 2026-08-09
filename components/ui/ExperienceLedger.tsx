@@ -42,8 +42,6 @@ import { cn } from "@/lib/utils";
 
 type ExperienceLedgerProps = {
   entries: readonly LedgerEntry[];
-  /** Year the timeline starts, for the closing line; omit to drop the line. */
-  startYear?: string | null;
 };
 
 const MONTH_LABELS = [
@@ -196,7 +194,7 @@ function useEntryReveal(listRef: RefObject<HTMLElement | null>, count: number) {
   }, [listRef, count]);
 }
 
-export function ExperienceLedger({ entries, startYear }: ExperienceLedgerProps) {
+export function ExperienceLedger({ entries }: ExperienceLedgerProps) {
   const [activeCertificate, setActiveCertificate] = useState<EducationCertificateRef | null>(null);
   const railRef = useRef<HTMLSpanElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
@@ -223,12 +221,6 @@ export function ExperienceLedger({ entries, startYear }: ExperienceLedgerProps) 
           ))}
         </ol>
       </div>
-
-      {startYear ? (
-        <p className="xp-end" aria-hidden="true">
-          - began <span className="xp-end-year">{startYear}</span>, still building
-        </p>
-      ) : null}
 
       <EducationCertificateViewer
         certificate={activeCertificate}

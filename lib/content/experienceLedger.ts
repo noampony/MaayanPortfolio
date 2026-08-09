@@ -190,16 +190,3 @@ function firstYear(value: string): number | null {
   const match = /\d{4}/.exec(value);
   return match ? Number(match[0]) : null;
 }
-
-/**
- * The earliest year anywhere in the ledger - the year the timeline starts, used for the
- * closing "began ..." line. Null when no entry carries a parseable year.
- */
-export function ledgerStartYear(entries: readonly LedgerEntry[]): string | null {
-  const years = entries
-    .map((entry) =>
-      firstYear(entry.kind === "role" ? entry.startDate : entry.education.dateRange),
-    )
-    .filter((year): year is number => year !== null);
-  return years.length > 0 ? String(Math.min(...years)) : null;
-}

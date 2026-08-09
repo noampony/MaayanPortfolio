@@ -1,17 +1,13 @@
 /**
  * Experience content - used by the Experience ledger.
  *
- * Sourced from the owner's CV ("Maayan Pony - CV" → Experience, Army Service). Published
- * because the CV is the owner's own outward-facing document and the owner asked for its
- * content to go on the site; nothing is added beyond what the CV already states.
+ * Sourced from the owner's CV ("Maayan Pony - CV" → Experience). Published because the CV
+ * is the owner's own outward-facing document and the owner asked for its content to go on
+ * the site; nothing is added beyond what the CV already states.
  *
- * ⚠️ Dates. The CV gives years only ("2024 - present", "2019 - 2021") with no months, so
- * each entry is anchored at year granularity: January for a start, December for an end.
- * Confirm the exact months before publishing.
- *
- * ⚠️ The army entry reproduces the CV's own wording, including the unit name. It contains
- * no operational, technical or location detail. Confirm with the owner that the unit name
- * should be public before this ships.
+ * ⚠️ Dates. The CV gives years only ("2024 - present") with no months, so each entry is
+ * anchored at year granularity: January for a start, December for an end. Confirm the exact
+ * months before publishing.
  */
 
 import type { Experience } from "../types";
@@ -39,18 +35,6 @@ const experienceData = [
     ],
     description:
       "I design and implement optical setups that integrate electronics and photonics, run experiments with lasers, sensors and signal acquisition systems, and process and analyze the resulting experimental data using Matlab and Python.",
-    confidentialityReviewed: true,
-  },
-  {
-    organization: "Israeli Air Force",
-    organizationType: "Patriot Unit",
-    role: "Classified Communication Systems Operator",
-    startDate: "2019-01",
-    endDate: "2021-12",
-    durationLabel: "3 yrs",
-    technologies: ["Communication Systems", "Real-Time Systems", "Teamwork"],
-    description:
-      "Responsible for secure real-time communication systems. Awarded an Excellent Soldier Certificate.",
     confidentialityReviewed: true,
   },
 ] as const;

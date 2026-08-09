@@ -1652,20 +1652,6 @@ a.business-card-contact-link:focus-visible {
   color: var(--accent-hover);
 }
 
-/* Closing flourish under the rail - decorative, and every date it alludes to is already
-   in the records above, so it is hidden from assistive tech. */
-.xp-end {
-  margin: 1.75rem 0 0 var(--xp-gutter);
-  font-size: var(--type-body);
-  font-style: italic;
-  color: var(--text-muted);
-}
-
-.xp-end-year {
-  font-style: normal;
-  color: var(--accent);
-}
-
 /* ----- Hover / focus ------------------------------------------------------------- */
 /* `:focus-within` mirrors `:hover` so keyboard users tabbing to a record's link or
    certificate trigger get the same feedback as a pointer. */
