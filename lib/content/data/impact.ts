@@ -1,16 +1,22 @@
 /**
- * Volunteering & Community content - the cards shown in the homepage carousel.
+ * Volunteering & Community content - the cards shown in the homepage grid.
  *
  * Sourced from the owner's CV ("Maayan Pony - CV" → Volunteering). One card per entry,
- * ordered newest-first via `displayOrder`; the carousel consumes the array directly. The
- * data is intentionally presentation-agnostic - no UI logic, styling, or icons here.
+ * ordered newest-first via `displayOrder`; the grid consumes the array directly. The
+ * data is intentionally presentation-agnostic - no layout or styling here.
  *
  * Every card restates what the CV already says publicly. No participant names, no
  * institution addresses, no numbers the CV does not state - these programmes involve
  * minors and vulnerable people, so nothing identifying is added and no impact figure is
  * invented. `confidentialityReviewed: true` records that check.
  *
- * `icon` is omitted for every card - it is optional and no icon assets exist.
+ * `logos` is the owner-supplied partner/organization logo(s) for an entry (served from
+ * `/public/images/volunteering/`); a card with no logo falls back to initials in the UI.
+ *
+ * `period` is a display-only label carrying the years the descriptions used to state in
+ * prose - the CV states bare years, so no month is inferred and nothing new is claimed.
+ * The descriptions were trimmed of those years when the chip took them over; the facts
+ * are unchanged, they just moved out of the sentence.
  */
 
 import type { Impact } from "../types";
@@ -19,24 +25,30 @@ import { validateImpactList } from "../validate";
 const impactData = [
   {
     title: "Perach Mentorship Program",
-    description:
-      "Mentoring and academic support for youth in underserved communities, from 2025 to today.",
+    description: "Mentoring and academic support for youth in underserved communities.",
     impactBullets: [
       "One-to-one mentoring alongside my own degree",
       "Academic support where it is hardest to come by",
       "An ongoing commitment, not a one-off",
     ],
+    period: "2025 - Present",
+    logos: [{ src: "/images/volunteering/perach.jpg", alt: "Perach", width: 480, height: 303 }],
     displayOrder: 1,
     confidentialityReviewed: true,
   },
   {
     title: "“Babushka” Initiative",
     description:
-      "Taking part in an educational-technological empowerment project for girls from minority communities, run with Elbit and the “Shavot” NGO. Ongoing since 2025.",
+      "Taking part in an educational-technological empowerment project for girls from minority communities, run with Elbit and the “Shavot” NGO.",
     impactBullets: [
       "Opening engineering and technology up to girls who rarely see it",
       "Built around education, not one-off exposure",
       "Run together with an industry partner and an NGO",
+    ],
+    period: "2025 - Present",
+    logos: [
+      { src: "/images/volunteering/elbit.png", alt: "Elbit Systems", width: 480, height: 167 },
+      { src: "/images/volunteering/shavot.png", alt: "Shavot", width: 480, height: 479 },
     ],
     displayOrder: 2,
     confidentialityReviewed: true,
@@ -44,11 +56,15 @@ const impactData = [
   {
     title: "I-School Program",
     description:
-      "Mentored and tutored an elementary school student in a socio-economically peripheral community over the 2024-2025 school year.",
+      "Mentored and tutored an elementary school student in a socio-economically peripheral community, across a full school year.",
     impactBullets: [
-      "Weekly one-to-one tutoring across a full school year",
+      "Weekly one-to-one tutoring",
       "Support for a student in a peripheral community",
       "A mentoring relationship, not just homework help",
+    ],
+    period: "2024 - 2025",
+    logos: [
+      { src: "/images/volunteering/ischool.jpg", alt: "I-School Program", width: 480, height: 480 },
     ],
     displayOrder: 3,
     confidentialityReviewed: true,
@@ -56,24 +72,26 @@ const impactData = [
   {
     title: "National Agricultural Harvest Scholarship",
     description:
-      "Volunteered in the 2024 national agricultural harvest effort, serving as a team leader.",
+      "Volunteered in the national agricultural harvest effort, serving as a team leader.",
     impactBullets: [
       "Led a volunteer team in the field",
       "Answered a national call for agricultural help",
       "Coordination and responsibility under real deadlines",
     ],
+    period: "2024",
     displayOrder: 4,
     confidentialityReviewed: true,
   },
   {
     title: "Holon Elderly Club",
     description:
-      "Provided assistance and companionship to elderly members of the Holon community during 2023.",
+      "Provided assistance and companionship to elderly members of the Holon community.",
     impactBullets: [
       "Regular companionship for people at risk of isolation",
       "Practical day-to-day assistance",
       "Time given consistently, week after week",
     ],
+    period: "2023",
     displayOrder: 5,
     confidentialityReviewed: true,
   },

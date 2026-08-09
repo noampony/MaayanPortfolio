@@ -17,6 +17,7 @@ import type {
   ExperienceEndDate,
   ExperienceRole,
   Impact,
+  ImpactLogo,
   LearningPath,
   Profile,
   Project,
@@ -135,6 +136,26 @@ function assertOptionalStringArray(value: unknown, path: string): string[] | und
   return assertRequiredStringArray(value, path);
 }
 
+function validateImpactLogo(value: unknown, path: string): ImpactLogo {
+  const raw = assertObject(value, path);
+  return {
+    src: assertRequiredInternalPath(raw.src, `${path}.src`),
+    alt: assertRequiredString(raw.alt, `${path}.alt`),
+    width: assertRequiredNumber(raw.width, `${path}.width`),
+    height: assertRequiredNumber(raw.height, `${path}.height`),
+  };
+}
+
+function assertOptionalImpactLogos(value: unknown, path: string): ImpactLogo[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!Array.isArray(value)) {
+    throw new ContentValidationError(path, "optional array of logos");
+  }
+  return value.map((item, index) => validateImpactLogo(item, `${path}[${index}]`));
+}
+
 function assertYearMonthDate(value: unknown, path: string): YearMonthDate {
   const date = assertRequiredString(value, path);
   if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(date)) {
@@ -158,6 +179,25 @@ function assertExperienceEndDate(value: unknown, path: string): ExperienceEndDat
     return value;
   }
   return assertYearMonthDate(value, path);
+}
+
+/**
+ * Volunteering period labels: `YYYY`, `YYYY - YYYY`, or `YYYY - Present`. The CV states
+ * these as bare years, so a month here would be an invented fact and the shape refuses
+ * one. `Present` matches the {@link assertExperienceEndDate} sentinel, and the separator
+ * is the ASCII hyphen-with-spaces used by every other date label on the site.
+ */
+const IMPACT_PERIOD_PATTERN = /^\d{4}(?: - (?:\d{4}|Present))?$/;
+
+function assertOptionalImpactPeriod(value: unknown, path: string): string | undefined {
+  const period = assertOptionalString(value, path);
+  if (period !== undefined && !IMPACT_PERIOD_PATTERN.test(period)) {
+    throw new ContentValidationError(
+      path,
+      "expected `YYYY`, `YYYY - YYYY`, or `YYYY - Present`",
+    );
+  }
+  return period;
 }
 
 function assertOptionalYearOrNumber(value: unknown, path: string): string | number | undefined {
@@ -626,7 +666,8 @@ export function validateImpactList(data: unknown): Impact[] {
       title: assertRequiredString(raw.title, `${path}.title`),
       description: assertRequiredString(raw.description, `${path}.description`),
       impactBullets: assertRequiredStringArray(raw.impactBullets, `${path}.impactBullets`),
-      icon: assertOptionalString(raw.icon, `${path}.icon`),
+      period: assertOptionalImpactPeriod(raw.period, `${path}.period`),
+      logos: assertOptionalImpactLogos(raw.logos, `${path}.logos`),
       displayOrder: assertRequiredNumber(raw.displayOrder, `${path}.displayOrder`),
       confidentialityReviewed: assertRequiredBoolean(
         raw.confidentialityReviewed,

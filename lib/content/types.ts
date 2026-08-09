@@ -87,14 +87,34 @@ export type AboutSectionData = {
   professionalFocus?: string;
 };
 
-/** §11.1A Impact Model - a single career impact card for the My Impact carousel (§8.2). */
+/** A partner/organization logo shown on a Volunteering & Community card (§11.1A). */
+export type ImpactLogo = {
+  /** Asset path, served from `/public`. */
+  src: AssetReference;
+  /** Organization name, read by assistive tech - not decorative. */
+  alt: string;
+  /** Intrinsic pixel width of the asset - lets the lockup reserve its box before decode. */
+  width: number;
+  /** Intrinsic pixel height of the asset. */
+  height: number;
+};
+
+/** §11.1A Impact Model - a single card in the Volunteering & Community grid (§8.2). */
 export type Impact = {
   title: string;
   description: string;
   impactBullets: string[];
-  /** Optional decorative/meaningful icon (served from `/public`); omitted until owner-supplied (§11.1A TBD). */
-  icon?: AssetReference;
-  /** 1-based carousel ordering. */
+  /**
+   * Display-only period label for the card's timeline chip. Validated shape: `YYYY`,
+   * `YYYY - YYYY`, or `YYYY - Present`. Free text rather than a date pair because the CV
+   * states these as bare years, so nothing here is a computed or invented month. The
+   * literal `Present` is the sentinel the card's "ongoing" state keys off, matching the
+   * {@link ExperienceEndDate} sentinel.
+   */
+  period?: string;
+  /** Partner/organization logos for this entry; omitted entries fall back to initials. */
+  logos?: ImpactLogo[];
+  /** 1-based display ordering. */
   displayOrder: number;
   /** Whether content has been reviewed for public sharing (§15.4). */
   confidentialityReviewed: boolean;

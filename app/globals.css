@@ -2241,258 +2241,535 @@ main:focus-visible {
   height: 0.9rem;
 }
 
-/* ── My Impact section (spec §8.2) ─────────────────────────────────────────
-   Circular Gallery of impact cards. The dev-grid wash mirrors the retired About
-   wash; the card glass matches the site card system (§6.7) but sits on a more
-   opaque base so overlapping slides stay readable in the 3D arc. */
+/* ── Volunteering & Community section (spec §8.2) ──────────────────────────
+   An asymmetric bento grid: the two ongoing programmes lead as wide feature tiles, the
+   past entries follow as compact tiles. The track is six columns - the LCM of the 2-up
+   feature row and the 3-up compact row - so both sizes land on whole tracks and no
+   breakpoint leaves a hole.
 
-.impact-header {
-  position: relative;
-}
+   The plate is the site card material (§6.7: see `.project-flip-face`, `.skills-plate`)
+   built up in layers instead of left flat: a gradient aura ring that lights on hover, an
+   inner sheen, a pointer-tracked accent spotlight, a hairline hatch, a ghost index
+   numeral and a gradient spine down the leading edge. Every layer is decorative and
+   transform/opacity-driven.
 
-.impact-gallery {
-  --impact-card-w: clamp(15.5rem, 80vw, 21rem);
-  --impact-card-h: clamp(23rem, 70vh, 27rem);
-  /* Step tracks the card width so the neighbour overlap stays consistent from
-     mobile to desktop instead of bottoming out at a fixed min. */
-  --impact-step: calc(var(--impact-card-w) * 0.72);
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 2vw, 1.5rem);
+   Motion follows the `.skills-plate` idiom: the resting state IS the reduced-motion
+   state, and every transition/animation is added inside
+   `@media (prefers-reduced-motion: no-preference)`. Colour and border hover states sit
+   outside that query, so reduced motion keeps the affordance without anything moving. */
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   margin-top: clamp(2rem, 5vw, 3.5rem);
 }
 
-.impact-gallery-track {
-  position: relative;
-  flex: 1 1 auto;
-  height: calc(var(--impact-card-h) + 3rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  touch-action: pan-y;
+/* `perspective` belongs on the cell, not the grid: a grid-level perspective shares one
+   vanishing point across a whole row, and combined with the cards' `overflow: hidden`
+   + `backdrop-filter` that is where Safari mis-clips the plate. Per-cell, each tile
+   rotates about its own axis and keeps its own stacking context. */
+.impact-cell {
+  display: flex;
+  perspective: 1000px;
 }
 
-/* Prev/Next controls flank the track on both sides (spec §8.2 side navigation). */
-.impact-gallery-arrow {
-  position: relative;
-  /* Must beat every card's z-index (`total - abs`, currently up to 9) - cards are
-     absolutely positioned and can visually extend under the arrows, so a low z-index
-     here let an overlapping card swallow the arrow's click. */
-  z-index: 20;
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-  background: color-mix(in srgb, var(--bg-surface) 80%, transparent);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease;
-}
+@media (min-width: 640px) {
+  .impact-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
 
-.impact-gallery-arrow svg {
-  width: 1.1rem;
-  height: 1.1rem;
-}
+  .impact-cell {
+    grid-column: span 6;
+  }
 
-.impact-gallery-arrow:hover {
-  border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
-  background: color-mix(in srgb, var(--accent) 14%, var(--bg-surface));
-  color: var(--accent);
-}
-
-.impact-gallery-arrow:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@media (max-width: 640px) {
-  .impact-gallery-arrow {
-    width: 2rem;
-    height: 2rem;
+  .impact-cell[data-tile="compact"] {
+    grid-column: span 3;
   }
 }
 
-.impact-slide {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--impact-card-w);
-  height: var(--impact-card-h);
-  /* Depth is conveyed with translateX/scale/opacity only - no rotateY or translateZ.
-     Either one turns the card into a projected 3D shape whose real screen quad can
-     drift from its rectangular hit box, so clicks on a visible side card silently
-     miss the card behind them. Pure 2D transforms keep "what's rendered" and "what's
-     clickable" exactly the same rectangle, while still reading as a receding arc. */
-  transform:
-    translate(-50%, -50%)
-    translateX(calc(var(--offset) * var(--impact-step)))
-    scale(calc(1 - var(--abs) * 0.09));
-  opacity: calc(1 - var(--abs) * 0.28);
-  transition:
-    transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
+/* Widow: an odd trailing compact fills its row rather than leaving a half-gap. Bounded to
+   the 2-up range on purpose - the widow selectors outrank the plain `[data-tile]` rules on
+   specificity, so an unbounded `min-width` query would leak this span into the 3-up
+   layout regardless of source order. Each breakpoint owns its own widow logic. */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .impact-cell[data-tile="compact"]:last-child:nth-child(2n + 1) {
+    grid-column: span 6;
+  }
 }
 
-/* Slides outside the visible window are fully hidden and non-interactive
-   (they are also `inert` in the DOM, so they never take keyboard focus). */
-.impact-slide:not([data-visible]) {
-  opacity: 0;
-  pointer-events: none;
+@media (min-width: 1024px) {
+  .impact-grid {
+    gap: 1.25rem;
+  }
+
+  .impact-cell[data-tile="feature"] {
+    grid-column: span 3; /* 3 + 3 */
+  }
+
+  .impact-cell[data-tile="compact"] {
+    grid-column: span 2; /* 2 + 2 + 2 */
+  }
+
+  /* Widow guards, verified hole-free for the 3-9 cards the validator allows. These
+     assume the feature tiles are children 1-2 (see FEATURE_TILE_COUNT in
+     components/sections/MyImpact.tsx) - a compact at child index i therefore starts a
+     row when i % 3 === 0. Re-derive the arithmetic if that count ever changes. */
+  .impact-cell[data-tile="compact"]:last-child:nth-child(3n) {
+    grid-column: span 6;
+  }
+
+  .impact-cell[data-tile="compact"]:last-child:nth-child(3n + 1),
+  .impact-cell[data-tile="compact"]:nth-last-child(2):nth-child(3n) {
+    grid-column: span 3;
+  }
 }
 
 .impact-card {
+  --r: 1.1rem;
+  --lift: 0rem;
+  --spine-width: 3px;
   position: relative;
+  isolation: isolate;
   display: flex;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   border: 1px solid var(--glass-edge);
-  border-radius: var(--radius);
+  border-radius: var(--r);
+  /* The shared glass recipe, byte-identical to `.skills-plate` and `.project-flip-face`
+     so the whole page reads as one material. Do not drift this stack in isolation. */
   background:
     radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
     linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
-    var(--glass-base-strong);
+    var(--glass-base);
   box-shadow:
-    0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.11),
+    0 1.25rem 3.5rem rgb(var(--shadow-rgb) / 0.08),
     inset 0 1px 0 var(--glass-highlight),
     inset 0 -1px 0 var(--glass-underline);
-  backdrop-filter: blur(24px) saturate(175%);
-  transition:
-    border-color 200ms ease,
-    box-shadow 200ms ease;
+  backdrop-filter: blur(22px) saturate(170%);
+  /* The tilt vars are written by ImpactCard on pointer move; `--lift` is CSS-only. Both
+     default to zero, so with no pointer (or under reduced motion) this is the identity. */
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))
+    translate3d(0, var(--lift), 0);
 }
 
-.impact-card[data-active] {
-  border-color: var(--glass-edge-strong);
-  /* Nearly opaque so the two overlapping cards behind it (visible through the
-     backdrop blur otherwise) never bleed into the focused card's own text. */
+/* Without backdrop-filter the translucent fill has nothing to blur, so the plate would
+   read as a washed-out box. Fall back to a near-opaque surface, as `.skills-plate` does. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .impact-card {
+    background: var(--glass-base-strong);
+  }
+}
+
+/* Layer: gradient aura ring. Painted into the 1px padding box and masked so only the
+   ring survives - the border box never changes, so lighting it cannot shift layout. */
+.impact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    var(--gradient-from),
+    var(--gradient-via) 45%,
+    var(--gradient-to)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+}
+
+.impact-card:hover::before,
+.impact-card:focus-within::before {
+  opacity: 0.55;
+}
+
+/* Layer: inner sheen - the same pair `.project-flip-face::after` uses. This is what stops
+   the plate reading as a flat fill. */
+.impact-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: calc(var(--r) - 1px);
   background:
-    radial-gradient(circle at 16% 0%, var(--glass-sheen), transparent 32%),
-    linear-gradient(145deg, var(--glass-wash), var(--glass-tint-a) 46%, var(--glass-tint-b)),
-    var(--glass-base-solid);
-  animation: impact-card-glow 4.5s ease-in-out infinite;
+    linear-gradient(180deg, var(--glass-wash), transparent 38%),
+    linear-gradient(90deg, var(--glass-tint-a), transparent 34%, var(--glass-tint-b));
 }
 
-.impact-card:not([data-active]):hover {
+.impact-card:hover,
+.impact-card:focus-within {
+  --lift: -0.4rem;
+  --spine-width: 5px;
   border-color: var(--glass-edge-strong);
+  box-shadow:
+    0 1.9rem 4.75rem rgb(var(--shadow-rgb) / 0.16),
+    0 0 2.25rem color-mix(in srgb, var(--accent) 10%, transparent),
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 var(--glass-underline);
 }
 
-@keyframes impact-card-glow {
-  0%,
-  100% {
-    box-shadow:
-      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
-      0 0 2.5rem color-mix(in srgb, var(--accent) 14%, transparent),
-      inset 0 1px 0 var(--glass-highlight),
-      inset 0 -1px 0 var(--glass-underline);
-  }
-  50% {
-    box-shadow:
-      0 1.75rem 4.5rem rgb(var(--shadow-rgb) / 0.13),
-      0 0 3.25rem color-mix(in srgb, var(--accent) 24%, transparent),
-      inset 0 1px 0 var(--glass-highlight),
-      inset 0 -1px 0 var(--glass-underline);
-  }
+/* Layer: accent spotlight following the pointer. Reuses the `--spot-x`/`--spot-y` names
+   from `.section-cursor-glow` so the site has one spotlight vocabulary. Purely a pointer
+   affordance - it carries no information, so reduced motion simply never reveals it. */
+.impact-card-spot {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    16rem 16rem at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    transparent 62%
+  );
+}
+
+/* Layer: hairline hatch, dissolved toward the middle of the plate - just enough
+   texture that the surface is not a flat fill. */
+.impact-card-hatch {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--accent) 7%, transparent) 7px 8px
+  );
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(90% 80% at 100% 0%, #000 0%, transparent 62%);
+  mask-image: radial-gradient(90% 80% at 100% 0%, #000 0%, transparent 62%);
+}
+
+/* Layer: gradient spine down the leading edge. It widens on hover rather than animating
+   forever - five permanently-running gradients sit on top of the section's own glow
+   drift and aurora spin, which is a real cost for a decorative detail. */
+.impact-card-spine {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 1;
+  width: var(--spine-width);
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--gradient-from),
+    var(--gradient-via) 28%,
+    var(--gradient-to) 55%,
+    var(--gradient-via) 78%,
+    var(--gradient-from)
+  );
+}
+
+/* Ghost index numeral, pinned opposite the logo lockup. */
+.impact-card-index {
+  position: absolute;
+  top: clamp(0.75rem, 1.6vw, 1.1rem);
+  right: clamp(0.9rem, 2vw, 1.4rem);
+  z-index: 1;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: color-mix(in srgb, var(--accent) 14%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+.impact-card--featured .impact-card-index {
+  font-size: 2.9rem;
+}
+
+.impact-card:hover .impact-card-index {
+  color: color-mix(in srgb, var(--accent) 26%, transparent);
 }
 
 .impact-card-body {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.6rem;
   width: 100%;
-  padding: clamp(1.1rem, 2.6vw, 1.5rem);
+  padding: clamp(1.35rem, 2.6vw, 1.85rem);
 }
 
-.impact-card-index {
-  margin: 0;
+.impact-card--featured .impact-card-body {
+  gap: 0.7rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Logo lockup on the left, period chip on the right. A grid rather than a flex row so the
+   chip has its own track and can never be squeezed by a two-logo lockup; the right pad
+   keeps both clear of the index numeral. */
+.impact-card-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding-right: clamp(2.6rem, 5vw, 3.4rem);
+}
+
+.impact-card-logos {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* The mark's frame. Fixed and square on purpose: a height-constrained chip renders a
+   square logo (I-School, Shavot) far smaller than a wide one (Elbit, Perach), so the set
+   looked ragged. A square box with `object-fit: contain` gives every mark the same
+   optical weight. The fill is white, so the two JPG logos' baked white background
+   disappears into the frame while the two alpha PNGs sit on the same field. */
+.impact-card-lockup {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border: 1px solid var(--glass-edge);
+  border-radius: 0.85rem;
+  background: var(--bg-surface-raised);
+  box-shadow: 0 0.25rem 0.75rem rgb(var(--shadow-rgb) / 0.06);
+}
+
+.impact-card--featured .impact-card-lockup {
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 1rem;
+}
+
+.impact-card-lockup-img {
+  width: 100%;
+  height: 100%;
+  padding: 0.3rem;
+  object-fit: contain;
+}
+
+.impact-card-lockup-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--accent);
+}
+
+.impact-card--featured .impact-card-lockup-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+/* Initials stand in when an entry has neither a logo nor a mapped icon - same ticker
+   style as the Experience rail's `.xp-marker-text` (see `organizationMarker`). */
+.impact-card-lockup-initials {
   font-family: var(--font-mono), var(--font-mono-fallback);
+  font-weight: 700;
   font-size: var(--type-small);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: color-mix(in srgb, var(--accent) 78%, var(--text-muted));
 }
 
+.impact-card:hover .impact-card-lockup {
+  border-color: var(--glass-edge-strong);
+  box-shadow: 0 0.5rem 1.15rem rgb(var(--shadow-rgb) / 0.12);
+}
+
+/* Period chip - display-only years, carrying what the description used to state in prose. */
+.impact-card-period {
+  flex: none;
+  align-self: center;
+  justify-self: end;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: 9999px;
+  background: var(--chip-fill);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+/* Ongoing marker. Decorative only - the chip already reads `Present`, so the state is
+   never carried by colour or motion alone. */
+.impact-card-period[data-ongoing]::before {
+  content: "";
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-right: 0.4rem;
+  border-radius: 9999px;
+  background: var(--accent);
+  vertical-align: 0.05em;
+}
+
+.impact-card:hover .impact-card-period {
+  background: var(--chip-fill-hover);
+}
+
 .impact-card-title {
-  margin: 0.1rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: var(--type-h2);
   font-weight: 600;
   line-height: var(--leading-h2);
+  letter-spacing: -0.01em;
   color: var(--text-primary);
+}
+
+.impact-card--featured .impact-card-title {
+  font-size: calc(var(--type-h2) * 1.14);
 }
 
 .impact-card-desc {
   margin: 0.15rem 0 0;
+  max-width: 52ch;
   font-size: var(--type-small);
   line-height: var(--leading-body);
   color: var(--text-secondary);
 }
 
+.impact-card--featured .impact-card-desc {
+  font-size: var(--type-body);
+}
+
+/* `margin-top: auto` anchors the bullet block to the bottom of every tile, so the rules
+   above them line up across a row even when the titles and descriptions differ in length. */
 .impact-card-bullets {
-  margin: 0.5rem 0 0;
-  padding: 0;
+  margin: 0.9rem 0 0;
+  margin-top: auto;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 14%, var(--border));
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
+}
+
+/* The wide tile has room to run its bullets in two columns. */
+@media (min-width: 768px) {
+  .impact-card--featured .impact-card-bullets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
 }
 
 .impact-card-bullet {
   display: flex;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: 0.55rem;
   margin: 0;
   font-size: var(--type-small);
   line-height: var(--leading-small);
   color: var(--text-secondary);
 }
 
-.impact-card-bullet-icon {
-  width: 1rem;
-  height: 1rem;
+/* Check mark in a tinted disc; the discs light in sequence as the card is hovered. */
+.impact-card-bullet-disc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
-  margin-top: 0.15rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  background: var(--chip-fill);
   color: var(--accent);
 }
 
-/* Whole-card activator overlay for non-centre slides. Transparent so the article
-   text underneath stays visible; labelled for AT via its `aria-label`. */
-.impact-card-activate {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  cursor: pointer;
-  border: 0;
-  border-radius: var(--radius);
-  background: transparent;
-  appearance: none;
+.impact-card:hover .impact-card-bullet-disc {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--chip-fill-hover);
 }
 
-.impact-card-activate:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.impact-card-bullet-icon {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+/* Every transition and every moving hover state, added only when motion is welcome.
+   Anything omitted here simply never animates, rather than leaking through a `reduce`
+   kill-switch that has to enumerate each selector. Matches `.skills-plate`. */
+@media (prefers-reduced-motion: no-preference) {
+  .impact-card {
+    transition:
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 260ms ease,
+      box-shadow 260ms ease;
+  }
+
+  .impact-card::before {
+    transition: opacity 300ms ease;
+  }
+
+  .impact-card-spot {
+    transition: opacity 260ms ease;
+  }
+
+  .impact-card[data-spot="on"] .impact-card-spot {
+    opacity: 1;
+  }
+
+  .impact-card-spine {
+    transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .impact-card-index {
+    transition: color 300ms ease;
+  }
+
+  .impact-card-lockup {
+    transition:
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+    /* Two-logo entries (Babushka) lift one after the other. */
+    transition-delay: calc(var(--logo-index, 0) * 60ms);
+  }
+
+  .impact-card:hover .impact-card-lockup {
+    transform: translateY(-3px);
+  }
+
+  .impact-card-period {
+    transition: background-color 260ms ease;
+  }
+
+  .impact-card-period[data-ongoing]::before {
+    animation: xp-current-ping 3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+
+  .impact-card-bullet-disc {
+    transition:
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 320ms ease,
+      border-color 320ms ease;
+    transition-delay: calc(var(--bullet-index, 0) * 55ms);
+  }
+
+  .impact-card:hover .impact-card-bullet-disc {
+    transform: scale(1.12);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .impact-slide {
-    transition: none;
-  }
-
-  .impact-card {
-    transition: none;
-    animation: none;
-  }
-
   .section-glow,
   .section-aurora {
     animation: none;
