@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="MP monogram">
+  <title>MP monogram</title>
+  <defs>
+    <!-- Bright orange → burnt orange → dark rust sweep for the frame and brackets. -->
+    <linearGradient id="mp-frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F08A2E" />
+      <stop offset="55%" stop-color="#C2410C" />
+      <stop offset="100%" stop-color="#6B2405" />
+    </linearGradient>
+    <!-- Warm gold for the accent ticks. -->
+    <linearGradient id="mp-accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FDD9A0" />
+      <stop offset="100%" stop-color="#E8973F" />
+    </linearGradient>
+    <linearGradient id="mp-letters" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C2410C" />
+      <stop offset="100%" stop-color="#6B2405" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rotated square frame: the diamond outline the mark sits inside. -->
+  <rect
+    x="50" y="50" width="156" height="156" rx="34"
+    transform="rotate(45 128 128)"
+    fill="none" stroke="url(#mp-frame)" stroke-width="11"
+  />
+
+  <!-- Code brackets flanking the monogram. -->
+  <path d="M54 92 L22 128 L54 164" fill="none" stroke="url(#mp-frame)" stroke-width="13"
+        stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M202 92 L234 128 L202 164" fill="none" stroke="url(#mp-frame)" stroke-width="13"
+        stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Gold accent ticks, top and bottom. -->
+  <g stroke="url(#mp-accent)" stroke-width="8" stroke-linecap="round">
+    <path d="M98 60 H118 M138 60 H158" />
+    <path d="M98 196 H118 M138 196 H158" />
+  </g>
+
+  <!-- MP monogram, drawn as strokes so it never depends on a font being installed. -->
+  <g fill="none" stroke="url(#mp-letters)" stroke-width="13"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M84 156 V104 L104 133 L124 104 V156" />
+    <path d="M140 156 V104 H157 a14 14 0 0 1 0 28 H140" />
+  </g>
+</svg>
