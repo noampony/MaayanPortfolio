@@ -15,7 +15,7 @@ interface SkillBadgeProps {
  *
  * The mark is decorative (`aria-hidden`) - the name is always rendered as text,
  * never a tooltip, so a skill is readable without hovering (spec §8.6). Skills
- * with no brand mark fall back to their initial in the site accent.
+ * with no mark at all fall back to their initial in the site accent.
  */
 export function SkillBadge({ skill, className }: SkillBadgeProps) {
   const icon = getSkillIcon(skill.name);
@@ -30,7 +30,11 @@ export function SkillBadge({ skill, className }: SkillBadgeProps) {
           className="skill-pill-icon fill-current"
           style={{ color }}
         >
-          <path d={icon.d} />
+          {/* A mark may be several paths (MATLAB's membrane is three). They all take
+              the same fill, so overlapping subshapes union instead of cancelling. */}
+          {icon.paths.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
         </svg>
       ) : (
         <span
