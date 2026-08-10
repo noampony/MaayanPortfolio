@@ -144,9 +144,16 @@ export function ImpactCard({ impact, headingId, index, featured = false }: Impac
       {/* The shared glare sweep. */}
       <div ref={overlayRef} style={overlayStyle} aria-hidden="true" />
 
-      <span className="impact-card-index" aria-hidden="true">
-        {String(index + 1).padStart(2, "0")}
-      </span>
+      <div className="impact-card-corner">
+        <span className="impact-card-index" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        {impact.period ? (
+          <span className="impact-card-period" data-ongoing={ongoing || undefined}>
+            {impact.period}
+          </span>
+        ) : null}
+      </div>
 
       <div className="impact-card-body">
         <div className="impact-card-head">
@@ -177,12 +184,6 @@ export function ImpactCard({ impact, headingId, index, featured = false }: Impac
               </span>
             )}
           </div>
-
-          {impact.period ? (
-            <span className="impact-card-period" data-ongoing={ongoing || undefined}>
-              {impact.period}
-            </span>
-          ) : null}
         </div>
 
         <h3 id={headingId} className="impact-card-title">
