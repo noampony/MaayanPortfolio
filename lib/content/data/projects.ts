@@ -23,7 +23,7 @@ import { validateProjectList } from "../validate";
 const projectData = [
   {
     name: "Capstone Engineering Project",
-    role: "Student Engineer",
+    role: "Lab Assistant",
     shortDescription:
       "My final engineering project, carried out in collaboration with Animal Health Technology Labs. In progress.",
     problemSolved:

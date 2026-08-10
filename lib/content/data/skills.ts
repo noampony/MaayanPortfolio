@@ -12,8 +12,10 @@
  *
  * Rules:
  * - No `proficiency` field is set anywhere - the CV states none.
- * - Tiles without an entry in `skill-icons.ts` fall back to the skill's initial, so a
- *   missing brand icon degrades gracefully rather than breaking the tile.
+ * - Every skill below is keyed in `skill-icons.ts`: the five products carry their
+ *   official brand mark, the rest carry a concept mark. Renaming a skill here without
+ *   renaming its key there drops it back to the initial-letter fallback in
+ *   `SkillBadge`, so keep the two in step.
  */
 
 import type { Skill } from "../types";

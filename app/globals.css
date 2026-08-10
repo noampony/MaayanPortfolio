@@ -178,6 +178,16 @@ html {
    (soft tinted shoulders, near-white core) so the pass reads as light catching the
    letters rather than a shadow crossing them. */
 .hero-name-shine {
+  /* Chromium clips a text-clipped background to the element's border box, and the
+     hero's tight line-heights let ascenders/descenders overdraw that box - without
+     the stretch the tails of "y" stay unlit as the band passes. Stretching the box
+     0.35em past both edges keeps every glyph inside it; padding-top pushes the text
+     back down so the overlay stays glyph-aligned with the name underneath. */
+  top: -0.35em;
+  bottom: -0.35em;
+  left: 0;
+  right: 0;
+  padding-top: 0.35em;
   background-image: linear-gradient(
     100deg,
     transparent 30%,
