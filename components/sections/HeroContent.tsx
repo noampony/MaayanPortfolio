@@ -321,7 +321,7 @@ export function HeroContent({ initials }: HeroContentProps) {
                 {nameComplete && !prefersReducedMotion ? (
                   <span
                     aria-hidden="true"
-                    className="hero-name-shine absolute inset-0"
+                    className="hero-name-shine absolute"
                   >
                     {displayedName}
                   </span>
@@ -347,7 +347,7 @@ export function HeroContent({ initials }: HeroContentProps) {
               {nameComplete && !prefersReducedMotion ? (
                 <span
                   aria-hidden="true"
-                  className="hero-name-shine hero-name-shine--delayed absolute inset-0"
+                  className="hero-name-shine hero-name-shine--delayed absolute"
                 >
                   {profile.title}
                 </span>
