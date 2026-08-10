@@ -547,7 +547,7 @@ export function HeroContent({ initials }: HeroContentProps) {
                         // slot would have had. The sized branches keep the label
                         // subordinate to a value that is already doing the shouting.
                         !("numericValue" in tag) && !("value" in tag)
-                          ? "font-bold text-accent text-[8px] sm:text-[9px] min-[850px]:text-sm"
+                          ? "font-bold text-accent text-[9px] sm:text-[10px] min-[850px]:text-base"
                           : "font-medium text-text-secondary",
                         ("numericValue" in tag || "value" in tag) &&
                           (tag.lines.length > 2

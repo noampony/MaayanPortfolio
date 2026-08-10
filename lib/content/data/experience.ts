@@ -20,6 +20,7 @@ import { validateExperienceList } from "../validate";
 const experienceData = [
   {
     organization: "Holon Institute of Technology (HIT)",
+    organizationLogo: "/logos/hit.jpg",
     organizationType: "Electro-Optics Laboratory",
     role: "Research Assistant",
     startDate: "2024-01",

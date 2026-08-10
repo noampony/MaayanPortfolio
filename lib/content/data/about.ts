@@ -16,9 +16,8 @@
  * Dean's List honour is the one exception: it carries a certificate ref pointed at the CV
  * as a temporary stand-in so the badge is a working viewer trigger.
  *
- * ⚠️ No institution logo assets exist in `public/logos/`, so both timeline markers fall back
- * to initials (`HIT`, `EKH`). Drop a licence-cleared logo in and set `institutionLogo` to
- * switch either over.
+ * Institution logos live in `public/logos/` and are wired via `institutionLogo` on each
+ * entry; owner-supplied, licence-cleared assets.
  *
  * Count stats (courses, technologies, projects, certificates) are absent: the CV states
  * none of them, and nothing in the UI renders them today.
@@ -65,6 +64,7 @@ const aboutData = {
     dateRange: "Oct 2022 - present",
     degree: "B.Sc. Electrical & Electronics Engineering",
     institution: "Holon Institute of Technology (HIT)",
+    institutionLogo: "/logos/hit.jpg",
     honors: [
       { label: "GPA 95" },
       // Owner-confirmed (the CV does not list it). The badge doubles as the trigger for
@@ -94,6 +94,7 @@ const aboutData = {
       dateRange: "2015 - 2018",
       degree: "High School Diploma, with honors",
       institution: "Ein-Kerem High School",
+      institutionLogo: "/logos/ein-kerem-high-school.jpg",
       honors: [{ label: "GPA 103" }],
       summary:
         "Extended studies in Mathematics, English, Physics, Biology and Agriculture.",

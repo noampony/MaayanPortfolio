@@ -53,7 +53,13 @@ export function SkillBadge({ skill, className }: SkillBadgeProps) {
           className="skill-pill-icon text-accent"
         >
           {mark.paths.map((path, i) => (
-            <path key={i} d={path.d} fill={path.fill ?? "currentColor"} />
+            <path
+              key={i}
+              d={path.d}
+              fill={path.fill ?? "currentColor"}
+              stroke={path.stroke}
+              strokeWidth={path.strokeWidth}
+            />
           ))}
         </svg>
       )}

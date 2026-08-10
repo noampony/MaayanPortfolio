@@ -79,6 +79,14 @@ const impactData = [
       "Coordination and responsibility under real deadlines",
     ],
     period: "2024",
+    logos: [
+      {
+        src: "/images/volunteering/ministry-of-agriculture.svg",
+        alt: "Ministry of Agriculture and Food Security",
+        width: 1000,
+        height: 900,
+      },
+    ],
     displayOrder: 4,
     confidentialityReviewed: true,
   },
@@ -92,6 +100,14 @@ const impactData = [
       "Time given consistently, week after week",
     ],
     period: "2023",
+    logos: [
+      {
+        src: "/images/volunteering/holon-elderly-club.webp",
+        alt: "Holon Elderly Club",
+        width: 1280,
+        height: 959,
+      },
+    ],
     displayOrder: 5,
     confidentialityReviewed: true,
   },

@@ -39,9 +39,13 @@ const C_LOGO = [
     { d: "m 37.485,10.205282 c 0.516,0.483 0.506,1.211 0.506,1.784 0,3.795 -0.032,14.589 0.009,18.384 0.004,0.396 -0.127,0.813 -0.323,1.127 l -19.084,-10.5 z", fill: "#00599c" },
 ] as const;
 
-/** LabVIEW - the run-arrow glyph: yellow arrow, black plus. */
+/** LabVIEW - the run-arrow glyph: yellow arrow, black plus. The arrow gets a thin dark
+ *  outline (absent from the source) because its brand yellow is close in lightness to
+ *  the pill fill and all but disappears without one. 12 units in this ~396-unit
+ *  viewBox renders as well under 1px at the pill's 16px size - a hairline, not a
+ *  cartoon outline. */
 const LABVIEW_LOGO = [
-    { d: "M371.577 168.249L43.417.636S21.973-2.056 13.128 3.64C3.375 9.92 0 30.927 0 30.927v335.227s3.023 24.975 13.126 31.303c11.407 7.144 38.37-3.031 38.37-3.031l323.11-165.594s21.204-13.126 21.204-31.301-24.233-29.282-24.233-29.282z", fill: "#ffda1c" },
+    { d: "M371.577 168.249L43.417.636S21.973-2.056 13.128 3.64C3.375 9.92 0 30.927 0 30.927v335.227s3.023 24.975 13.126 31.303c11.407 7.144 38.37-3.031 38.37-3.031l323.11-165.594s21.204-13.126 21.204-31.301-24.233-29.282-24.233-29.282z", fill: "#ffda1c", stroke: "#00000055", strokeWidth: 12 },
     { d: "M125.205 182.362v-38.37h27.263v38.37h39.379v27.262h-39.379v37.36h-27.263v-37.36H84.816v-27.262z", fill: "#000" },
 ] as const;
 
@@ -143,6 +147,11 @@ const BOX_PUZZLE = "0 0 36 36";
 export interface SkillPath {
   d: string;
   fill?: string;
+  /** Outline colour - set only where the fill alone doesn't read against the pill
+   *  (LabVIEW's brand yellow is close in lightness to the pill fill). */
+  stroke?: string;
+  /** In the mark's own viewBox units, not px - scales with the artwork. */
+  strokeWidth?: number;
 }
 
 /** A resolved skill mark: either inline vector, or a raster logo for `next/image`. */
