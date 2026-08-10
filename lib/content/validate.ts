@@ -7,6 +7,7 @@
 
 import type {
   AboutEducation,
+  AboutEducationHonor,
   AboutSectionData,
   AboutStats,
   BusinessCard,
@@ -317,9 +318,36 @@ function validateEducationCertificateRef(
   });
 }
 
+function validateAboutEducationHonor(value: unknown, path: string): AboutEducationHonor {
+  const raw = assertObject(value, path);
+
+  return omitUndefined({
+    label: assertRequiredString(raw.label, `${path}.label`),
+    certificate:
+      raw.certificate === undefined
+        ? undefined
+        : validateEducationCertificateRef(raw.certificate, `${path}.certificate`),
+  });
+}
+
+function assertOptionalAboutEducationHonorList(
+  value: unknown,
+  path: string,
+): AboutEducationHonor[] | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!Array.isArray(value)) {
+    throw new ContentValidationError(path, "optional array of education honours");
+  }
+
+  return value.map((entry, index) =>
+    validateAboutEducationHonor(entry, `${path}[${index}]`),
+  );
+}
+
 function validateAboutEducation(value: unknown, path: string): AboutEducation {
   const raw = assertObject(value, path);
-  const honor = assertOptionalString(raw.honor, `${path}.honor`);
 
   return omitUndefined({
     dateRange: assertRequiredString(raw.dateRange, `${path}.dateRange`),
@@ -327,15 +355,11 @@ function validateAboutEducation(value: unknown, path: string): AboutEducation {
     institution: assertRequiredString(raw.institution, `${path}.institution`),
     institutionLogo: assertOptionalString(raw.institutionLogo, `${path}.institutionLogo`),
     summary: assertRequiredString(raw.summary, `${path}.summary`),
-    honor,
+    honors: assertOptionalAboutEducationHonorList(raw.honors, `${path}.honors`),
     degreeCertificate:
       raw.degreeCertificate === undefined
         ? undefined
         : validateEducationCertificateRef(raw.degreeCertificate, `${path}.degreeCertificate`),
-    honorCertificate:
-      raw.honorCertificate === undefined
-        ? undefined
-        : validateEducationCertificateRef(raw.honorCertificate, `${path}.honorCertificate`),
   });
 }
 

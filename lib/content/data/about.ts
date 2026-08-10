@@ -7,10 +7,14 @@
  * GPA 95, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
  * diploma (2015-2018, GPA 103, with honors).
  *
- * ⚠️ No certificate files exist for either entry yet, so `degreeCertificate` is omitted on
- * both - the ledger then renders the record without a "Preview certificate" trigger rather
- * than opening an empty viewer. Drop a PDF into `public/certificates/` and add the ref to
- * wire it up.
+ * The Dean's List placement on the B.Sc. entry is owner-confirmed rather than CV-sourced;
+ * the CV states no honour.
+ *
+ * ⚠️ No certificate files exist for any entry yet, so `degreeCertificate` is omitted on both
+ * and the record renders without a "Preview certificate" trigger rather than opening an
+ * empty viewer. Drop a PDF into `public/certificates/` and add the ref to wire it up. The
+ * Dean's List honour is the one exception: it carries a certificate ref pointed at the CV
+ * as a temporary stand-in so the badge is a working viewer trigger.
  *
  * ⚠️ No institution logo assets exist in `public/logos/`, so both timeline markers fall back
  * to initials (`HIT`, `EKH`). Drop a licence-cleared logo in and set `institutionLogo` to
@@ -61,7 +65,24 @@ const aboutData = {
     dateRange: "Oct 2022 - present",
     degree: "B.Sc. Electrical & Electronics Engineering",
     institution: "Holon Institute of Technology (HIT)",
-    honor: "GPA 95",
+    honors: [
+      { label: "GPA 95" },
+      // Owner-confirmed (the CV does not list it). The badge doubles as the trigger for
+      // the certificate viewer.
+      // ⚠️ STUB: no Dean's List PDF exists yet, so the viewer is pointed at the CV so the
+      // interaction is real and testable. Swap `file` for the actual certificate once it
+      // lands in `public/certificates/` - or drop the `file` key entirely to fall back to
+      // the viewer's "preview is not available yet" state.
+      {
+        label: "Included in Dean's List",
+        certificate: {
+          id: "deans-list",
+          title: "Dean's List",
+          viewLabel: "View Dean's List certificate",
+          file: "/resume.pdf",
+        },
+      },
+    ],
     summary:
       "Specializing in Electro-Optics & Microelectronics. Coursework includes Semiconductor " +
       "Devices (100), Microelectronics Technologies (99), Control Systems (98), " +
@@ -73,7 +94,7 @@ const aboutData = {
       dateRange: "2015 - 2018",
       degree: "High School Diploma, with honors",
       institution: "Ein-Kerem High School",
-      honor: "GPA 103",
+      honors: [{ label: "GPA 103" }],
       summary:
         "Extended studies in Mathematics, English, Physics, Biology and Agriculture.",
     },

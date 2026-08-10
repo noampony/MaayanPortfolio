@@ -2474,11 +2474,20 @@ main:focus-visible {
 }
 
 /* Ghost index numeral, pinned opposite the logo lockup. */
-.impact-card-index {
+/* Ghost numeral and period chip share one top-right stack, the chip sitting right below
+   the numeral - a grid track so the head content still has a fixed-width lane to clear. */
+.impact-card-corner {
   position: absolute;
   top: clamp(0.75rem, 1.6vw, 1.1rem);
   right: clamp(0.9rem, 2vw, 1.4rem);
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.impact-card-index {
   font-family: var(--font-mono), var(--font-mono-fallback);
   font-size: 2.1rem;
   font-weight: 700;
@@ -2512,14 +2521,11 @@ main:focus-visible {
   padding: clamp(1.5rem, 3vw, 2.25rem);
 }
 
-/* Logo lockup on the left, period chip on the right. A grid rather than a flex row so the
-   chip has its own track and can never be squeezed by a two-logo lockup; the right pad
-   keeps both clear of the index numeral. */
+/* Logo lockup only - the period chip now lives in `.impact-card-corner` with the ghost
+   numeral. The right pad keeps the lockup clear of that corner stack. */
 .impact-card-head {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 0.75rem;
   padding-right: clamp(2.6rem, 5vw, 3.4rem);
 }
 
@@ -2590,8 +2596,6 @@ main:focus-visible {
 /* Period chip - display-only years, carrying what the description used to state in prose. */
 .impact-card-period {
   flex: none;
-  align-self: center;
-  justify-self: end;
   border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
   border-radius: 9999px;
   background: var(--chip-fill);

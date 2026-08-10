@@ -377,11 +377,12 @@ function RoleRecord({ entry, index, onOpenCertificate }: RecordProps<LedgerRoleE
 }
 
 /**
- * An education record closing out the ledger. The in-page certificate viewer is wired to
- * whichever certificates exist: a "Preview certificate" trigger when the qualification has
- * one, and - when the honour has its own certificate - one pill that is both the honour
- * badge and its trigger. An entry with no certificates at all simply renders no action row,
- * rather than a trigger that opens an empty viewer.
+ * An education record closing out the ledger. Honours render as badges in the order the
+ * content gives them. The in-page certificate viewer is wired to whichever certificates
+ * exist: a "Preview certificate" trigger when the qualification has one, and - when an
+ * honour has its own certificate - one pill that is both the honour badge and its trigger.
+ * An entry with neither certificates nor honours simply renders no action row, rather than
+ * a trigger that opens an empty viewer.
  */
 function EducationRecord({
   entry,
@@ -390,26 +391,23 @@ function EducationRecord({
 }: RecordProps<LedgerEducationEntry>) {
   const { education } = entry;
 
-  let honorGroup: ReactNode = null;
-  if (education.honorCertificate) {
-    honorGroup = (
-      <span className="experience-honor-group">
+  const honorBadges: ReactNode[] = (education.honors ?? []).map((honor) =>
+    honor.certificate ? (
+      <span key={honor.label} className="experience-honor-group">
         <EducationCertificateTrigger
-          certificate={education.honorCertificate}
+          certificate={honor.certificate}
           onOpen={onOpenCertificate}
-          label={education.honor ?? "Preview certificate"}
+          label={honor.label}
           leadingIcon={<HonorIcon />}
         />
       </span>
-    );
-  } else if (education.honor) {
-    honorGroup = (
-      <span className="about-education-honor-badge">
+    ) : (
+      <span key={honor.label} className="about-education-honor-badge">
         <HonorIcon />
-        {education.honor}
+        {honor.label}
       </span>
-    );
-  }
+    ),
+  );
 
   return (
     <>
@@ -427,7 +425,7 @@ function EducationRecord({
 
       <p className="xp-desc">{education.summary}</p>
 
-      {education.degreeCertificate || honorGroup ? (
+      {education.degreeCertificate || honorBadges.length > 0 ? (
         <div className="xp-actions">
           {education.degreeCertificate ? (
             <EducationCertificateTrigger
@@ -435,7 +433,7 @@ function EducationRecord({
               onOpen={onOpenCertificate}
             />
           ) : null}
-          {honorGroup}
+          {honorBadges}
         </div>
       ) : null}
     </>
