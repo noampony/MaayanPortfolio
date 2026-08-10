@@ -64,14 +64,28 @@ export type AboutEducation = {
   /** Optional institution logo (served from `/public`). */
   institutionLogo?: AssetReference;
   summary: string;
-  honor?: string;
+  /**
+   * Distinctions earned on the entry - a GPA, a Dean's List placement, … Rendered as
+   * badges in the order given; an entry with none renders no badges at all.
+   */
+  honors?: AboutEducationHonor[];
   /**
    * The entry's primary certificate (a degree diploma, a bootcamp certificate, …).
    * Optional: an entry with no certificate file simply renders without a preview
    * trigger rather than opening an empty viewer.
    */
   degreeCertificate?: EducationCertificateRef;
-  honorCertificate?: EducationCertificateRef;
+};
+
+/** One distinction badge on an education entry. */
+export type AboutEducationHonor = {
+  /** The badge's text, e.g. `GPA 95` or `Included in Dean's List`. */
+  label: string;
+  /**
+   * The honour's own certificate. When present the badge doubles as the trigger that
+   * opens it; when absent it is a plain, non-interactive badge.
+   */
+  certificate?: EducationCertificateRef;
 };
 
 /** About section data (spec §8.2). */

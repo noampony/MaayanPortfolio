@@ -29,30 +29,75 @@ const heroRoles = [
 ] as const;
 
 /**
- * Floating tags pinned to the left edge of the profile-frame ellipse. They pop in
- * bottom-to-top, one second apart, each reusing the original experience-tag
- * spring + float treatment.
+ * Floating tags arranged along the left arc of the profile frame's oval, top to
+ * bottom: Lab / GPA / Dean's List / B.Sc. They pop in bottom-to-top, one second
+ * apart, each reusing the original experience-tag spring + float treatment.
  *
- * All three are CV facts: the degree GPA, the current lab role, and the degree itself.
+ * Owner-supplied facts: the current lab role, the degree GPA, the Dean's List honour
+ * and the degree itself (the honour is not on the CV - it was confirmed by the owner,
+ * and carries no year because none was given).
  * Nothing here is derived from a clock, so nothing goes stale between builds.
+ *
+ * Layout - the pills ride the frame's own oval. Vertically, every pill keeps its fixed
+ * footprint (72.8 / 83.2 / 140px tall by breakpoint), so four of them are taller than
+ * the frame (224 / 256 / 416 / 448px): each is centred on the frame
+ * (`top-1/2 -translate-y-1/2`) and pushed by a whole number of *slots* - one pill
+ * height plus the column gap - at -1.5 / -0.5 / +0.5 / +1.5. Centring on the frame
+ * rather than anchoring to its edges keeps the column centred at both the min-[850px]
+ * (416px) and lg (448px) frame heights without a third set of offsets.
+ *
+ * Horizontally, each pill's right edge sits on the ellipse `x = cx - rx·√(1 - u²)`,
+ * where `u` is the slot's distance from the frame's vertical centre as a fraction of
+ * the *path* ellipse's semi-height. The path ellipse is the frame's oval stretched
+ * vertically so the ±1.5 slots land on it (u = 0.75 there, 0.25 at the ±0.5 slots) -
+ * without the stretch the outer two pills would sit past the oval's poles, where it
+ * has no left edge to follow. `rx` is then set so the inner pills keep their original
+ * overhang, which makes the outer pair tuck back in by ~24 / 28 / 42px per breakpoint:
+ * the column bows out at the waist and narrows at the ends, like the oval itself.
  */
+const TAG_ARC_POSITION_CLASSES = "top-1/2 -translate-y-1/2";
+
+/**
+ * Per-slot offsets: vertical is ±0.5 / ±1.5 × (pill height + gap); horizontal is the
+ * ellipse solution above, so the two inner slots share one inset and the two outer
+ * slots the other.
+ */
+const tagSlotOffsetClasses = {
+  "-1.5":
+    "mt-[-115.2px] -left-[24px] sm:mt-[-130.8px] sm:-left-[27px] min-[850px]:mt-[-219px] min-[850px]:-left-[38px]",
+  "-0.5":
+    "mt-[-38.4px] -left-12 sm:mt-[-43.6px] sm:-left-[55px] min-[850px]:mt-[-73px] min-[850px]:-left-20",
+  "0.5":
+    "mt-[38.4px] -left-12 sm:mt-[43.6px] sm:-left-[55px] min-[850px]:mt-[73px] min-[850px]:-left-20",
+  "1.5":
+    "mt-[115.2px] -left-[24px] sm:mt-[130.8px] sm:-left-[27px] min-[850px]:mt-[219px] min-[850px]:-left-[38px]",
+} as const;
+
 const profileTags = [
-  {
-    key: "gpa",
-    ariaLabel: "GPA 95 at HIT",
-    numericValue: 95,
-    lines: ["GPA", "at HIT"],
-    positionClasses:
-      "-top-1 -left-6 sm:-top-[4.6px] sm:-left-[28px] min-[850px]:-top-3 min-[850px]:-left-10",
-    appearDelay: 3.15,
-  },
   {
     key: "lab",
     ariaLabel: "Research Assistant, Electro-Optics Laboratory",
     value: "Lab",
     lines: ["Research", "Assistant"],
-    positionClasses:
-      "top-1/2 -translate-y-1/2 -left-12 sm:-left-[55px] min-[850px]:-left-20",
+    slotClasses: tagSlotOffsetClasses["-1.5"],
+    appearDelay: 4.15,
+  },
+  {
+    key: "gpa",
+    ariaLabel: "GPA 95 at HIT",
+    numericValue: 95,
+    lines: ["GPA", "at HIT"],
+    slotClasses: tagSlotOffsetClasses["-0.5"],
+    appearDelay: 3.15,
+  },
+  {
+    key: "deans-list",
+    ariaLabel: "Dean's List Honor",
+    // No value slot: the honour has no short headline word to put there (a 30px
+    // "Dean's" would overflow a 97px pill), so the pill is label-only and the label
+    // itself carries the emphasis.
+    lines: ["Dean's", "List", "Honor"],
+    slotClasses: tagSlotOffsetClasses["0.5"],
     appearDelay: 2.15,
   },
   {
@@ -60,13 +105,7 @@ const profileTags = [
     ariaLabel: "B.Sc Electrical and Electronics Engineering",
     value: "B.Sc",
     lines: ["Electrical &", "Electronics", "Eng."],
-    // Bottom offset is a touch larger than the top tag's (rather than the same
-    // -1/-2/-3 value) because this tag wraps onto 3 lines and is taller, so a
-    // matching edge offset would pull its center closer to the middle tag than
-    // the top tag's. The extra px exactly compensates for that height delta so
-    // the middle tag sits equidistant between the top and bottom tags.
-    positionClasses:
-      "-bottom-[7.2px] -left-[22px] sm:-bottom-[8.2px] sm:-left-[25px] min-[850px]:-bottom-[18.41px] min-[850px]:-left-10",
+    slotClasses: tagSlotOffsetClasses["1.5"],
     appearDelay: 1.15,
   },
 ] as const;
@@ -222,8 +261,8 @@ export function HeroContent({ initials }: HeroContentProps) {
   // The portrait itself is cropped head-to-hip and horizontally centred on the
   // subject's optical centre (head + torso, not the hair-inclusive bounding box),
   // so the figure reads as centred in the ellipse.
-  // `min-[850px]:ml-20` reserves the widest tag overhang (the middle tag's
-  // `min-[850px]:-left-20`) as real layout space - the tags are absolutely
+  // `min-[850px]:ml-20` reserves the tag column's overhang
+  // (`min-[850px]:-left-20`) as real layout space - the tags are absolutely
   // positioned, so without it the flex row lets the text column run underneath
   // them at narrow row-layout widths.
   const profileFrameClasses = cn(
@@ -383,7 +422,11 @@ export function HeroContent({ initials }: HeroContentProps) {
       </div>
 
       <motion.div
-        className="order-2 flex shrink-0 items-start justify-center min-[850px]:order-none min-[850px]:justify-end"
+        // `my-5` in the stacked layout: the four-pill column is ~40px taller than the
+        // frame at each end (see profileTags), which eats into the flex `gap-8`/`gap-10`
+        // and lets the top pill touch the paragraph and the bottom one the Resume CTA.
+        // The row layout has no such collision - the column sits beside the text.
+        className="order-2 my-5 flex shrink-0 items-start justify-center min-[850px]:order-none min-[850px]:my-0 min-[850px]:justify-end"
         initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}
         animate={contentRevealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }}
         transition={{ duration: 0.83, ease: easeOut, delay: prefersReducedMotion ? 0 : 0.24 }}
@@ -442,7 +485,7 @@ export function HeroContent({ initials }: HeroContentProps) {
               <div
                 key={tag.key}
                 aria-label={tag.ariaLabel}
-                className={cn("absolute z-20", tag.positionClasses)}
+                className={cn("absolute z-20", TAG_ARC_POSITION_CLASSES, tag.slotClasses)}
               >
                 <motion.div
                   initial={prefersReducedMotion ? false : { scale: 0, opacity: 0 }}
@@ -479,26 +522,37 @@ export function HeroContent({ initials }: HeroContentProps) {
                       "gap-1 px-2.5 py-3 sm:gap-1 sm:px-3 sm:py-3.5 min-[850px]:gap-1.5 min-[850px]:px-4 min-[850px]:py-6"
                     )}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="font-bold leading-none text-accent text-sm sm:text-base min-[850px]:text-3xl"
-                    >
-                      {"numericValue" in tag ? (
-                        <CountUp
-                          value={tag.numericValue}
-                          start={contentRevealed}
-                          delay={tag.appearDelay + 0.1}
-                        />
-                      ) : (
-                        tag.value
-                      )}
-                    </span>
+                    {/* A tag without a value slot (the honour) is all label - see below. */}
+                    {"numericValue" in tag || "value" in tag ? (
+                      <span
+                        aria-hidden="true"
+                        className="font-bold leading-none text-accent text-sm sm:text-base min-[850px]:text-3xl"
+                      >
+                        {"numericValue" in tag ? (
+                          <CountUp
+                            value={tag.numericValue}
+                            start={contentRevealed}
+                            delay={tag.appearDelay + 0.1}
+                          />
+                        ) : (
+                          tag.value
+                        )}
+                      </span>
+                    ) : null}
                     <span
                       className={cn(
-                        "text-center leading-tight font-medium text-text-secondary",
-                        tag.lines.length > 2
-                          ? "text-[6px] sm:text-[7px] min-[850px]:text-[10px]"
-                          : "text-[7px] sm:text-[8px] min-[850px]:text-[11px]",
+                        "text-center leading-tight",
+                        // Value-less tags carry the whole pill on their label, so it
+                        // steps up to the weight, size and accent colour the value
+                        // slot would have had. The sized branches keep the label
+                        // subordinate to a value that is already doing the shouting.
+                        !("numericValue" in tag) && !("value" in tag)
+                          ? "font-bold text-accent text-[8px] sm:text-[9px] min-[850px]:text-sm"
+                          : "font-medium text-text-secondary",
+                        ("numericValue" in tag || "value" in tag) &&
+                          (tag.lines.length > 2
+                            ? "text-[6px] sm:text-[7px] min-[850px]:text-[10px]"
+                            : "text-[7px] sm:text-[8px] min-[850px]:text-[11px]"),
                       )}
                     >
                       {tag.lines.map((line, index) => (
