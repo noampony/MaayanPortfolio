@@ -35,12 +35,12 @@ const config: Config = {
         "gradient-from": "var(--gradient-from)",
         "gradient-via": "var(--gradient-via)",
         "gradient-to": "var(--gradient-to)",
-        // Ambient orange wash palette (see the light-theme material tokens in
+        // Ambient tan wash palette (see the light-theme material tokens in
         // globals.css) - decorative blurred blobs only, never text or borders.
-        "wash-peach": "var(--wash-peach)",
-        "wash-apricot": "var(--wash-apricot)",
-        "wash-tangerine": "var(--wash-tangerine)",
-        "wash-amber": "var(--wash-amber)",
+        "wash-sand": "var(--wash-sand)",
+        "wash-latte": "var(--wash-latte)",
+        "wash-camel": "var(--wash-camel)",
+        "wash-honey": "var(--wash-honey)",
         danger: "var(--danger)",
         background: "var(--background)",
         foreground: "var(--foreground)",
