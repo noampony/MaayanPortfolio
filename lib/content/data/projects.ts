@@ -10,8 +10,8 @@
  * tooling that is not either named in the CV entry itself or in its Technical Skills list.
  *
  * The capstone is complete. Its scope, partner deliverables and results are deliberately not
- * described beyond what the CV states (the partner, Animal Health Technology Labs, is named
- * on the CV).
+ * described beyond what the CV states (the partner, the Department of Pharmacy at Hadassah
+ * Ein Kerem Hospital, is named on the CV).
  *
  * Still absent by design: project years (`year`) and categories (`category`) are omitted
  * everywhere rather than invented.
@@ -28,7 +28,7 @@ const projectData = [
     name: "Optical Characterisation of Hydrogel Fibers",
     role: "Lab Assistant",
     shortDescription:
-      "My final engineering project, with Animal Health Technology Labs: soft hydrogel fibers that guide light and hold living microalgae inside.",
+      "My final engineering project, with the Department of Pharmacy at Hadassah Ein Kerem Hospital: soft hydrogel fibers that guide light and hold living microalgae inside.",
     problemSolved:
       "We built and tested hydrogel fibers to see how well they guide light and whether the microalgae inside stay alive. The fiber must work as both optics and biology - a step toward future use in tissue engineering and cultured meat.",
     whyImportant:
