@@ -10,12 +10,12 @@
 
 :root {
   color-scheme: light;
-  --bg-base: #F6E7D0;
-  --bg-surface: #FAF0DE;
-  --bg-surface-raised: #FFFBF2;
-  /* The brand tan itself. Hairlines only - at 1.77:1 on --bg-base it is decorative,
-     never text. */
-  --border: #C7AD8D;
+  --bg-base: #FAF3E3;
+  --bg-surface: #FCF8EC;
+  --bg-surface-raised: #FFFDF7;
+  /* The brand tan, lightened one step so hairlines stay quiet on the cream page.
+     Hairlines only - at 1.73:1 on --bg-base it is decorative, never text. */
+  --border: #CFB897;
   --text-primary: #46331C;
   --text-secondary: #5C482D;
   --text-muted: #6F5B3E;
@@ -24,14 +24,14 @@
      "current role" pill, the viewer action links), not just on the bare page - the raw
      tan would not (4.5:1 rules out anything lighter than roughly this). `--accent-hover`
      goes darker, not lighter: on a light surface, deeper reads as "pressed/active".
-     Contrast on --bg-base: accent 5.40:1, accent-hover 6.90:1; white on accent 6.57:1. */
+     Contrast on --bg-base: accent 5.36:1, accent-hover 7.59:1; white on accent 5.93:1. */
   --accent: #7E5E36;
   --accent-hover: #63491F;
   --accent-contrast: #FFFFFF;
   /* Display gradient (hero name, highlighted heading words, logo, bars). A single-hue
      earth arc, deep brown → bronze → light bronze, so the sweep reads as light catching
      the letters. Every stop clears 3:1 on --bg-base for the large display text it
-     paints (9.86 / 4.10 / 3.35). */
+     paints (10.85 / 4.51 / 3.69). */
   --gradient-from: #46331C;
   --gradient-via: #8A6A3E;
   --gradient-to: #97794A;
@@ -48,10 +48,10 @@
      family (pale sand → camel), separated by saturation and lightness rather than hue so
      overlapping blobs still read as distinct shapes instead of one flat stain.
      Decorative only: never text, never a border, so no contrast floor applies. */
-  --wash-sand: #EAD9BC;
-  --wash-latte: #DCC5A1;
-  --wash-camel: #C7AD8D;
-  --wash-honey: #F0E4C4;
+  --wash-sand: #F1E6D0;
+  --wash-latte: #E5D4B6;
+  --wash-camel: #D4BFA2;
+  --wash-honey: #F5EDD8;
 
   /* Elevation. Warm ink, so shadows read as paper shade rather than grey haze; on a
      light page they need far lower alpha than a dark one. */
@@ -79,7 +79,7 @@
   --chip-fill: color-mix(in srgb, var(--accent) 6%, transparent);
   --chip-fill-hover: color-mix(in srgb, var(--accent) 12%, transparent);
   /* Roadmap road surface + lane dashes (§8.6). */
-  --road-surface: #C7AD8D;
+  --road-surface: #D4BFA2;
   --road-lane: rgb(255 255 255 / 0.85);
 
   --background: var(--bg-base);
