@@ -8,13 +8,13 @@
  * diploma (2015-2018, GPA 103, with honors).
  *
  * The Dean's List placement on the B.Sc. entry is owner-confirmed rather than CV-sourced;
- * the CV states no honour.
+ * the CV states no honour. The certificate image lives at
+ * `public/certificates/deans-list.jpeg` (the owner's ID number was redacted before
+ * committing, since the file is public once deployed).
  *
- * ⚠️ No certificate files exist for any entry yet, so `degreeCertificate` is omitted on both
- * and the record renders without a "Preview certificate" trigger rather than opening an
- * empty viewer. Drop a PDF into `public/certificates/` and add the ref to wire it up. The
- * Dean's List honour is the one exception: it carries a certificate ref pointed at the CV
- * as a temporary stand-in so the badge is a working viewer trigger.
+ * ⚠️ No certificate files exist for the other entries yet, so `degreeCertificate` is omitted
+ * on them and the record renders without a "Preview certificate" trigger rather than opening
+ * an empty viewer. Drop a PDF into `public/certificates/` and add the ref to wire it up.
  *
  * Institution logos live in `public/logos/` and are wired via `institutionLogo` on each
  * entry; owner-supplied, licence-cleared assets.
@@ -69,17 +69,13 @@ const aboutData = {
       { label: "GPA 95" },
       // Owner-confirmed (the CV does not list it). The badge doubles as the trigger for
       // the certificate viewer.
-      // ⚠️ STUB: no Dean's List PDF exists yet, so the viewer is pointed at the CV so the
-      // interaction is real and testable. Swap `file` for the actual certificate once it
-      // lands in `public/certificates/` - or drop the `file` key entirely to fall back to
-      // the viewer's "preview is not available yet" state.
       {
         label: "Included in Dean's List",
         certificate: {
           id: "deans-list",
           title: "Dean's List",
           viewLabel: "View Dean's List certificate",
-          file: "/resume.pdf",
+          file: "/certificates/deans-list.jpeg",
         },
       },
     ],

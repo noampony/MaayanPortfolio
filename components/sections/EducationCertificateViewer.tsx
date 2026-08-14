@@ -9,6 +9,8 @@ type EducationCertificateViewerProps = {
   onClose: () => void;
 };
 
+const IMAGE_FILE_PATTERN = /\.(jpe?g|png|gif|webp|avif)$/i;
+
 function CertificateDocumentIcon() {
   return (
     <svg
@@ -86,7 +88,8 @@ export function EducationCertificateTrigger({
   leadingIcon,
 }: EducationCertificateTriggerProps) {
   const handleClick = () => {
-    // On narrow mobile screens, open the PDF directly - iframes can't render PDFs inline.
+    // On narrow mobile screens, open the file directly - iframes render PDFs and images
+    // poorly at that size.
     if (certificate.file && window.innerWidth <= 420) {
       window.open(certificate.file, "_blank", "noopener,noreferrer");
       return;
@@ -176,11 +179,19 @@ export function EducationCertificateViewer({
             {certificate.file ? (
               <>
                 <div className="cert-viewer-frame-wrap">
-                  <iframe
-                    src={certificate.file}
-                    title={certificate.title}
-                    className="cert-viewer-frame"
-                  />
+                  {IMAGE_FILE_PATTERN.test(certificate.file) ? (
+                    <img
+                      src={certificate.file}
+                      alt={`${certificate.title} certificate`}
+                      className="cert-viewer-frame cert-viewer-image"
+                    />
+                  ) : (
+                    <iframe
+                      src={certificate.file}
+                      title={certificate.title}
+                      className="cert-viewer-frame"
+                    />
+                  )}
                 </div>
                 <a
                   href={certificate.file}
@@ -189,7 +200,7 @@ export function EducationCertificateViewer({
                   className="cert-viewer-open-link"
                 >
                   <ExternalLinkIcon />
-                  Open PDF in new tab
+                  Open in new tab
                 </a>
               </>
             ) : (
