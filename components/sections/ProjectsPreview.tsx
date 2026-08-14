@@ -19,7 +19,8 @@ import { revealItemVariants, staggerContainerVariants } from "@/lib/motion";
  * screenshot of one of her own apps, which has no business sitting behind these cards.
  */
 const PROJECT_BACKGROUNDS: Record<string, string> = {
-  "Capstone Engineering Project": "/images/projects/capstone-engineering-project.jpg",
+  "Optical Characterisation of Hydrogel Fibers":
+    "/images/projects/optical-characterisation-of-hydrogel-fibers.png",
   "Microcontrollers Lab": "/images/projects/microcontrollers-lab.jpg",
   "Semiconductors Lab": "/images/projects/semiconductors-lab.jpg",
 };
@@ -99,7 +100,7 @@ export function ProjectsPreview() {
           }
           lead={
             <>
-              The engineering work behind the degree - built, measured, and tested.
+              Hands-on laboratory work - built, measured, and tested.
               <br />
               Tap a card to flip it over.
             </>

@@ -9,9 +9,9 @@
  * card needs without adding facts the CV does not state - no results, no grades, and no
  * tooling that is not either named in the CV entry itself or in its Technical Skills list.
  *
- * ⚠️ The capstone is explicitly in progress. Its scope, partner deliverables and results
- * are deliberately not described beyond what the CV states; revisit once the owner confirms
- * what can be published (the partner, Animal Health Technology Labs, is named on the CV).
+ * The capstone is complete. Its scope, partner deliverables and results are deliberately not
+ * described beyond what the CV states (the partner, Animal Health Technology Labs, is named
+ * on the CV).
  *
  * Still absent by design: project years (`year`) and categories (`category`) are omitted
  * everywhere rather than invented.
@@ -22,10 +22,10 @@ import { validateProjectList } from "../validate";
 
 const projectData = [
   {
-    name: "Capstone Engineering Project",
+    name: "Optical Characterisation of Hydrogel Fibers",
     role: "Lab Assistant",
     shortDescription:
-      "My final engineering project, carried out in collaboration with Animal Health Technology Labs. In progress.",
+      "My final engineering project, carried out in collaboration with Animal Health Technology Labs.",
     problemSolved:
       "The capstone is the degree's end-to-end engineering exercise: an industry-partnered problem taken from definition through to a working result, with a real partner's constraints rather than a textbook's.",
     whyImportant:
