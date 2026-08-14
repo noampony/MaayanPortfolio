@@ -31,11 +31,10 @@ const experienceData = [
       "Optical Setups",
       "Lasers",
       "Sensors",
-      "Signal Acquisition",
       "Data Analysis",
     ],
     description:
-      "I design and implement optical setups that integrate electronics and photonics, run experiments with lasers, sensors and signal acquisition systems, and process and analyze the resulting experimental data using Matlab and Python.",
+      "I design and implement optical setups that integrate electronics and photonics, run experiments with lasers and sensors, and process and analyze the resulting experimental data using Matlab and Python.",
     confidentialityReviewed: true,
   },
 ] as const;

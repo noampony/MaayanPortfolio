@@ -48,11 +48,11 @@ const yearsExperienceCountLabel = String(
 
 const aboutData = {
   professionalSummary:
-    "I'm a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, " +
+    "I'm an Electrical Engineer pursuing my B.Sc. at HIT, " +
     "specializing in Electro-Optics and Microelectronics.\n\n" +
     "In the Electro-Optics Laboratory I design and implement optical setups that integrate " +
-    "electronics and photonics, run experiments with lasers, sensors and signal acquisition " +
-    "systems, and process the resulting data in Matlab and Python.\n\n" +
+    "electronics and photonics, run experiments with lasers and sensors, and process the " +
+    "resulting data in Matlab and Python.\n\n" +
     "I'm motivated to apply what I've learned in a practical environment, contribute to " +
     "innovative projects, and gain hands-on experience in the industry.",
   yearsExperienceStartDate: profile.yearsExperienceStartDate,

@@ -35,7 +35,7 @@ const projectData = [
   },
   {
     name: "Microcontrollers Lab",
-    role: "Student Engineer",
+    role: "Engineer",
     shortDescription:
       "Embedded systems designed, programmed in C, and tested on real hardware in the HIT Microcontrollers Lab.",
     problemSolved:
@@ -49,7 +49,7 @@ const projectData = [
   },
   {
     name: "Semiconductors Lab",
-    role: "Student Engineer",
+    role: "Engineer",
     shortDescription:
       "Characterization of diodes and transistors, with I-V curves extracted from measurement.",
     problemSolved:

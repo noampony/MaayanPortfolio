@@ -33,7 +33,7 @@ export function ExperienceIntro() {
             So Far
           </>
         }
-        lead="Research, service, and the studies behind them - most recent first."
+        lead="Hands-on experience and the studies behind it - most recent first."
       />
     </motion.div>
   );

@@ -25,7 +25,7 @@ export function StructuredData() {
     "@type": "WebSite",
     name: profile.name,
     description:
-      "Maayan Pony is a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
+      "Maayan Pony is an Electrical Engineer at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
     inLanguage: "en",
     url: siteUrl,
   };

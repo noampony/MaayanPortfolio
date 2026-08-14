@@ -17,22 +17,22 @@ export const metadata: Metadata = {
   // app/twitter-image.png) to absolute URLs so link unfurlers (WhatsApp,
   // Notion, Slack, etc.) can fetch them.
   metadataBase: new URL(siteUrl),
-  title: "Maayan Pony | Electrical & Electronics Engineering Student",
+  title: "Maayan Pony | Electrical Engineer",
   description:
-    "Maayan Pony is a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
+    "Maayan Pony is an Electrical Engineer at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
   openGraph: {
-    title: "Maayan Pony | Electrical & Electronics Engineering Student",
+    title: "Maayan Pony | Electrical Engineer",
     description:
-      "Maayan Pony is a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
+      "Maayan Pony is an Electrical Engineer at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
     type: "website",
     url: homepageUrl,
     siteName: "Maayan Pony",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maayan Pony | Electrical & Electronics Engineering Student",
+    title: "Maayan Pony | Electrical Engineer",
     description:
-      "Maayan Pony is a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
+      "Maayan Pony is an Electrical Engineer at HIT, specializing in Electro-Optics and Microelectronics, with hands-on laboratory and research experience.",
   },
 };
 
