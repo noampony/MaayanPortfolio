@@ -122,9 +122,9 @@ export function ImpactCard({ impact, headingId, index, featured = false }: Impac
 
   const logos = impact.logos ?? [];
   const icon = logos.length === 0 ? <ImpactIcon title={impact.title} /> : null;
-  // `period` is validated as `YYYY`, `YYYY - YYYY` or `YYYY - Present`, so the sentinel is
-  // the only thing that can end the label. Derived rather than carried as a second field,
-  // which could contradict the label sitting next to it.
+  // The validated `period` shape ends in either a date or the `Present` sentinel, so this
+  // test is enough. Derived rather than carried as a second field, which could contradict
+  // the label sitting next to it.
   const ongoing = /\bPresent$/.test(impact.period ?? "");
 
   return (
@@ -149,9 +149,18 @@ export function ImpactCard({ impact, headingId, index, featured = false }: Impac
         <span className="impact-card-index" aria-hidden="true">
           {String(index + 1).padStart(2, "0")}
         </span>
-        {impact.period ? (
-          <span className="impact-card-period" data-ongoing={ongoing || undefined}>
-            {impact.period}
+        {/* Dates and span share one row: the corner stack is absolutely positioned over the
+            head, so a third stacked line would reach down into the title. */}
+        {impact.period || impact.durationLabel ? (
+          <span className="impact-card-timeline">
+            {impact.period ? (
+              <span className="impact-card-period" data-ongoing={ongoing || undefined}>
+                {impact.period}
+              </span>
+            ) : null}
+            {impact.durationLabel ? (
+              <span className="impact-card-duration">{impact.durationLabel}</span>
+            ) : null}
           </span>
         ) : null}
       </div>

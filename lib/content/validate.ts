@@ -183,19 +183,27 @@ function assertExperienceEndDate(value: unknown, path: string): ExperienceEndDat
 }
 
 /**
- * Volunteering period labels: `YYYY`, `YYYY - YYYY`, or `YYYY - Present`. The CV states
- * these as bare years, so a month here would be an invented fact and the shape refuses
- * one. `Present` matches the {@link assertExperienceEndDate} sentinel, and the separator
- * is the ASCII hyphen-with-spaces used by every other date label on the site.
+ * Volunteering period labels: a bare year (`2024`) or a month-precise `Mmm YYYY`
+ * (`Oct 2025`), on its own or as the two ends of a ` - ` range whose end may be the
+ * literal `Present`.
+ *
+ * Both shapes are allowed on purpose: an entry is written with a month only where the
+ * owner supplies one, so an entry known only to the year stays a bare year rather than
+ * gaining an invented month. `Present` matches the {@link assertExperienceEndDate}
+ * sentinel, and the separator is the ASCII hyphen-with-spaces used by every other date
+ * label on the site.
  */
-const IMPACT_PERIOD_PATTERN = /^\d{4}(?: - (?:\d{4}|Present))?$/;
+const IMPACT_PERIOD_POINT = String.raw`(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) )?\d{4}`;
+const IMPACT_PERIOD_PATTERN = new RegExp(
+  String.raw`^${IMPACT_PERIOD_POINT}(?: - (?:${IMPACT_PERIOD_POINT}|Present))?$`,
+);
 
 function assertOptionalImpactPeriod(value: unknown, path: string): string | undefined {
   const period = assertOptionalString(value, path);
   if (period !== undefined && !IMPACT_PERIOD_PATTERN.test(period)) {
     throw new ContentValidationError(
       path,
-      "expected `YYYY`, `YYYY - YYYY`, or `YYYY - Present`",
+      "expected `YYYY` or `Mmm YYYY`, optionally as a ` - ` range ending in either shape or `Present`",
     );
   }
   return period;
@@ -315,6 +323,7 @@ function validateEducationCertificateRef(
     title: assertRequiredString(raw.title, `${path}.title`),
     viewLabel: assertRequiredString(raw.viewLabel, `${path}.viewLabel`),
     file: assertOptionalString(raw.file, `${path}.file`),
+    triggerLabel: assertOptionalString(raw.triggerLabel, `${path}.triggerLabel`),
   });
 }
 
@@ -691,6 +700,7 @@ export function validateImpactList(data: unknown): Impact[] {
       description: assertRequiredString(raw.description, `${path}.description`),
       impactBullets: assertRequiredStringArray(raw.impactBullets, `${path}.impactBullets`),
       period: assertOptionalImpactPeriod(raw.period, `${path}.period`),
+      durationLabel: assertOptionalString(raw.durationLabel, `${path}.durationLabel`),
       logos: assertOptionalImpactLogos(raw.logos, `${path}.logos`),
       displayOrder: assertRequiredNumber(raw.displayOrder, `${path}.displayOrder`),
       confidentialityReviewed: assertRequiredBoolean(

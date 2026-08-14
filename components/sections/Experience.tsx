@@ -4,6 +4,7 @@ import { ExperienceLedger } from "@/components/ui/ExperienceLedger";
 import { about } from "@/lib/content/data/about";
 import { experiences } from "@/lib/content/data/experience";
 import { buildExperienceLedger } from "@/lib/content/experienceLedger";
+import { formatDuration, monthsBetween } from "@/lib/content/duration";
 import { filterConfidentialityReviewed } from "@/lib/content/loaders";
 import type { Experience as ExperienceModel } from "@/lib/content/types";
 
@@ -46,43 +47,6 @@ function byMostRecent(a: ExperienceModel, b: ExperienceModel): number {
     return endComparison;
   }
   return b.startDate.localeCompare(a.startDate);
-}
-
-/**
- * Whole months between two year-months, counting both the first and the last month - the
- * way LinkedIn counts, so the label matches what the same dates show there (Jan 2024 -
- * Jul 2026 is `2 yrs 7 mos`, not 6).
- *
- * `end` defaults to now - which is build time for static pages, so an ongoing role's span
- * is baked in at build rather than read off a runtime clock.
- */
-function monthsBetween(start: string, end?: string, now = new Date()): number {
-  const [startYear, startMonth] = start.split("-").map(Number);
-  if (!startYear || !startMonth) {
-    return 0;
-  }
-  const [endYear, endMonth] = end
-    ? end.split("-").map(Number)
-    : [now.getFullYear(), now.getMonth() + 1];
-  if (!endYear || !endMonth) {
-    return 0;
-  }
-  const months = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
-  return Math.max(1, months);
-}
-
-/** Human-readable span (e.g. `3 yrs 8 mos`) from a whole-month count. */
-function formatDuration(totalMonths: number): string {
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-  const parts: string[] = [];
-  if (years > 0) {
-    parts.push(`${years} yr${years === 1 ? "" : "s"}`);
-  }
-  if (months > 0) {
-    parts.push(`${months} mo${months === 1 ? "" : "s"}`);
-  }
-  return parts.length > 0 ? parts.join(" ") : "1 mo";
 }
 
 /**

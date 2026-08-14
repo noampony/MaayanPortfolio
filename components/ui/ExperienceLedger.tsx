@@ -378,11 +378,11 @@ function RoleRecord({ entry, index, onOpenCertificate }: RecordProps<LedgerRoleE
 
 /**
  * An education record closing out the ledger. Honours render as badges in the order the
- * content gives them. The in-page certificate viewer is wired to whichever certificates
- * exist: a "Preview certificate" trigger when the qualification has one, and - when an
- * honour has its own certificate - one pill that is both the honour badge and its trigger.
- * An entry with neither certificates nor honours simply renders no action row, rather than
- * a trigger that opens an empty viewer.
+ * content gives them, then the qualification's own certificate. The in-page certificate
+ * viewer is wired to whichever certificates exist: a trigger when the qualification has
+ * one, and - when an honour has its own certificate - one pill that is both the honour
+ * badge and its trigger. An entry with neither certificates nor honours simply renders no
+ * action row, rather than a trigger that opens an empty viewer.
  */
 function EducationRecord({
   entry,
@@ -427,13 +427,16 @@ function EducationRecord({
 
       {education.degreeCertificate || honorBadges.length > 0 ? (
         <div className="xp-actions">
+          {honorBadges}
+          {/* After the honours, so the row reads distinctions first and the qualification's
+              own document last. */}
           {education.degreeCertificate ? (
             <EducationCertificateTrigger
               certificate={education.degreeCertificate}
               onOpen={onOpenCertificate}
+              label={education.degreeCertificate.triggerLabel}
             />
           ) : null}
-          {honorBadges}
         </div>
       ) : null}
     </>

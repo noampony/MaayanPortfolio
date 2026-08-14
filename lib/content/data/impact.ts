@@ -13,13 +13,17 @@
  * `logos` is the owner-supplied partner/organization logo(s) for an entry (served from
  * `/public/images/volunteering/`); a card with no logo falls back to initials in the UI.
  *
- * `period` is a display-only label carrying the years the descriptions used to state in
- * prose - the CV states bare years, so no month is inferred and nothing new is claimed.
- * The descriptions were trimmed of those years when the chip took them over; the facts
- * are unchanged, they just moved out of the sentence.
+ * `period` is a display-only label carrying the dates the descriptions used to state in
+ * prose. The start and end months are owner-supplied (the CV states bare years), so no
+ * month here is inferred. The descriptions were trimmed of those dates when the chip took
+ * them over; the facts are unchanged, they just moved out of the sentence.
+ *
+ * `durationLabel` is never authored - it is derived from `period` below, so the span and
+ * the dates next to it can never disagree.
  */
 
 import type { Impact } from "../types";
+import { formatDuration, monthsBetween } from "../duration";
 import { validateImpactList } from "../validate";
 
 const impactData = [
@@ -32,7 +36,7 @@ const impactData = [
       "Opening engineering and technology up to girls who rarely see it",
       "Run together with an industry partner and a Non-Profit organization",
     ],
-    period: "2025 - Present",
+    period: "Oct 2025 - Jul 2026",
     logos: [
       { src: "/images/volunteering/elbit.png", alt: "Elbit Systems", width: 480, height: 167 },
       { src: "/images/volunteering/shavot.png", alt: "Shavot", width: 480, height: 479 },
@@ -48,7 +52,7 @@ const impactData = [
       "Academic support where it is hardest to come by",
       "An ongoing commitment, not a one-off",
     ],
-    period: "2025 - Present",
+    period: "Oct 2025 - Jul 2026",
     logos: [{ src: "/images/volunteering/perach.jpg", alt: "Perach", width: 480, height: 303 }],
     displayOrder: 2,
     confidentialityReviewed: true,
@@ -62,7 +66,7 @@ const impactData = [
       "Support for a student in a peripheral community",
       "A mentoring relationship, not just homework help",
     ],
-    period: "2024 - 2025",
+    period: "Sep 2025 - Jul 2026",
     logos: [
       { src: "/images/volunteering/ischool.jpg", alt: "I-School Program", width: 480, height: 480 },
     ],
@@ -80,7 +84,7 @@ const impactData = [
       "Answered a national call for agricultural help",
       "Coordination and responsibility under real deadlines",
     ],
-    period: "2024",
+    period: "Nov 2024 - Jan 2025",
     logos: [
       {
         src: "/images/volunteering/ministry-of-agriculture.svg",
@@ -101,7 +105,7 @@ const impactData = [
       "Practical day-to-day assistance",
       "Time given consistently, week after week",
     ],
-    period: "2023",
+    period: "Sep 2023 - Jul 2024",
     logos: [
       {
         src: "/images/volunteering/holon-elderly-club.webp",
@@ -115,5 +119,44 @@ const impactData = [
   },
 ] as const;
 
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * `Oct 2025` → `2025-10`, the year-month shape {@link monthsBetween} counts in. A bare
+ * year has no month to convert, so it returns nothing rather than guessing January.
+ */
+function toYearMonth(point: string): string | undefined {
+  const [month, year] = point.split(" ");
+  if (year === undefined) {
+    return undefined;
+  }
+  const monthIndex = MONTH_NAMES.indexOf(month);
+  return monthIndex < 0 ? undefined : `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+}
+
+/**
+ * The span a `period` label covers, e.g. `Oct 2025 - Jul 2026` → `10 months`. Counted the
+ * same way the Experience ledger counts; spelled out in full because the card's chip has
+ * the room the ledger's meta row does not.
+ *
+ * Returns nothing when the label gives nothing to measure: a single point in time, an end
+ * of `Present` (no fixed end, and a client-rendered card must not read a clock), or an end
+ * the CV states only as a year. Better no chip than an invented one.
+ */
+function durationFromPeriod(period: string): string | undefined {
+  const [start, end] = period.split(" - ");
+  if (end === undefined) {
+    return undefined;
+  }
+  const startYearMonth = toYearMonth(start);
+  const endYearMonth = toYearMonth(end);
+  if (!startYearMonth || !endYearMonth) {
+    return undefined;
+  }
+  return formatDuration(monthsBetween(startYearMonth, endYearMonth), "long");
+}
+
 /** Validated Volunteering & Community cards, newest first. */
-export const impacts: Impact[] = validateImpactList(impactData);
+export const impacts: Impact[] = validateImpactList(
+  impactData.map((card) => ({ ...card, durationLabel: durationFromPeriod(card.period) })),
+);

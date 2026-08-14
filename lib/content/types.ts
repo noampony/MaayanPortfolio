@@ -50,6 +50,12 @@ export type EducationCertificateRef = {
   title: string;
   viewLabel: string;
   file?: AssetReference;
+  /**
+   * Visible text on the trigger button. Optional: a certificate that needs no introduction
+   * falls back to the generic `Preview certificate`, and one sitting beside other triggers
+   * names itself so the row does not read as two identical buttons.
+   */
+  triggerLabel?: string;
 };
 
 /**
@@ -119,13 +125,20 @@ export type Impact = {
   description: string;
   impactBullets: string[];
   /**
-   * Display-only period label for the card's timeline chip. Validated shape: `YYYY`,
-   * `YYYY - YYYY`, or `YYYY - Present`. Free text rather than a date pair because the CV
-   * states these as bare years, so nothing here is a computed or invented month. The
-   * literal `Present` is the sentinel the card's "ongoing" state keys off, matching the
-   * {@link ExperienceEndDate} sentinel.
+   * Display-only period label for the card's timeline chip. Validated shape: a year
+   * (`YYYY`) or a month-precise `MMM YYYY`, optionally followed by ` - ` and an end of
+   * the same shape or the literal `Present`. Free text rather than a date pair because
+   * some entries are known only to the year - a month is written here when the owner
+   * supplies one and left out when nobody does, so nothing is invented. `Present` is the
+   * sentinel the card's "ongoing" state keys off, matching {@link ExperienceEndDate}.
    */
   period?: string;
+  /**
+   * How long the entry ran, e.g. `10 mos`, shown next to {@link period}. Derived from
+   * `period` in the data layer rather than authored, so the two can never disagree; a
+   * period with no measurable span (a bare year, or one still running) simply has none.
+   */
+  durationLabel?: string;
   /** Partner/organization logos for this entry; omitted entries fall back to initials. */
   logos?: ImpactLogo[];
   /** 1-based display ordering. */

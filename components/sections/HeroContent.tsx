@@ -541,18 +541,26 @@ export function HeroContent({ initials }: HeroContentProps) {
                     ) : null}
                     <span
                       className={cn(
-                        "text-center leading-tight",
+                        // `whitespace-nowrap`: the pill is narrower than some label
+                        // lines, so without it the browser re-breaks a line that has
+                        // a space ("Electrical &") and the label gains a line it was
+                        // never laid out for - which pushes the text into the pill's
+                        // rounded caps. The authored `lines` are the only breaks.
+                        "whitespace-nowrap text-center leading-tight",
                         // Value-less tags carry the whole pill on their label, so it
                         // steps up to the weight, size and accent colour the value
                         // slot would have had. The sized branches keep the label
                         // subordinate to a value that is already doing the shouting.
+                        // The mobile/sm steps are ~25% up on the original sizes - the
+                        // pills keep their footprint, so this is the largest the label
+                        // can go and still clear the caps.
                         !("numericValue" in tag) && !("value" in tag)
-                          ? "font-bold text-accent text-[9px] sm:text-[10px] min-[850px]:text-base"
+                          ? "font-bold text-accent text-[11px] sm:text-[12px] min-[850px]:text-base"
                           : "font-medium text-text-secondary",
                         ("numericValue" in tag || "value" in tag) &&
                           (tag.lines.length > 2
-                            ? "text-[6px] sm:text-[7px] min-[850px]:text-[10px]"
-                            : "text-[7px] sm:text-[8px] min-[850px]:text-[11px]"),
+                            ? "text-[7.5px] sm:text-[9px] min-[850px]:text-[10px]"
+                            : "text-[9px] sm:text-[10px] min-[850px]:text-[11px]"),
                       )}
                     >
                       {tag.lines.map((line, index) => (
