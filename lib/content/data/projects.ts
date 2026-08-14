@@ -27,7 +27,7 @@ const projectData = [
     shortDescription:
       "My final engineering project, carried out in collaboration with Animal Health Technology Labs.",
     problemSolved:
-      "The capstone is the degree's end-to-end engineering exercise: an industry-partnered problem taken from definition through to a working result, with a real partner's constraints rather than a textbook's.",
+      "Animal Health Technology Labs needed to know how its hydrogel fibers behave with light. The answer had to come from measurements in the lab, and it had to fit what the company needed and the time we had - not a set exercise with a known answer.",
     whyImportant:
       "It is the piece of the degree that most resembles industry work - an external partner, a moving target, and a result that has to hold up outside the lab.",
     techStack: ["Engineering Design", "Industry Collaboration"],

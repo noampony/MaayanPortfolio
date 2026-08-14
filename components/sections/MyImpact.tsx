@@ -90,7 +90,7 @@ export function MyImpact() {
           headingId="volunteering-heading"
           title="Volunteering"
           lead={
-            <>Where I give my time outside the lab - and what each one is for.</>
+            <>The work I do outside my studies, and the people it is for.</>
           }
         />
 

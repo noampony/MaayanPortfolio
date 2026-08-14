@@ -5,9 +5,9 @@
  * is the owner's own outward-facing document and the owner asked for its content to go on
  * the site; nothing is added beyond what the CV already states.
  *
- * ⚠️ Dates. The CV gives years only ("2024 - present") with no months, so each entry is
- * anchored at year granularity: January for a start, December for an end. Confirm the exact
- * months before publishing.
+ * ⚠️ Dates. The CV gives years only ("2024 - present") with no months, so a start is anchored
+ * at January and an end at December unless the owner gave the exact month. The research
+ * assistantship's July 2026 end is owner-given, not anchored.
  */
 
 import type { Experience } from "../types";
@@ -24,7 +24,9 @@ const experienceData = [
     organizationType: "Electro-Optics Laboratory",
     role: "Research Assistant",
     startDate: "2024-01",
-    endDate: "Present",
+    // Owner-confirmed end: the role finished in July 2026. Not "Present" any more, so the
+    // ledger drops the "Current" badge for this entry.
+    endDate: "2026-07",
     technologies: [
       "Matlab",
       "Python",
@@ -33,8 +35,9 @@ const experienceData = [
       "Sensors",
       "Data Analysis",
     ],
+    // Past tense: the role ended in July 2026.
     description:
-      "I design and implement optical setups that integrate electronics and photonics, run experiments with lasers and sensors, and process and analyze the resulting experimental data using Matlab and Python.",
+      "I designed and implemented optical setups that integrate electronics and photonics, ran experiments with lasers and sensors, and processed and analyzed the resulting experimental data using Matlab and Python.",
     confidentialityReviewed: true,
   },
 ] as const;

@@ -95,8 +95,12 @@ const aboutData = {
       institution: "Ein-Kerem High School",
       institutionLogo: "/logos/ein-kerem-high-school.jpg",
       honors: [{ label: "GPA 103" }],
+      // "5 units" is the highest level of the Israeli matriculation (Bagrut) exams; spelled
+      // out here because the term means nothing outside Israel. The `**bold**` marker is
+      // rendered as `<strong>` by ExperienceLedger (see lib/utils.ts).
       summary:
-        "Extended studies in Mathematics, English, Physics, Biology and Agriculture.",
+        "Studied Mathematics, English, Physics, Biology and Agriculture at the **5-unit** " +
+        "Bagrut level.",
     },
   ],
 } as const;

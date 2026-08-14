@@ -1564,13 +1564,29 @@ a.business-card-contact-link:focus-visible {
   text-transform: uppercase;
 }
 
-/* Secondary meta beside the dates: duration, employment type, or the "Education" marker. */
+/* Secondary meta beside the dates: duration, employment type, or the "Education" marker.
+   Each carries a leading rule - the same device the entry number uses on its other side -
+   so "JAN 2024 - JUL 2026" and "2 YRS 6 MOS" read as two facts rather than one run of
+   text. The rule is drawn as a border, not as generated content, so a screen reader gets
+   the dates and the note as plain text with no stray separator character. */
 .xp-note {
   font-family: var(--font-mono), var(--font-mono-fallback);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: var(--text-muted);
   text-transform: uppercase;
+  padding-left: 1rem;
+  border-left: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
+/* On narrow screens the meta row wraps and a note usually starts its own line, where a
+   leading rule reads as a quote bar instead of a separator - and the line break already
+   does the separating. */
+@media (max-width: 640px) {
+  .xp-note {
+    padding-left: 0;
+    border-left: none;
+  }
 }
 
 .xp-role {
