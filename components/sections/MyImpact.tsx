@@ -11,8 +11,8 @@ import { easeOut, revealItemVariants, staggerContainerVariants } from "@/lib/mot
 /**
  * Volunteering & Community section - replaces the former About section. Every
  * volunteering entry from the validated content model renders as a card in an asymmetric
- * bento grid: the two ongoing programmes lead as wide feature tiles, the past entries
- * follow as compact tiles. The grid runs on six columns (the LCM of the 2-up and 3-up
+ * bento grid: the two most recent programmes lead as wide feature tiles, the earlier
+ * entries follow as compact tiles. The grid runs on six columns (the LCM of the 2-up and 3-up
  * rows) so both tile sizes land on whole tracks and no breakpoint leaves a hole.
  *
  * Motion: a stagger reveal that lifts, un-skews and un-blurs each tile on scroll, on the

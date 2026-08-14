@@ -21,13 +21,16 @@ import type { Project } from "../types";
 import { validateProjectList } from "../validate";
 
 const projectData = [
+  // The fiber details below (visible light guiding, living microalgae inside, and the
+  // tissue-engineering / cultured-meat direction) are the owner's own description of the
+  // project, supplied directly. They go beyond the single CV line but do not contradict it.
   {
     name: "Optical Characterisation of Hydrogel Fibers",
     role: "Lab Assistant",
     shortDescription:
-      "My final engineering project, carried out in collaboration with Animal Health Technology Labs.",
+      "My final engineering project, with Animal Health Technology Labs: soft hydrogel fibers that guide light and hold living microalgae inside.",
     problemSolved:
-      "Animal Health Technology Labs needed to know how its hydrogel fibers behave with light. The answer had to come from measurements in the lab, and it had to fit what the company needed and the time we had - not a set exercise with a known answer.",
+      "We built and tested hydrogel fibers to see how well they guide light and whether the microalgae inside stay alive. The fiber must work as both optics and biology - a step toward future use in tissue engineering and cultured meat.",
     whyImportant:
       "It is the piece of the degree that most resembles industry work - an external partner, a moving target, and a result that has to hold up outside the lab.",
     techStack: ["Engineering Design", "Industry Collaboration"],

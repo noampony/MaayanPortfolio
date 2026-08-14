@@ -2517,7 +2517,7 @@ main:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .impact-card-index {
@@ -2529,10 +2529,6 @@ main:focus-visible {
   color: color-mix(in srgb, var(--accent) 14%, transparent);
   pointer-events: none;
   user-select: none;
-}
-
-.impact-card--featured .impact-card-index {
-  font-size: 2.9rem;
 }
 
 .impact-card:hover .impact-card-index {
@@ -2555,11 +2551,13 @@ main:focus-visible {
 }
 
 /* Logo lockup only - the period chip now lives in `.impact-card-corner` with the ghost
-   numeral. The right pad keeps the lockup clear of that corner stack. */
+   numeral. The right pad keeps the lockup clear of that corner stack; the bottom pad keeps
+   the title clear of it on the single-column grid, where the stack is at its tallest. */
 .impact-card-head {
   display: flex;
   align-items: center;
   padding-right: clamp(2.6rem, 5vw, 3.4rem);
+  padding-bottom: 0.55rem;
 }
 
 .impact-card-logos {
@@ -2626,17 +2624,19 @@ main:focus-visible {
   box-shadow: 0 0.5rem 1.15rem rgb(var(--shadow-rgb) / 0.12);
 }
 
-/* Period chip - display-only years, carrying what the description used to state in prose. */
+/* Period chip - display-only dates, carrying what the description used to state in prose.
+   Sized down here for the single-column grid, where a full `Oct 2025 - Jul 2026` at the
+   larger size reaches left across the logo lockup; the 640px block restores it. */
 .impact-card-period {
   flex: none;
   border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
   border-radius: 9999px;
   background: var(--chip-fill);
-  padding: 0.2rem 0.6rem;
+  padding: 0.18rem 0.5rem;
   font-family: var(--font-mono), var(--font-mono-fallback);
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--accent);
@@ -2657,6 +2657,63 @@ main:focus-visible {
 
 .impact-card:hover .impact-card-period {
   background: var(--chip-fill-hover);
+}
+
+/* Dates and span, right-aligned under the numeral. Stacked on the narrowest cards, where
+   one row would reach left across the logo lockup; side by side once there is room (see
+   the 640px block below). */
+.impact-card-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+/* Span label beside the period chip - the same mono voice, dialled back so the dates stay
+   the loud part of the corner stack. Borderless on purpose: a second outlined pill would
+   read as a second fact rather than a footnote to the one next to it. */
+.impact-card-duration {
+  flex: none;
+  font-family: var(--font-mono), var(--font-mono-fallback);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* From the two-up grid on, the corner has the width to run the dates and the span on one
+   line at full size - which also keeps the stack short enough to clear the title below it,
+   so the head no longer has to reserve the extra room. */
+@media (min-width: 640px) {
+  .impact-card-head {
+    padding-bottom: 0;
+  }
+
+  .impact-card-corner {
+    gap: 0.4rem;
+  }
+
+  .impact-card--featured .impact-card-index {
+    font-size: 2.9rem;
+  }
+
+  .impact-card-timeline {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .impact-card-period {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  .impact-card-duration {
+    font-size: 0.62rem;
+  }
 }
 
 .impact-card-title {

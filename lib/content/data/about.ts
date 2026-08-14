@@ -13,8 +13,13 @@
  * `public/certificates/deans-list.jpeg` (the owner's ID number was redacted before
  * committing, since the file is public once deployed).
  *
- * ⚠️ No certificate files exist for the other entries yet, so `degreeCertificate` is omitted
- * on them and the record renders without a "Preview certificate" trigger rather than opening
+ * The B.Sc. `degreeCertificate` is the HIT grades sheet at
+ * `public/certificates/degree-grades-sheet.pdf`. Same rule as the Dean's List: the ID
+ * number, home address, personal e-mail and phone were redacted out of the original before
+ * it was committed, and the file was rebuilt as page images so no text layer survives.
+ *
+ * ⚠️ No certificate file exists for the high-school entry, so `degreeCertificate` is omitted
+ * there and the record renders without a "Preview certificate" trigger rather than opening
  * an empty viewer. Drop a PDF into `public/certificates/` and add the ref to wire it up.
  *
  * Institution logos live in `public/logos/` and are wired via `institutionLogo` on each
@@ -80,6 +85,13 @@ const aboutData = {
         },
       },
     ],
+    degreeCertificate: {
+      id: "degree-grades-sheet",
+      title: "Degree Grades Sheet",
+      viewLabel: "View the degree grades sheet",
+      triggerLabel: "Degree Grades Sheet",
+      file: "/certificates/degree-grades-sheet.pdf",
+    },
     // Grade numbers carry `**bold**` markers - rendered as `<strong>` by ExperienceLedger via
     // `withBoldMarkers` (see lib/utils.ts).
     summary:
