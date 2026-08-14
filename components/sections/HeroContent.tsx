@@ -337,7 +337,7 @@ export function HeroContent({ initials }: HeroContentProps) {
           </h1>
 
           <motion.p
-            className="m-0 text-h2 font-medium text-text-secondary sm:text-h1 lg:text-[2.25rem]"
+            className="m-0 mt-2 text-h2 font-medium text-text-secondary sm:mt-3 sm:text-h1 lg:text-[2.25rem]"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
             animate={contentRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.68, ease: easeOut, delay: prefersReducedMotion ? 0 : 0.18 }}

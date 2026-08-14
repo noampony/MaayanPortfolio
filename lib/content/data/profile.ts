@@ -4,9 +4,10 @@
  * Sourced from the owner's CV ("Maayan Pony - CV"): name, the About-Me summary, and the
  * main fields (derived from the CV's About Me + Technical Skills lists).
  *
- * `title` is `Electrical & Electronics Engineering Student` - the CV's own framing
- * ("Fourth-year Electrical & Electronics Engineering B.Sc. student"). The hero body copy
- * below keeps the CV's About-Me wording.
+ * `title` is `Electrical Engineer` - owner-directed framing that moves away from the CV's
+ * own "student" wording (the owner no longer wants to be presented as a student). The
+ * degree itself is untouched: it still reads `B.Sc. Electrical & Electronics Engineering`
+ * wherever the degree title is shown (see `about.ts`).
  *
  * `yearsExperienceStartDate` anchors to `2024-01`, the start of the Electro-Optics
  * Laboratory research assistantship. The CV gives the year only ("2024 - present"), so the
@@ -24,12 +25,12 @@ import { validateProfile } from "../validate";
 
 const profileData = {
   name: "Maayan Pony",
-  title: "Electrical & Electronics Engineering Student",
+  title: "Electrical Engineer",
   oneLineSummary:
-    "A fourth-year Electrical & Electronics Engineering student specializing in Electro-Optics and Microelectronics",
+    "An Electrical Engineer specializing in Electro-Optics and Microelectronics",
   // Two lines, each kept short: the Hero renders them unwrapped at xl.
   heroText:
-    "Specializing in Electro-Optics and Microelectronics at HIT.\nHands-on laboratory, research, and data-analysis experience.",
+    "Specializing in Electro-Optics and Microelectronics at HIT.\nHands-on laboratory, research, and circuit-building experience.",
   location: "Israel",
   profileImage: "/profile.png",
   yearsExperienceStartDate: "2024-01",

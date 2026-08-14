@@ -88,9 +88,9 @@ export function MyImpact() {
         <SectionHeading
           className="impact-reveal max-w-measure"
           headingId="volunteering-heading"
-          title="Volunteering & Community"
+          title="Volunteering"
           lead={
-            <>Where I give my time outside the lecture hall - and what each one is for.</>
+            <>The work I do outside my studies, and the people it is for.</>
           }
         />
 

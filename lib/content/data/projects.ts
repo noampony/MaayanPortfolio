@@ -9,9 +9,9 @@
  * card needs without adding facts the CV does not state - no results, no grades, and no
  * tooling that is not either named in the CV entry itself or in its Technical Skills list.
  *
- * ⚠️ The capstone is explicitly in progress. Its scope, partner deliverables and results
- * are deliberately not described beyond what the CV states; revisit once the owner confirms
- * what can be published (the partner, Animal Health Technology Labs, is named on the CV).
+ * The capstone is complete. Its scope, partner deliverables and results are deliberately not
+ * described beyond what the CV states (the partner, Animal Health Technology Labs, is named
+ * on the CV).
  *
  * Still absent by design: project years (`year`) and categories (`category`) are omitted
  * everywhere rather than invented.
@@ -22,12 +22,12 @@ import { validateProjectList } from "../validate";
 
 const projectData = [
   {
-    name: "Capstone Engineering Project",
+    name: "Optical Characterisation of Hydrogel Fibers",
     role: "Lab Assistant",
     shortDescription:
-      "My final engineering project, carried out in collaboration with Animal Health Technology Labs. In progress.",
+      "My final engineering project, carried out in collaboration with Animal Health Technology Labs.",
     problemSolved:
-      "The capstone is the degree's end-to-end engineering exercise: an industry-partnered problem taken from definition through to a working result, with a real partner's constraints rather than a textbook's.",
+      "Animal Health Technology Labs needed to know how its hydrogel fibers behave with light. The answer had to come from measurements in the lab, and it had to fit what the company needed and the time we had - not a set exercise with a known answer.",
     whyImportant:
       "It is the piece of the degree that most resembles industry work - an external partner, a moving target, and a result that has to hold up outside the lab.",
     techStack: ["Engineering Design", "Industry Collaboration"],
@@ -35,7 +35,7 @@ const projectData = [
   },
   {
     name: "Microcontrollers Lab",
-    role: "Student Engineer",
+    role: "Engineer",
     shortDescription:
       "Embedded systems designed, programmed in C, and tested on real hardware in the HIT Microcontrollers Lab.",
     problemSolved:
@@ -49,7 +49,7 @@ const projectData = [
   },
   {
     name: "Semiconductors Lab",
-    role: "Student Engineer",
+    role: "Engineer",
     shortDescription:
       "Characterization of diodes and transistors, with I-V curves extracted from measurement.",
     problemSolved:

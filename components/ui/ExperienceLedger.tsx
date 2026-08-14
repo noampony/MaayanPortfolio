@@ -12,7 +12,7 @@ import type {
   LedgerRoleEntry,
 } from "@/lib/content/experienceLedger";
 import type { EducationCertificateRef, ExperienceEndDate } from "@/lib/content/types";
-import { cn } from "@/lib/utils";
+import { cn, withBoldMarkers } from "@/lib/utils";
 
 /**
  * Experience timeline - an editorial ledger running down a single rail.
@@ -423,7 +423,7 @@ function EducationRecord({
         <span className="xp-org-name">{education.institution}</span>
       </p>
 
-      <p className="xp-desc">{education.summary}</p>
+      <p className="xp-desc">{withBoldMarkers(education.summary)}</p>
 
       {education.degreeCertificate || honorBadges.length > 0 ? (
         <div className="xp-actions">

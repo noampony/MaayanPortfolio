@@ -48,14 +48,27 @@ function byMostRecent(a: ExperienceModel, b: ExperienceModel): number {
   return b.startDate.localeCompare(a.startDate);
 }
 
-/** Whole months between a start year-month and now (build time for static pages). */
-function monthsElapsedSince(start: string, now = new Date()): number {
+/**
+ * Whole months between two year-months, counting both the first and the last month - the
+ * way LinkedIn counts, so the label matches what the same dates show there (Jan 2024 -
+ * Jul 2026 is `2 yrs 7 mos`, not 6).
+ *
+ * `end` defaults to now - which is build time for static pages, so an ongoing role's span
+ * is baked in at build rather than read off a runtime clock.
+ */
+function monthsBetween(start: string, end?: string, now = new Date()): number {
   const [startYear, startMonth] = start.split("-").map(Number);
   if (!startYear || !startMonth) {
     return 0;
   }
-  const months = (now.getFullYear() - startYear) * 12 + (now.getMonth() + 1 - startMonth);
-  return Math.max(0, months);
+  const [endYear, endMonth] = end
+    ? end.split("-").map(Number)
+    : [now.getFullYear(), now.getMonth() + 1];
+  if (!endYear || !endMonth) {
+    return 0;
+  }
+  const months = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+  return Math.max(1, months);
 }
 
 /** Human-readable span (e.g. `3 yrs 8 mos`) from a whole-month count. */
@@ -74,15 +87,20 @@ function formatDuration(totalMonths: number): string {
 
 /**
  * Resolve the duration label shown beside an entry's dates. Prefer the
- * owner-provided label; otherwise compute it for an ongoing role. Completed roles
- * with no provided label simply show their date range - no value is invented.
+ * owner-provided label; otherwise compute the span from the entry's own dates -
+ * up to now for an ongoing role, up to its end date for a finished one. An entry
+ * with no end date and no label shows only its date range: there is nothing to
+ * measure against, so no value is invented.
  */
 function resolveDuration(entry: ExperienceModel): string | null {
   if (entry.durationLabel) {
     return entry.durationLabel;
   }
   if (entry.endDate === "Present") {
-    return formatDuration(monthsElapsedSince(entry.startDate));
+    return formatDuration(monthsBetween(entry.startDate));
+  }
+  if (entry.endDate) {
+    return formatDuration(monthsBetween(entry.startDate, entry.endDate));
   }
   return null;
 }

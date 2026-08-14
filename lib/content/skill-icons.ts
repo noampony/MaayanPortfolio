@@ -96,7 +96,7 @@ const ELECTRO_OPTICS =
 const WAVEFORM =
   "M22 12L20 13L19 14L18 13L17 16L16 13L15 21L14 13L13 15L12 13L11 17L10 13L9 22L8 13L7 19L6 13L5 14L4 13L2 12L4 11L5 10L6 11L7 5L8 11L9 2L10 11L11 7L12 11L13 9L14 11L15 3L16 11L17 8L18 11L19 10L20 11L22 12Z";
 
-// Control - the closed feedback loop, the defining structure of a control system (MDI
+// System Control - the closed feedback loop, the defining structure of a control system (MDI
 // autorenew). A literal block diagram needs strokes too fine to survive 16px.
 const FEEDBACK_LOOP =
   "M12,6V9L16,5L12,1V4A8,8 0 0,0 4,12C4,13.57 4.46,15.03 5.24,16.26L6.7,14.8C6.25,13.97 6,13 6,12A6,6 0 0,1 12,6M18.76,7.74L17.3,9.2C17.74,10.04 18,11 18,12A6,6 0 0,1 12,18V15L8,19L12,23V20A8,8 0 0,0 20,12C20,10.43 19.54,8.97 18.76,7.74Z";
@@ -190,7 +190,7 @@ export const SKILL_MARKS: Record<string, SkillMark> = {
   Microelectronics: concept(IC_CHIP),
   "Electro-Optics": concept(ELECTRO_OPTICS),
   "Signal Processing": concept(WAVEFORM),
-  Control: concept(FEEDBACK_LOOP),
+  "System Control": concept(FEEDBACK_LOOP),
   "Communication Systems": concept(ANTENNA),
 
   // Soft Skills.

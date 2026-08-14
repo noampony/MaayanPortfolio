@@ -3,9 +3,10 @@
  * Experience ledger.
  *
  * `professionalSummary`, `education` and `furtherEducation` are sourced from the owner's
- * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - present,
+ * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - Oct 2026,
  * GPA 95, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
- * diploma (2015-2018, GPA 103, with honors).
+ * diploma (2015-2018, GPA 103, with honors). The Oct 2026 end date is owner-confirmed - the
+ * expected graduation date, not stated in the CV.
  *
  * The Dean's List placement on the B.Sc. entry is owner-confirmed rather than CV-sourced;
  * the CV states no honour. The certificate image lives at
@@ -48,11 +49,11 @@ const yearsExperienceCountLabel = String(
 
 const aboutData = {
   professionalSummary:
-    "I'm a fourth-year Electrical & Electronics Engineering B.Sc. student at HIT, " +
+    "I'm an Electrical Engineer pursuing my B.Sc. at HIT, " +
     "specializing in Electro-Optics and Microelectronics.\n\n" +
     "In the Electro-Optics Laboratory I design and implement optical setups that integrate " +
-    "electronics and photonics, run experiments with lasers, sensors and signal acquisition " +
-    "systems, and process the resulting data in Matlab and Python.\n\n" +
+    "electronics and photonics, run experiments with lasers and sensors, and process the " +
+    "resulting data in Matlab and Python.\n\n" +
     "I'm motivated to apply what I've learned in a practical environment, contribute to " +
     "innovative projects, and gain hands-on experience in the industry.",
   yearsExperienceStartDate: profile.yearsExperienceStartDate,
@@ -61,7 +62,7 @@ const aboutData = {
   },
   mainFields: profile.mainFields,
   education: {
-    dateRange: "Oct 2022 - present",
+    dateRange: "Oct 2022 - Oct 2026",
     degree: "B.Sc. Electrical & Electronics Engineering",
     institution: "Holon Institute of Technology (HIT)",
     institutionLogo: "/logos/hit.jpg",
@@ -79,10 +80,12 @@ const aboutData = {
         },
       },
     ],
+    // Grade numbers carry `**bold**` markers - rendered as `<strong>` by ExperienceLedger via
+    // `withBoldMarkers` (see lib/utils.ts).
     summary:
       "Specializing in Electro-Optics & Microelectronics. Coursework includes Semiconductor " +
-      "Devices (100), Microelectronics Technologies (99), Control Systems (98), " +
-      "Electromagnetic Fields (94), Digital Signal Processing, Linear Circuits, " +
+      "Devices (**100**), Microelectronics Technologies (**99**), Control Systems (**98**), " +
+      "Electromagnetic Fields (**94**), Digital Signal Processing, Linear Circuits, " +
       "Communication Systems and the Microcontrollers Lab.",
   },
   furtherEducation: [
@@ -92,8 +95,12 @@ const aboutData = {
       institution: "Ein-Kerem High School",
       institutionLogo: "/logos/ein-kerem-high-school.jpg",
       honors: [{ label: "GPA 103" }],
+      // "5 units" is the highest level of the Israeli matriculation (Bagrut) exams; spelled
+      // out here because the term means nothing outside Israel. The `**bold**` marker is
+      // rendered as `<strong>` by ExperienceLedger (see lib/utils.ts).
       summary:
-        "Extended studies in Mathematics, English, Physics, Biology and Agriculture.",
+        "Studied Mathematics, English, Physics, Biology and Agriculture at the **5-unit** " +
+        "Bagrut level.",
     },
   ],
 } as const;

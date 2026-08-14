@@ -39,7 +39,7 @@ const skillData: unknown[] = [
   { name: "Microelectronics",      category: "Engineering Knowledge", displayOrder: 3 },
   { name: "Electro-Optics",        category: "Engineering Knowledge", displayOrder: 4 },
   { name: "Signal Processing",     category: "Engineering Knowledge", displayOrder: 5 },
-  { name: "Control",               category: "Engineering Knowledge", displayOrder: 6 },
+  { name: "System Control",        category: "Engineering Knowledge", displayOrder: 6 },
   { name: "Communication Systems", category: "Engineering Knowledge", displayOrder: 7 },
 
   // ── Soft Skills ──────────────────────────────────────────────────────────

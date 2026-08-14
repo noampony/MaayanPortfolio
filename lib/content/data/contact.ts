@@ -24,7 +24,7 @@ const contactData = {
   heading: "Get In Touch",
   message:
     "Let's Work Together! Have something interesting to work on? Feel free to contact me.",
-  email: "Maayanpony11@gmail.com",
+  email: "maayanpony11@gmail.com",
   linkedIn: "https://www.linkedin.com/in/maayanpony/",
   phone: "+972 54 237 7256",
   location: "Israel",
