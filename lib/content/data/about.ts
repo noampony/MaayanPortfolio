@@ -3,9 +3,10 @@
  * Experience ledger.
  *
  * `professionalSummary`, `education` and `furtherEducation` are sourced from the owner's
- * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - present,
+ * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - Oct 2026,
  * GPA 95, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
- * diploma (2015-2018, GPA 103, with honors).
+ * diploma (2015-2018, GPA 103, with honors). The Oct 2026 end date is owner-confirmed - the
+ * expected graduation date, not stated in the CV.
  *
  * The Dean's List placement on the B.Sc. entry is owner-confirmed rather than CV-sourced;
  * the CV states no honour. The certificate image lives at
@@ -61,7 +62,7 @@ const aboutData = {
   },
   mainFields: profile.mainFields,
   education: {
-    dateRange: "Oct 2022 - present",
+    dateRange: "Oct 2022 - Oct 2026",
     degree: "B.Sc. Electrical & Electronics Engineering",
     institution: "Holon Institute of Technology (HIT)",
     institutionLogo: "/logos/hit.jpg",
@@ -79,10 +80,12 @@ const aboutData = {
         },
       },
     ],
+    // Grade numbers carry `**bold**` markers - rendered as `<strong>` by ExperienceLedger via
+    // `withBoldMarkers` (see lib/utils.ts).
     summary:
       "Specializing in Electro-Optics & Microelectronics. Coursework includes Semiconductor " +
-      "Devices (100), Microelectronics Technologies (99), Control Systems (98), " +
-      "Electromagnetic Fields (94), Digital Signal Processing, Linear Circuits, " +
+      "Devices (**100**), Microelectronics Technologies (**99**), Control Systems (**98**), " +
+      "Electromagnetic Fields (**94**), Digital Signal Processing, Linear Circuits, " +
       "Communication Systems and the Microcontrollers Lab.",
   },
   furtherEducation: [

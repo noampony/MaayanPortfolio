@@ -9,6 +9,7 @@ import { organizationMarker } from "@/lib/content/experienceLedger";
 import { useGlareHandlers } from "@/components/ui/GlareHover";
 import { ImpactIcon } from "@/components/ui/ImpactIcon";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
+import { withBoldMarkers } from "@/lib/utils";
 
 /**
  * A single Volunteering & Community card (spec §8.2). Presentation-agnostic content comes
@@ -189,7 +190,7 @@ export function ImpactCard({ impact, headingId, index, featured = false }: Impac
         <h3 id={headingId} className="impact-card-title">
           {impact.title}
         </h3>
-        <p className="impact-card-desc">{impact.description}</p>
+        <p className="impact-card-desc">{withBoldMarkers(impact.description)}</p>
 
         <ul className="impact-card-bullets">
           {impact.impactBullets.map((bullet, bulletIndex) => (

@@ -24,6 +24,23 @@ import { validateImpactList } from "../validate";
 
 const impactData = [
   {
+    title: "“Babushka” Initiative",
+    description:
+      "Taking part in an educational-technological confidence-building project for girls from minority communities, run with Elbit and the “Shavot” Non-Profit organization.",
+    impactBullets: [
+      "Built around education, not one-off exposure",
+      "Opening engineering and technology up to girls who rarely see it",
+      "Run together with an industry partner and a Non-Profit organization",
+    ],
+    period: "2025 - Present",
+    logos: [
+      { src: "/images/volunteering/elbit.png", alt: "Elbit Systems", width: 480, height: 167 },
+      { src: "/images/volunteering/shavot.png", alt: "Shavot", width: 480, height: 479 },
+    ],
+    displayOrder: 1,
+    confidentialityReviewed: true,
+  },
+  {
     title: "Perach Mentorship Program",
     description: "Mentoring and academic support for youth in underserved communities.",
     impactBullets: [
@@ -33,23 +50,6 @@ const impactData = [
     ],
     period: "2025 - Present",
     logos: [{ src: "/images/volunteering/perach.jpg", alt: "Perach", width: 480, height: 303 }],
-    displayOrder: 1,
-    confidentialityReviewed: true,
-  },
-  {
-    title: "“Babushka” Initiative",
-    description:
-      "Taking part in an educational-technological empowerment project for girls from minority communities, run with Elbit and the “Shavot” NGO.",
-    impactBullets: [
-      "Opening engineering and technology up to girls who rarely see it",
-      "Built around education, not one-off exposure",
-      "Run together with an industry partner and an NGO",
-    ],
-    period: "2025 - Present",
-    logos: [
-      { src: "/images/volunteering/elbit.png", alt: "Elbit Systems", width: 480, height: 167 },
-      { src: "/images/volunteering/shavot.png", alt: "Shavot", width: 480, height: 479 },
-    ],
     displayOrder: 2,
     confidentialityReviewed: true,
   },
@@ -71,8 +71,10 @@ const impactData = [
   },
   {
     title: "National Agricultural Harvest Scholarship",
+    // "team leader" carries a `**bold**` marker - rendered as `<strong>` by ImpactCard via
+    // `withBoldMarkers` (see lib/utils.ts).
     description:
-      "Volunteered in the national agricultural harvest effort, serving as a team leader.",
+      "Volunteered in the national agricultural harvest effort, serving as a **team leader**.",
     impactBullets: [
       "Led a volunteer team in the field",
       "Answered a national call for agricultural help",
