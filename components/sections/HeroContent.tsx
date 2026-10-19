@@ -84,8 +84,8 @@ const profileTags = [
   },
   {
     key: "gpa",
-    ariaLabel: "GPA 95 at HIT",
-    numericValue: 95,
+    ariaLabel: "GPA 96 at HIT",
+    numericValue: 96,
     lines: ["GPA", "at HIT"],
     slotClasses: tagSlotOffsetClasses["-0.5"],
     appearDelay: 3.15,

@@ -52,7 +52,7 @@ content is the CV at `public/resume.pdf`.
 
 ## 5. Component copy — done
 
-- [x] Hero: rotating subtitle + the three profile tags (GPA 95 / Lab Research Assistant /
+- [x] Hero: rotating subtitle + the three profile tags (GPA 96 / Lab Research Assistant /
       B.Sc), which are now static CV facts rather than a clock-derived "years of experience"
 - [x] Hero tag glass fill raised so the labels stay legible where the pills overhang the
       (much darker) new portrait

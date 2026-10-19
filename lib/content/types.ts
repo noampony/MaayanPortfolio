@@ -85,7 +85,7 @@ export type AboutEducation = {
 
 /** One distinction badge on an education entry. */
 export type AboutEducationHonor = {
-  /** The badge's text, e.g. `GPA 95` or `Included in Dean's List`. */
+  /** The badge's text, e.g. `GPA 96` or `Included in Dean's List`. */
   label: string;
   /**
    * The honour's own certificate. When present the badge doubles as the trigger that
