@@ -4,7 +4,7 @@
  *
  * `professionalSummary`, `education` and `furtherEducation` are sourced from the owner's
  * CV ("Maayan Pony - CV"): the About-Me paragraph, the HIT B.Sc. entry (Oct 2022 - Oct 2026,
- * GPA 95, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
+ * GPA 96, Electro-Optics & Microelectronics specialization) and the Ein-Kerem High School
  * diploma (2015-2018, GPA 103, with honors). The Oct 2026 end date is owner-confirmed - the
  * expected graduation date, not stated in the CV.
  *
@@ -72,7 +72,7 @@ const aboutData = {
     institution: "Holon Institute of Technology (HIT)",
     institutionLogo: "/logos/hit.jpg",
     honors: [
-      { label: "GPA 95" },
+      { label: "GPA 96" },
       // Owner-confirmed (the CV does not list it). The badge doubles as the trigger for
       // the certificate viewer.
       {
